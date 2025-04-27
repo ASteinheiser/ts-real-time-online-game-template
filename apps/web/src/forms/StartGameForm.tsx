@@ -29,7 +29,7 @@ export const StartGameForm = ({ isOpen, onOpenChange, onSubmit }: StartGameFormP
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Join a game</DialogTitle>
           <DialogDescription>Enter your username to join a game</DialogDescription>
