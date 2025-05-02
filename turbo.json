@@ -18,6 +18,9 @@
     "dev": {
       "cache": false,
       "persistent": true
+    },
+    "generate-pwa-assets": {
+      "cache": false
     }
   }
 }

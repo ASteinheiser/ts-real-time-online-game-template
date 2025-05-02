@@ -24,12 +24,11 @@ const App = () => {
             style={{ width: '120px', height: 'auto', padding: '20px', marginLeft: '20px' }}
           />
         </a>
-        <div className="card">
-          <Button onClick={() => setIsOpen(true)}>Open that form!</Button>
-        </div>
+
+        <Button onClick={() => setIsOpen(true)}>Open that form!</Button>
       </div>
     </>
   );
 };
 
-createRoot(document.getElementById('app')!).render(<App />);
+createRoot(document.getElementById('root')!).render(<App />);
