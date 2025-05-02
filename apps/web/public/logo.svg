@@ -1,0 +1,73 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 700 800"
+  shape-rendering="geometricPrecision"
+  text-rendering="geometricPrecision"
+>
+  <g transform="translate(-22.225952-34.060505)">
+    <g transform="translate(143.954246-81.282791)">
+      <path
+        d="M2.07332,-43.811996l440,130"
+        transform="translate(6.198386 494.155292)"
+        fill="none"
+        fill-rule="evenodd"
+        stroke="#7c7c7c"
+        stroke-width="40"
+        stroke-linecap="square"
+      />
+      <path
+        d="M-40.582209,697.576492l570-670"
+        transform="translate(-16.146085 152.766804)"
+        fill="none"
+        fill-rule="evenodd"
+        stroke="#7c7c7c"
+        stroke-width="40"
+        stroke-linecap="square"
+      />
+      <path
+        d="M-22.778458,193.247943l505-270"
+        transform="translate(31.050164 257.095353)"
+        fill="none"
+        fill-rule="evenodd"
+        stroke="#7c7c7c"
+        stroke-width="40"
+        stroke-linecap="square"
+      />
+      <path
+        d="M-11.53645,194.489949l505-270"
+        transform="translate(-45.191844 655.853347)"
+        fill="none"
+        fill-rule="evenodd"
+        stroke="#7c7c7c"
+        stroke-width="40"
+        stroke-linecap="square"
+      />
+    </g>
+    <g transform="translate(648.198997 13.952236)">
+      <circle
+        r="65"
+        transform="translate(9.026955 85.108269)"
+        fill="#5700a1"
+        fill-rule="evenodd"
+      />
+      <circle
+        r="65"
+        transform="translate(-560.973045 755.108269)"
+        fill="#5700a1"
+        fill-rule="evenodd"
+      />
+      <circle
+        r="65"
+        transform="translate(-55.973045 485.108269)"
+        fill="#5700a1"
+        fill-rule="evenodd"
+      />
+      <circle
+        r="65"
+        transform="translate(-495.973045 355.108269)"
+        fill="#5700a1"
+        fill-rule="evenodd"
+      />
+    </g>
+  </g>
+</svg>
