@@ -23,7 +23,7 @@
       "cache": false,
       "persistent": true
     },
-    "generate-pwa-assets": {
+    "generate:pwa-assets": {
       "cache": false
     }
   }

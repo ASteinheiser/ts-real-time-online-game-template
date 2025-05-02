@@ -13,7 +13,7 @@
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint:fix",
     "check-types": "turbo run check-types",
-    "generate-pwa-assets": "turbo run generate-pwa-assets"
+    "generate:pwa-assets": "turbo run generate:pwa-assets"
   },
   "devDependencies": {
     "eslint": "^9.25.1",
