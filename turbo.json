@@ -6,6 +6,10 @@
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": ["dist/**"]
     },
+    "preview": {
+      "dependsOn": ["build"],
+      "persistent": true
+    },
     "lint": {
       "dependsOn": ["^lint"]
     },
