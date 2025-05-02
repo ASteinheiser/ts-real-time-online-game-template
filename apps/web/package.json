@@ -6,8 +6,8 @@
   "private": false,
   "type": "module",
   "scripts": {
-    "dev": "vite --clearScreen false",
-    "build": "tsc && vite build",
+    "dev": "vite --config vite/config.dev.ts --clearScreen false",
+    "build": "tsc && vite build --config vite/config.prod.ts",
     "preview": "vite preview",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
