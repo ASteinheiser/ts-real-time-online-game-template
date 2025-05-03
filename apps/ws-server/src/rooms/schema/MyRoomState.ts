@@ -1,9 +1,9 @@
 import { ArraySchema, MapSchema, Schema, type } from '@colyseus/schema';
 
 export class Player extends Schema {
-  @type('string') username: string;
-  @type('number') x: number;
-  @type('number') y: number;
+  @type('string') username?: string;
+  @type('number') x: number = 0;
+  @type('number') y: number = 0;
   @type('boolean') isFacingRight: boolean = true;
   @type('boolean') isAttacking: boolean = false;
   @type('number') attackCount: number = 0;
@@ -24,9 +24,9 @@ export interface InputPayload {
 }
 
 export class Enemy extends Schema {
-  @type('string') id: string;
-  @type('number') x: number;
-  @type('number') y: number;
+  @type('string') id?: string;
+  @type('number') x: number = 0;
+  @type('number') y: number = 0;
 }
 
 export class MyRoomState extends Schema {
