@@ -1,34 +1,10 @@
-import { useState } from 'react';
-import { createRoot } from 'react-dom/client';
-import { Button } from '@repo/ui';
-import { StartGameForm } from './forms/StartGameForm';
+import { StrictMode } from 'react';
+import ReactDOM from 'react-dom/client';
+import { App } from './App';
 import './theme.css';
 
-const App = () => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <>
-      <StartGameForm isOpen={isOpen} onOpenChange={setIsOpen} onSubmit={console.log} />
-
-      <div>
-        <a
-          href="https://github.com/ASteinheiser/ts-real-time-online-game-template"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <img
-            src="/logo.svg"
-            className="logo"
-            alt="App logo"
-            style={{ width: '120px', height: 'auto', padding: '20px', marginLeft: '20px' }}
-          />
-        </a>
-
-        <Button onClick={() => setIsOpen(true)}>Open that form!</Button>
-      </div>
-    </>
-  );
-};
-
-createRoot(document.getElementById('root')!).render(<App />);
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <App />
+  </StrictMode>
+);
