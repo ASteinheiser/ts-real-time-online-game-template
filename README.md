@@ -11,7 +11,7 @@ pnpm i && pnpm dev
 
 #### Otherwise, you should:
 
-First ensure you are using the correct version of Node.js. You can validate this by comparing your local version of node (`node -v`) with the `.nvmrc`.
+First __ensure__ you are using the __correct version__ of __Node.js__. You can validate this by comparing your local version of node (`node -v`) with the `.nvmrc`.
 
 NOTE: The `.nvmrc` uses an alias for the node version. I highly recommend managing your local node version with [`nvm`](https://github.com/nvm-sh/nvm). This will allow you to quickly swap to the correct version with: `nvm use`.
 
