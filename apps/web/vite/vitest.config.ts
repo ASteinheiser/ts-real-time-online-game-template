@@ -1,5 +1,5 @@
 import { defineConfig, mergeConfig } from 'vitest/config';
-import viteConfig from './config.dev';
+import viteConfig from './dev.config';
 
 export default mergeConfig(
   viteConfig,

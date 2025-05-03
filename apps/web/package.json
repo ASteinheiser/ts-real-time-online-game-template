@@ -9,9 +9,9 @@
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "check-types": "tsc --noEmit",
-    "dev": "vite --config vite/config.dev.ts --clearScreen false",
-    "build": "tsc && vite build --config vite/config.prod.ts",
-    "preview": "vite preview --config vite/config.dev.ts --port 4200",
+    "dev": "vite --config vite/dev.config.ts --clearScreen false",
+    "build": "tsc && vite build --config vite/prod.config.ts",
+    "preview": "vite preview --config vite/dev.config.ts --port 4200",
     "generate:pwa-assets": "pwa-assets-generator --preset minimal public/logo.svg",
     "test:unit": "vitest --config vite/vitest.config.ts"
   },
