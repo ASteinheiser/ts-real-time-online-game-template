@@ -72,6 +72,9 @@ importers:
       vite-plugin-pwa:
         specifier: ^1.0.0
         version: 1.0.0(@vite-pwa/assets-generator@1.0.0)(vite@5.4.18)(workbox-build@7.3.0)(workbox-window@7.3.0)
+      vitest:
+        specifier: ^3.1.2
+        version: 3.1.2(terser@5.39.0)
 
   apps/ws-server:
     dependencies:
@@ -132,7 +135,7 @@ importers:
         version: 5.5.4
       vitest:
         specifier: ^3.1.2
-        version: 3.1.2
+        version: 3.1.2(terser@5.39.0)
 
   infra: {}
 
@@ -3524,7 +3527,7 @@ packages:
       std-env: 3.9.0
       test-exclude: 7.0.1
       tinyrainbow: 2.0.0
-      vitest: 3.1.2
+      vitest: 3.1.2(terser@5.39.0)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -7727,7 +7730,7 @@ packages:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
     engines: {node: '>= 0.8'}
 
-  /vite-node@3.1.2:
+  /vite-node@3.1.2(terser@5.39.0):
     resolution: {integrity: sha512-/8iMryv46J3aK13iUXsei5G/A3CUlW4665THCPS+K8xAaqrVWiGB4RfXMQXCLjpK9P2eK//BczrVkn5JLAk6DA==}
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
     hasBin: true
@@ -7811,7 +7814,7 @@ packages:
       fsevents: 2.3.3
     dev: true
 
-  /vitest@3.1.2:
+  /vitest@3.1.2(terser@5.39.0):
     resolution: {integrity: sha512-WaxpJe092ID1C0mr+LH9MmNrhfzi8I65EX/NRU/Ld016KqQNRgxSOlGNP1hHN+a/F8L15Mh8klwaF77zR3GeDQ==}
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
     hasBin: true
@@ -7858,7 +7861,7 @@ packages:
       tinypool: 1.0.2
       tinyrainbow: 2.0.0
       vite: 5.4.18(terser@5.39.0)
-      vite-node: 3.1.2
+      vite-node: 3.1.2(terser@5.39.0)
       why-is-node-running: 2.3.0
     transitivePeerDependencies:
       - less

@@ -12,7 +12,8 @@
     "dev": "vite --config vite/config.dev.ts --clearScreen false",
     "build": "tsc && vite build --config vite/config.prod.ts",
     "preview": "vite preview --config vite/config.dev.ts --port 4200",
-    "generate:pwa-assets": "pwa-assets-generator --preset minimal public/logo.svg"
+    "generate:pwa-assets": "pwa-assets-generator --preset minimal public/logo.svg",
+    "test:unit": "vitest --config vite/vitest.config.ts"
   },
   "dependencies": {
     "@repo/ui": "workspace:*",
@@ -33,6 +34,7 @@
     "terser": "^5.39.0",
     "typescript": "5.5.4",
     "vite": "^5.1.4",
-    "vite-plugin-pwa": "^1.0.0"
+    "vite-plugin-pwa": "^1.0.0",
+    "vitest": "^3.1.2"
   }
 }
