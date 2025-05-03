@@ -42,6 +42,7 @@ export default defineConfig({
   ],
   logLevel: 'warn',
   build: {
+    chunkSizeWarningLimit: 1200,
     minify: 'terser',
     terserOptions: {
       compress: { passes: 2 },
