@@ -2,11 +2,8 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "./base.json",
   "compilerOptions": {
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
     "noEmit": true,
     "resolveJsonModule": true,
-    "sourceMap": true,
-    "target": "ESNext"
+    "sourceMap": true
   }
 }
