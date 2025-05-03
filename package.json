@@ -13,7 +13,9 @@
     "dev": "turbo run dev",
     "build": "turbo run build",
     "preview": "turbo run preview",
-    "generate:pwa-assets": "turbo run generate:pwa-assets"
+    "generate:pwa-assets": "turbo run generate:pwa-assets",
+    "test:unit": "turbo run test:unit",
+    "test:load": "turbo run test:load"
   },
   "devDependencies": {
     "eslint": "^9.25.1",
