@@ -26,11 +26,7 @@
     "generate:pwa-assets": {
       "cache": false
     },
-    "test:unit": {
-      "dependsOn": []
-    },
-    "test:load": {
-      "dependsOn": []
-    }
+    "test:unit": {},
+    "test:load": {}
   }
 }
