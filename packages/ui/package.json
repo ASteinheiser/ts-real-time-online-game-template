@@ -15,11 +15,11 @@
     "./label": "./components/label.tsx"
   },
   "scripts": {
-    "dev": "tailwindcss -i ./theme.css -o ./dist/theme.css --watch",
-    "build": "tailwindcss -i ./theme.css -o ./dist/theme.css",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
-    "check-types": "tsc --noEmit"
+    "check-types": "tsc --noEmit",
+    "dev": "tailwindcss -i ./theme.css -o ./dist/theme.css --watch",
+    "build": "tailwindcss -i ./theme.css -o ./dist/theme.css"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.11",

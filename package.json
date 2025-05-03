@@ -7,12 +7,12 @@
   "private": false,
   "type": "module",
   "scripts": {
-    "build": "turbo run build",
-    "dev": "turbo run dev",
-    "preview": "turbo run preview",
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint:fix",
     "check-types": "turbo run check-types",
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "preview": "turbo run preview",
     "generate:pwa-assets": "turbo run generate:pwa-assets"
   },
   "devDependencies": {
