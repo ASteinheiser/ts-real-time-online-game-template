@@ -1,10 +1,17 @@
 # Real-time Online Game Template (TypeScript)
 
-A template for creating real-time, online games using [TypeScript](https://www.typescriptlang.org/)! Quickly create mmo-style games using [React](https://react.dev/) + [Phaser](https://phaser.io/) for rendering, [Colyseus](https://colyseus.io/) for websockets, [Electron](https://www.electronjs.org/) for native builds, and [SST](https://sst.dev/) ([IaC](https://en.wikipedia.org/wiki/Infrastructure_as_code)) for deployment! Also has support for [Progressive Web Apps](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps) (PWA).
+A _highly opinionated_ template for creating real-time, online games using [TypeScript](https://www.typescriptlang.org/)! Quickly create mmo-style games using [React](https://react.dev/) + [Phaser](https://phaser.io/) for rendering, [Colyseus](https://colyseus.io/) for websockets, [Electron](https://www.electronjs.org/) for native builds, and [SST](https://sst.dev/) ([IaC](https://en.wikipedia.org/wiki/Infrastructure_as_code)) for deployment! Also has support for [Progressive Web Apps](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps) (PWA).
 
 ## Developer Quickstart
 
-First, ensure you are using the correct version of Node.js. You can validate this by comparing your local version of node (`node -v`) with the `.nvmrc`.
+If you are familiar with Node.js and `pnpm`, you can quickly start development with:
+```
+pnpm i && pnpm dev
+```
+
+#### Otherwise, you should:
+
+First ensure you are using the correct version of Node.js. You can validate this by comparing your local version of node (`node -v`) with the `.nvmrc`.
 
 NOTE: The `.nvmrc` uses an alias for the node version. I highly recommend managing your local node version with [`nvm`](https://github.com/nvm-sh/nvm). This will allow you to quickly swap to the correct version with: `nvm use`.
 
@@ -34,8 +41,8 @@ These commands are available from the root directory whether you decide to insta
 | `pnpm lint` | Runs the code linting check in each repo |
 | `pnpm lint:fix` | Runs the linter and fixes code when possible |
 | `pnpm check-types` | Runs the typescript check in each repo |
-| `pnpm build` | Builds each app including sub-repos |
 | `pnpm dev` | Run local development servers for each app |
+| `pnpm build` | Builds each app including sub-repos |
 | `pnpm preview` | Builds each app and runs a local server using the output |
 | `pnpm generate:pwa-assets` | Generates PWA images for web via `web/public/logo.svg` |
 
