@@ -28,7 +28,7 @@
       "cache": false
     },
     "test:unit": {
-      "persistent": false
+      "persistent": true
     },
     "test:load": {
       "with": ["ws-server#dev"],

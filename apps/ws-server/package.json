@@ -11,7 +11,7 @@
     "check-types": "tsc --noEmit",
     "dev": "tsx watch src/index.ts",
     "build": "rimraf dist && tsc",
-    "test:unit": "vitest",
+    "test:unit": "mocha -r tsx test/**/*.test.ts --watch --watch-files src/**/*.ts --watch-files test/**/*.test.ts --timeout 15000 --reporter min",
     "test:load": "tsx test/load/test.ts --room my_room --numClients 2 --endpoint ws://localhost:4204"
   },
   "devDependencies": {
@@ -20,12 +20,12 @@
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@types/express": "^5.0.1",
-    "@vitest/coverage-v8": "^3.1.2",
+    "@types/mocha": "^10.0.10",
     "colyseus.js": "^0.16.16",
+    "mocha": "^11.2.2",
     "rimraf": "^6.0.1",
     "tsx": "^4.19.4",
-    "typescript": "5.5.4",
-    "vitest": "^3.1.2"
+    "typescript": "5.5.4"
   },
   "dependencies": {
     "@colyseus/core": "^0.16.17",
