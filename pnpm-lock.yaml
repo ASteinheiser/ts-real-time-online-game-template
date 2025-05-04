@@ -23,6 +23,9 @@ importers:
       '@repo/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      colyseus.js:
+        specifier: ^0.16.16
+        version: 0.16.16
       phaser:
         specifier: ^3.88.2
         version: 3.88.2
@@ -4045,7 +4048,6 @@ packages:
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
-    dev: true
 
   /colyseus@0.16.4(@colyseus/auth@0.16.6)(@colyseus/core@0.16.17)(@colyseus/redis-driver@0.16.1)(@colyseus/redis-presence@0.16.2)(@colyseus/schema@3.0.35)(@colyseus/uwebsockets-transport@0.16.9)(@colyseus/ws-transport@0.16.5):
     resolution: {integrity: sha512-2SSfWj/onUD5l1rtayApOTFoKgk7/3T5Br+eOazpA9nk08G6IuUIeHXy1KJcruRwUf+ROndddiUC5qbSIPZySQ==}
@@ -5318,7 +5320,6 @@ packages:
   /httpie@2.0.0-next.13:
     resolution: {integrity: sha512-KbKOnq8wt0hVEfteYCSnEsPgzaWxcVc4qZ4OaDU9mVOYLRo3XChjWs3MiuRgFu5y+4JDo7sDKdKzkAn1ljQYFA==}
     engines: {node: '>=10'}
-    dev: true
 
   /ico-endec@0.1.6:
     resolution: {integrity: sha512-ZdLU38ZoED3g1j3iEyzcQj+wAkY2xfWNkymszfJPoxucIUhK7NayQ+/C4Kv0nDFMIsbtbEHldv3V8PU494/ueQ==}
