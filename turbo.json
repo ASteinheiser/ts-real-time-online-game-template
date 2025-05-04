@@ -32,7 +32,7 @@
       "persistent": true
     },
     "test:load": {
-      "with": ["ws-server#dev"],
+      "with": ["ws-server#preview"],
       "cache": false,
       "persistent": true
     }
