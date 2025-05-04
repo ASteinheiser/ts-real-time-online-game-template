@@ -2,6 +2,12 @@
   "extends": "@repo/typescript-config/base.json",
   "include": ["src"],
   "compilerOptions": {
-    "outDir": "dist"
+    "experimentalDecorators": true,
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "outDir": "dist",
+    "strictNullChecks": false,
+    "target": "ESNext",
+    "useDefineForClassFields": false
   }
 }
