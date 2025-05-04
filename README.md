@@ -45,6 +45,9 @@ These commands are available from the root directory whether you decide to insta
 | `pnpm build` | Builds each app including sub-repos |
 | `pnpm preview` | Builds each app and runs a local server using the output |
 | `pnpm generate:pwa-assets` | Generates PWA images for web via `web/public/logo.svg` |
+| `test:unit` | Runs the test suite in each repo and returns the results |
+| `test:unit:watch` | Runs the test suite in each repo and watches for changes |
+| `test:load` | Builds/runs the `ws-server` and runs the load test against it |
 
 ## Hosting setup
 
