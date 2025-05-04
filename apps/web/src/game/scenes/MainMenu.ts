@@ -44,7 +44,6 @@ export class MainMenu extends Scene {
   }
 
   changeScene(username?: string) {
-    console.log('changeScene', { username });
-    // this.scene.start('Game', { username });
+    this.scene.start('Game', { username });
   }
 }
