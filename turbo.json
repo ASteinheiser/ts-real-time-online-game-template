@@ -27,7 +27,9 @@
     "generate:pwa-assets": {
       "cache": false
     },
-    "test:unit": {},
+    "test:unit": {
+      "persistent": false
+    },
     "test:load": {
       "with": ["ws-server#dev"],
       "cache": false,
