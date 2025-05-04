@@ -13,7 +13,8 @@
     "build": "tsc && vite build --config vite/prod.config.ts",
     "preview": "vite preview --config vite/dev.config.ts --port 4200",
     "generate:pwa-assets": "pwa-assets-generator --preset minimal public/logo.svg",
-    "test:unit": "vitest --config vite/vitest.config.ts"
+    "test:unit": "vitest --config vite/vitest.config.ts",
+    "test:unit:watch": "vitest --config vite/vitest.config.ts --watch"
   },
   "dependencies": {
     "@repo/ui": "workspace:*",

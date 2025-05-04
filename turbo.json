@@ -27,7 +27,8 @@
     "generate:pwa-assets": {
       "cache": false
     },
-    "test:unit": {
+    "test:unit": {},
+    "test:unit:watch": {
       "persistent": true
     },
     "test:load": {

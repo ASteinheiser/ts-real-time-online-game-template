@@ -15,6 +15,7 @@
     "preview": "turbo run preview",
     "generate:pwa-assets": "turbo run generate:pwa-assets",
     "test:unit": "turbo run test:unit",
+    "test:unit:watch": "turbo run test:unit:watch",
     "test:load": "turbo run test:load"
   },
   "devDependencies": {

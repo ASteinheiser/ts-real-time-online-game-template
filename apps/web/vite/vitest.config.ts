@@ -6,6 +6,7 @@ export default mergeConfig(
   defineConfig({
     test: {
       name: 'web',
+      watch: false,
     },
   })
 );
