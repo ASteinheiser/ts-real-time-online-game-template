@@ -1,0 +1,8 @@
+require: tsx
+spec: test/**/*.test.ts
+reporter: min
+watch: true
+watch-files:
+  - src/**/*.ts
+  - test/**/*.test.ts
+timeout: 15000

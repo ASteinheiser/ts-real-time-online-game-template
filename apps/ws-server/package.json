@@ -11,7 +11,7 @@
     "check-types": "tsc --noEmit",
     "dev": "tsx watch src/index.ts",
     "build": "rimraf dist && tsc",
-    "test:unit": "mocha -r tsx test/**/*.test.ts --watch --watch-files src/**/*.ts --watch-files test/**/*.test.ts --timeout 15000 --reporter min",
+    "test:unit": "mocha --config test/.mocharc.yaml",
     "test:load": "tsx test/load/test.ts --room my_room --numClients 2 --endpoint ws://localhost:4204"
   },
   "devDependencies": {
