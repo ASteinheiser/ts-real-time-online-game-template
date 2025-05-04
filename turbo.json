@@ -33,8 +33,7 @@
     "test:load": {
       "with": ["ws-server#dev"],
       "cache": false,
-      "persistent": true,
-      "interactive": true
+      "persistent": true
     }
   }
 }
