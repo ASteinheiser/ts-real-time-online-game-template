@@ -4,13 +4,15 @@
   "author": "Andrew Steinheiser <me@iamandrew.io>",
   "license": "MIT",
   "private": false,
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "check-types": "tsc --noEmit",
     "dev": "tsx watch src/index.ts",
     "build": "rimraf dist && tsc",
+    "start": "node dist/src/index.js",
+    "preview": "pnpm run start",
     "test:unit": "mocha --config test/.mocharc.yaml",
     "test:unit:watch": "mocha --config test/.mocharc.yaml --watch",
     "test:load": "tsx test/load/test.ts --room my_room --numClients 2 --endpoint ws://localhost:4204"
