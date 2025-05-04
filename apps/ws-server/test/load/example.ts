@@ -2,6 +2,9 @@ import { Client, Room } from 'colyseus.js';
 import { cli, Options } from '@colyseus/loadtest';
 
 export async function main(options: Options) {
+  // wait 3 seconds before starting load test
+  await new Promise((resolve) => setTimeout(resolve, 3000));
+
   const client = new Client(options.endpoint);
   const room: Room = await client.joinOrCreate(options.roomName, {
     // your join options here...

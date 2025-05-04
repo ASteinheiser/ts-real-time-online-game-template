@@ -28,6 +28,11 @@
       "cache": false
     },
     "test:unit": {},
-    "test:load": {}
+    "test:load": {
+      "with": ["ws-server#dev"],
+      "cache": false,
+      "persistent": true,
+      "interactive": true
+    }
   }
 }
