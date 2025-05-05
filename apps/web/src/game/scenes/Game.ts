@@ -176,10 +176,15 @@ export class Game extends Scene {
     const { x, y } = this.currentPlayer.entity;
     const { left, right, up, down } = this.inputPayload;
 
-    this.currentPlayer.move({
-      x: left ? x - VELOCITY : right ? x + VELOCITY : x,
-      y: up ? y - VELOCITY : down ? y + VELOCITY : y,
-    });
+    let newX = left ? x - VELOCITY : right ? x + VELOCITY : x;
+    let newY = up ? y - VELOCITY : down ? y + VELOCITY : y;
+
+    if (newX < 0) newX = 0;
+    if (newX > 1024) newX = 1024;
+    if (newY < 0) newY = 0;
+    if (newY > 768) newY = 768;
+
+    this.currentPlayer.move({ x: newX, y: newY });
 
     for (const sessionId in this.playerEntities) {
       // skip the current player
