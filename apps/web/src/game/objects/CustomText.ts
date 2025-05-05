@@ -11,7 +11,7 @@ export class CustomText extends GameObjects.Text {
     style?: Phaser.Types.GameObjects.Text.TextStyle
   ) {
     const defaultStyle: Phaser.Types.GameObjects.Text.TextStyle = {
-      fontFamily: 'Arial',
+      fontFamily: 'Courier',
       fontSize: '24px',
       color: '#ffffff',
       stroke: '#000000',
@@ -22,6 +22,7 @@ export class CustomText extends GameObjects.Text {
     const mergedStyle = { ...defaultStyle, ...style };
 
     super(scene, x, y, text, mergedStyle);
+    this.setDepth(100);
 
     this.color = mergedStyle.color as string;
 

@@ -4,6 +4,7 @@ import { EventBus } from '../EventBus';
 import { Player } from '../objects/Player';
 import { Hitbox } from '../objects/Hitbox';
 import { Enemy } from '../objects/Enemy';
+import { CustomText } from '../objects/CustomText';
 
 const GAME_SERVER_URL = 'ws://localhost:4204';
 const GAME_API_URL = 'http://localhost:4204';
@@ -14,7 +15,6 @@ const VELOCITY = 2;
 export class Game extends Scene {
   camera?: Phaser.Cameras.Scene2D.Camera;
   background?: Phaser.GameObjects.Image;
-  gameText?: Phaser.GameObjects.Text;
   client: Client;
   room?: Room;
   playerEntities: Record<string, Player> = {};
@@ -50,14 +50,7 @@ export class Game extends Scene {
     this.background = this.add.image(512, 384, 'background');
     this.background.setAlpha(0.5);
 
-    this.add
-      .text(340, 10, 'Press Shift to leave the game')
-      .setStyle({
-        fontSize: 20,
-        stroke: '#000000',
-        strokeThickness: 4,
-      })
-      .setDepth(100);
+    new CustomText(this, 340, 10, 'Press Shift to leave the game', { fontSize: 20 });
 
     try {
       this.room = await this.client.joinOrCreate('my_room', { username });
@@ -71,14 +64,9 @@ export class Game extends Scene {
     $(this.room.state).players.onAdd((player, sessionId) => {
       const entity = this.physics.add.sprite(player.x, player.y, 'player').setDepth(100);
 
-      const nameText = this.add
-        .text(player.x, player.y, player.username, {
-          fontSize: 12,
-          stroke: '#000000',
-          strokeThickness: 4,
-        })
-        .setOrigin(0.5, 2.5)
-        .setDepth(100);
+      const nameText = new CustomText(this, player.x, player.y, player.username, {
+        fontSize: 12,
+      }).setOrigin(0.5, 2.5);
 
       const newPlayer = new Player(entity, nameText);
 

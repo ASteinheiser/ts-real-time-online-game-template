@@ -18,7 +18,6 @@ export class MainMenu extends Scene {
       strokeThickness: 8,
     })
       .setOrigin(0.5)
-      .setDepth(100)
       .bounce(5, 2000);
 
     new CustomText(this, 512, 460, 'Click here to start', {
@@ -27,7 +26,6 @@ export class MainMenu extends Scene {
       strokeThickness: 8,
     })
       .setOrigin(0.5)
-      .setDepth(100)
       .makeButton('#ff00ff', () => {
         EventBus.emit('menu-open__game-start');
       })

@@ -32,14 +32,9 @@ export class GameOver extends Scene {
       strokeThickness: 8,
     })
       .setOrigin(0.5)
-      .setDepth(100)
       .typeWriter(150);
 
-    new CustomText(this, 410, 10, 'Press Shift to continue', {
-      fontSize: '20px',
-    })
-      .setDepth(100)
-      .fadeIn(1500);
+    new CustomText(this, 375, 10, 'Press Shift to continue', { fontSize: 20 }).fadeIn(1500);
 
     gameResults.forEach((result, index) => {
       const accuracy = ((result.killCount / result.attackCount) * 100).toFixed(2);
@@ -48,9 +43,8 @@ export class GameOver extends Scene {
 
       const resultText = `${result.username} - ${killCountText} (${accuracy}% accuracy)`;
 
-      new CustomText(this, 512, 384 + index * 30, resultText)
+      new CustomText(this, 512, 384 + index * 30, resultText, { fontFamily: 'Arial' })
         .setOrigin(0.5)
-        .setDepth(100)
         .fadeIn(500, 300 * (index + 1));
     });
 
