@@ -5,6 +5,7 @@ import { EventBus } from '../EventBus';
 export class MainMenu extends Scene {
   background?: GameObjects.Image;
   title?: GameObjects.Text;
+  startButton?: GameObjects.Text;
 
   constructor() {
     super('MainMenu');
@@ -25,8 +26,8 @@ export class MainMenu extends Scene {
       .setOrigin(0.5)
       .setDepth(100);
 
-    this.add
-      .text(512, 460, 'Click to start', {
+    this.startButton = this.add
+      .text(512, 460, 'Click here to start', {
         fontFamily: 'Arial Black',
         fontSize: 38,
         color: '#ffffff',
@@ -36,6 +37,12 @@ export class MainMenu extends Scene {
       .setOrigin(0.5)
       .setDepth(100)
       .setInteractive()
+      .on('pointerover', () => {
+        this.startButton?.setColor('#ff00ff');
+      })
+      .on('pointerout', () => {
+        this.startButton?.setColor('#ffffff');
+      })
       .on('pointerdown', () => {
         EventBus.emit('menu-open__game-start');
       });
