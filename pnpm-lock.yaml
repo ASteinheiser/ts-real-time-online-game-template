@@ -148,6 +148,9 @@ importers:
         specifier: ^3.1.2
         version: 3.1.2(terser@5.39.0)
     devDependencies:
+      '@repo/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
