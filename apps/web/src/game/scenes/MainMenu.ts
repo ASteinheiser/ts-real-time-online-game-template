@@ -1,11 +1,9 @@
 import { GameObjects, Scene } from 'phaser';
-
 import { EventBus } from '../EventBus';
+import { CustomText } from '../objects/CustomText';
 
 export class MainMenu extends Scene {
   background?: GameObjects.Image;
-  title?: GameObjects.Text;
-  startButton?: GameObjects.Text;
 
   constructor() {
     super('MainMenu');
@@ -14,38 +12,26 @@ export class MainMenu extends Scene {
   create() {
     this.background = this.add.image(512, 384, 'background');
 
-    this.title = this.add
-      .text(512, 300, 'Duck, Duck, Punch', {
-        fontFamily: 'Arial Black',
-        fontSize: 38,
-        color: '#ffffff',
-        stroke: '#000000',
-        strokeThickness: 8,
-        align: 'center',
-      })
-      .setOrigin(0.5)
-      .setDepth(100);
-
-    this.startButton = this.add
-      .text(512, 460, 'Click here to start', {
-        fontFamily: 'Arial Black',
-        fontSize: 38,
-        color: '#ffffff',
-        stroke: '#000000',
-        strokeThickness: 8,
-      })
+    new CustomText(this, 512, 300, 'Duck, Duck, Punch', {
+      fontFamily: 'Arial Black',
+      fontSize: '38px',
+      strokeThickness: 8,
+    })
       .setOrigin(0.5)
       .setDepth(100)
-      .setInteractive()
-      .on('pointerover', () => {
-        this.startButton?.setColor('#ff00ff');
-      })
-      .on('pointerout', () => {
-        this.startButton?.setColor('#ffffff');
-      })
-      .on('pointerdown', () => {
+      .bounce(5, 2000);
+
+    new CustomText(this, 512, 460, 'Click here to start', {
+      fontFamily: 'Arial Black',
+      fontSize: '38px',
+      strokeThickness: 8,
+    })
+      .setOrigin(0.5)
+      .setDepth(100)
+      .makeButton('#ff00ff', () => {
         EventBus.emit('menu-open__game-start');
-      });
+      })
+      .fadeIn(1000);
 
     EventBus.emit('current-scene-ready', this);
   }

@@ -1,10 +1,10 @@
-import { EventBus } from '../EventBus';
 import { Scene } from 'phaser';
+import { EventBus } from '../EventBus';
+import { CustomText } from '../objects/CustomText';
 
 export class GameOver extends Scene {
   camera?: Phaser.Cameras.Scene2D.Camera;
   background?: Phaser.GameObjects.Image;
-  gameOverText?: Phaser.GameObjects.Text;
   cursorKeys?: Phaser.Types.Input.Keyboard.CursorKeys;
 
   constructor() {
@@ -26,44 +26,32 @@ export class GameOver extends Scene {
     this.background = this.add.image(512, 384, 'background');
     this.background.setAlpha(0.5);
 
-    this.gameOverText = this.add
-      .text(512, 184, 'Game Over', {
-        fontFamily: 'Arial Black',
-        fontSize: 64,
-        color: '#ffffff',
-        stroke: '#000000',
-        strokeThickness: 8,
-        align: 'center',
-      })
+    new CustomText(this, 512, 184, 'Game Over', {
+      fontFamily: 'Arial Black',
+      fontSize: '64px',
+      strokeThickness: 8,
+    })
       .setOrigin(0.5)
-      .setDepth(100);
+      .setDepth(100)
+      .typeWriter(150);
 
-    this.add
-      .text(375, 10, 'Press Shift to continue')
-      .setStyle({
-        fontSize: 20,
-        stroke: '#000000',
-        strokeThickness: 4,
-      })
-      .setDepth(100);
+    new CustomText(this, 375, 10, 'Press Shift to continue', {
+      fontSize: '20px',
+    })
+      .setDepth(100)
+      .fadeIn(1500);
 
     gameResults.forEach((result, index) => {
-      const accuracy = (result.killCount / result.attackCount) * 100;
+      const accuracy = ((result.killCount / result.attackCount) * 100).toFixed(2);
 
-      this.add
-        .text(
-          512,
-          384 + index * 30,
-          `${result.username} - ${result.killCount} kill${result.killCount === 1 ? '' : 's'} (${accuracy.toFixed(2)}% accuracy)`,
-          {
-            fontSize: 24,
-            color: '#ffffff',
-            stroke: '#000000',
-            strokeThickness: 4,
-          }
-        )
+      const killCountText = `${result.killCount} kill${result.killCount === 1 ? '' : 's'}`;
+
+      const resultText = `${result.username} - ${killCountText} (${accuracy}% accuracy)`;
+
+      new CustomText(this, 512, 384 + index * 30, resultText)
         .setOrigin(0.5)
-        .setDepth(100);
+        .setDepth(100)
+        .fadeIn(500, 300 * (index + 1));
     });
 
     EventBus.emit('current-scene-ready', this);
