@@ -1,5 +1,6 @@
 import { Room, Client } from '@colyseus/core';
 import { nanoid } from 'nanoid';
+import { VELOCITY } from '@repo/core-game';
 import { MyRoomState, Player, InputPayload, Enemy } from './schema/MyRoomState';
 
 // TODO: fix this. Currrent solution is basically mocking a DB
@@ -9,9 +10,6 @@ export const RESULTS: Record<string, { username: string; attackCount: number; ki
 // map dimensions
 const MAP_WIDTH = 1024;
 const MAP_HEIGHT = 768;
-
-// how fast the player and enemies can move
-const VELOCITY = 2;
 
 // attack animation takes 0.625 seconds total (5 frames at 8fps)
 const ATTACK_COOLDOWN = 625;

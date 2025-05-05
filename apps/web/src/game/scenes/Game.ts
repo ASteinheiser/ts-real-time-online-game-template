@@ -1,5 +1,6 @@
 import { Scene } from 'phaser';
 import { Client, Room, getStateCallbacks } from 'colyseus.js';
+import { VELOCITY } from '@repo/core-game';
 import { EventBus } from '../EventBus';
 import { Player } from '../objects/Player';
 import { Hitbox } from '../objects/Hitbox';
@@ -9,8 +10,6 @@ import { CustomText } from '../objects/CustomText';
 const GAME_SERVER_URL = 'ws://localhost:4204';
 const GAME_API_URL = 'http://localhost:4204';
 
-// how fast the player moves
-const VELOCITY = 2;
 const FIXED_TIME_STEP = 1000 / 128;
 
 export class Game extends Scene {

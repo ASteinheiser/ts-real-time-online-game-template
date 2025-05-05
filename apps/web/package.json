@@ -17,6 +17,7 @@
     "test:unit:watch": "vitest --config vite/vitest.config.ts --watch"
   },
   "dependencies": {
+    "@repo/core-game": "workspace:*",
     "@repo/ui": "workspace:*",
     "colyseus.js": "^0.16.16",
     "phaser": "^3.88.2",

@@ -20,6 +20,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@repo/core-game':
+        specifier: workspace:*
+        version: link:../../packages/core-game
       '@repo/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -96,6 +99,9 @@ importers:
       '@colyseus/tools':
         specifier: ^0.16.8
         version: 0.16.8(@colyseus/core@0.16.17)(@colyseus/ws-transport@0.16.5)
+      '@repo/core-game':
+        specifier: workspace:*
+        version: link:../../packages/core-game
       colyseus:
         specifier: ^0.16.4
         version: 0.16.4(@colyseus/auth@0.16.6)(@colyseus/core@0.16.17)(@colyseus/redis-driver@0.16.1)(@colyseus/redis-presence@0.16.2)(@colyseus/schema@3.0.35)(@colyseus/uwebsockets-transport@0.16.9)(@colyseus/ws-transport@0.16.5)

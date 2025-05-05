@@ -36,6 +36,7 @@
     "@colyseus/playground": "^0.16.4",
     "@colyseus/schema": "^3.0.35",
     "@colyseus/tools": "^0.16.8",
+    "@repo/core-game": "workspace:*",
     "colyseus": "^0.16.4",
     "express": "^5.1.0",
     "nanoid": "^5.1.5"
