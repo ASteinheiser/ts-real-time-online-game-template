@@ -3,8 +3,6 @@ import { EventBus } from '../EventBus';
 import { CustomText } from '../objects/CustomText';
 
 export class GameOver extends Scene {
-  camera?: Phaser.Cameras.Scene2D.Camera;
-  background?: Phaser.GameObjects.Image;
   cursorKeys?: Phaser.Types.Input.Keyboard.CursorKeys;
 
   constructor() {
@@ -20,11 +18,8 @@ export class GameOver extends Scene {
   }: {
     gameResults: Array<{ username: string; attackCount: number; killCount: number }>;
   }) {
-    this.camera = this.cameras.main;
-    this.camera.setBackgroundColor(0xff0000);
-
-    this.background = this.add.image(512, 384, 'background');
-    this.background.setAlpha(0.5);
+    this.cameras.main.setBackgroundColor(0xff0000);
+    this.add.image(512, 384, 'background').setAlpha(0.5);
 
     new CustomText(this, 512, 184, 'Game Over', {
       fontFamily: 'Arial Black',

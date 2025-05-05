@@ -1,16 +1,14 @@
-import { GameObjects, Scene } from 'phaser';
+import { Scene } from 'phaser';
 import { EventBus } from '../EventBus';
 import { CustomText } from '../objects/CustomText';
 
 export class MainMenu extends Scene {
-  background?: GameObjects.Image;
-
   constructor() {
     super('MainMenu');
   }
 
   create() {
-    this.background = this.add.image(512, 384, 'background');
+    this.add.image(512, 384, 'background');
 
     new CustomText(this, 512, 300, 'Duck, Duck, Punch', {
       fontFamily: 'Arial Black',

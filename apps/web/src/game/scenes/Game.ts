@@ -11,10 +11,9 @@ const GAME_API_URL = 'http://localhost:4204';
 
 // how fast the player moves
 const VELOCITY = 2;
+const FIXED_TIME_STEP = 1000 / 128;
 
 export class Game extends Scene {
-  camera?: Phaser.Cameras.Scene2D.Camera;
-  background?: Phaser.GameObjects.Image;
   client: Client;
   room?: Room;
   playerEntities: Record<string, Player> = {};
@@ -31,7 +30,6 @@ export class Game extends Scene {
     attack: false,
   };
   elapsedTime = 0;
-  fixedTimeStep = 1000 / 128;
 
   constructor() {
     super('Game');
@@ -44,11 +42,8 @@ export class Game extends Scene {
   }
 
   async create({ username }: { username: string }) {
-    this.camera = this.cameras.main;
-    this.camera.setBackgroundColor(0x00ff00);
-
-    this.background = this.add.image(512, 384, 'background');
-    this.background.setAlpha(0.5);
+    this.cameras.main.setBackgroundColor(0x00ff00);
+    this.add.image(512, 384, 'background').setAlpha(0.5);
 
     new CustomText(this, 340, 10, 'Press Shift to leave the game', { fontSize: 20 });
 
@@ -146,14 +141,13 @@ export class Game extends Scene {
     if (!this.currentPlayer) return;
 
     this.elapsedTime += delta;
-    while (this.elapsedTime >= this.fixedTimeStep) {
-      this.elapsedTime -= this.fixedTimeStep;
-      this.fixedTick(this.fixedTimeStep);
+    while (this.elapsedTime >= FIXED_TIME_STEP) {
+      this.elapsedTime -= FIXED_TIME_STEP;
+      this.fixedTick();
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  fixedTick(_: number) {
+  fixedTick() {
     if (!this.room || !this.currentPlayer || !this.cursorKeys) return;
 
     // press shift to leave the game
