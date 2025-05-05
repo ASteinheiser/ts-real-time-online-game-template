@@ -35,7 +35,7 @@ export class GameOver extends Scene {
       .setDepth(100)
       .typeWriter(150);
 
-    new CustomText(this, 415, 10, 'Press Shift to continue', {
+    new CustomText(this, 410, 10, 'Press Shift to continue', {
       fontSize: '20px',
     })
       .setDepth(100)
