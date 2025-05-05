@@ -1,0 +1,25 @@
+{
+  "name": "@repo/core-game",
+  "version": "0.0.1",
+  "author": "Andrew Steinheiser <me@iamandrew.io>",
+  "license": "MIT",
+  "private": false,
+  "type": "module",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "scripts": {
+    "lint": "eslint",
+    "lint:fix": "eslint --fix",
+    "check-types": "tsc --noEmit",
+    "test:unit": "vitest",
+    "test:unit:watch": "vitest --watch"
+  },
+  "dependencies": {
+    "vitest": "^3.1.2"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "typescript": "5.5.4"
+  }
+}
