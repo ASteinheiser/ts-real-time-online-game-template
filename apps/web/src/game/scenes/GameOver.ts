@@ -37,7 +37,7 @@ export class GameOver extends Scene {
     new CustomText(this, 375, 10, 'Press Shift to continue', { fontSize: 20 }).fadeIn(1500);
 
     gameResults.forEach((result, index) => {
-      const accuracy = ((result.killCount / result.attackCount) * 100).toFixed(2);
+      const accuracy = ((result.killCount / result.attackCount || 0) * 100).toFixed(2);
 
       const killCountText = `${result.killCount} kill${result.killCount === 1 ? '' : 's'}`;
 
