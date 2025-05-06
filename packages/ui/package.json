@@ -6,20 +6,20 @@
   "private": false,
   "type": "module",
   "exports": {
-    ".": "./index.ts",
+    ".": "./src/index.ts",
     "./theme.css": "./dist/theme.css",
-    "./utils": "./utils.ts",
-    "./button": "./components/button.tsx",
-    "./dialog": "./components/dialog.tsx",
-    "./input": "./components/input.tsx",
-    "./label": "./components/label.tsx"
+    "./utils": "./src/utils.ts",
+    "./button": "./src/components/button.tsx",
+    "./dialog": "./src/components/dialog.tsx",
+    "./input": "./src/components/input.tsx",
+    "./label": "./src/components/label.tsx"
   },
   "scripts": {
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "check-types": "tsc --noEmit",
-    "dev": "tailwindcss -i ./theme.css -o ./dist/theme.css --watch",
-    "build": "tailwindcss -i ./theme.css -o ./dist/theme.css"
+    "dev": "tailwindcss -i ./src/theme.css -o ./dist/theme.css --watch",
+    "build": "tailwindcss -i ./src/theme.css -o ./dist/theme.css"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.11",

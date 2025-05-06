@@ -1,4 +1,4 @@
 {
   "extends": "@repo/typescript-config/react-web.json",
-  "include": ["index.ts", "utils.ts", "components"]
+  "include": ["src"]
 }
