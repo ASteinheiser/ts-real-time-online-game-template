@@ -5,8 +5,10 @@ A _highly opinionated_ template for creating real-time, online games using [Type
 ## Developer Quickstart
 
 If you are familiar with Node.js and `pnpm`, you can quickly start development with:
-```
-pnpm i && pnpm dev
+```bash
+pnpm i
+pnpm dev
+pnpm ci:all-checks # runs lint, tests, etc.
 ```
 
 #### Otherwise, you should:
@@ -38,16 +40,17 @@ These commands are available from the root directory whether you decide to insta
 | Command | Description |
 |---------|-------------|
 | `pnpm install` | Installs dependencies for each repo |
+| `pnpm dev` | Run local development servers for each app |
+| `pnpm ci:all-checks` | Runs the linter, type check and unit tests |
 | `pnpm lint` | Runs the code linting check in each repo |
 | `pnpm lint:fix` | Runs the linter and fixes code when possible |
-| `pnpm check-types` | Runs the typescript check in each repo |
-| `pnpm dev` | Run local development servers for each app |
-| `pnpm build` | Builds each app including sub-repos |
-| `pnpm preview` | Builds each app and runs a local server using the output |
-| `pnpm generate:pwa-assets` | Generates PWA images for web via `web/public/logo.svg` |
 | `test:unit` | Runs the test suite in each repo and returns the results |
 | `test:unit:watch` | Runs the test suite in each repo and watches for changes |
 | `test:load` | Builds/runs the `ws-server` and runs the load test against it |
+| `pnpm generate:pwa-assets` | Generates PWA images for web via `web/public/logo.svg` |
+| `pnpm check-types` | Runs the typescript check in each repo |
+| `pnpm build` | Builds each app including sub-repos |
+| `pnpm preview` | Builds each app and runs a local server using the output |
 
 ## Hosting setup
 
