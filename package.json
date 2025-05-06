@@ -1,6 +1,6 @@
 {
   "name": "ts-real-time-online-game-template",
-  "packageManager": "pnpm@8.15.6",
+  "packageManager": "pnpm@10.10.0",
   "version": "0.0.1",
   "author": "Andrew Steinheiser <me@iamandrew.io>",
   "license": "MIT",
