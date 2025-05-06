@@ -8,6 +8,18 @@
     "lint:fix": {
       "dependsOn": ["^lint:fix"]
     },
+    "test:unit": {},
+    "test:unit:watch": {
+      "persistent": true
+    },
+    "test:load": {
+      "with": ["ws-server#preview"],
+      "cache": false,
+      "persistent": true
+    },
+    "generate:pwa-assets": {
+      "cache": false
+    },
     "check-types": {
       "dependsOn": ["^check-types"]
     },
@@ -24,17 +36,8 @@
       "dependsOn": ["build"],
       "persistent": true
     },
-    "generate:pwa-assets": {
-      "cache": false
-    },
-    "test:unit": {},
-    "test:unit:watch": {
-      "persistent": true
-    },
-    "test:load": {
-      "with": ["ws-server#preview"],
-      "cache": false,
-      "persistent": true
+    "ci:all-checks": {
+      "dependsOn": ["lint", "check-types", "test:unit"]
     }
   }
 }

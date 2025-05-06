@@ -12,9 +12,9 @@
   "scripts": {
     "lint": "eslint",
     "lint:fix": "eslint --fix",
-    "check-types": "tsc --noEmit",
     "test:unit": "vitest",
-    "test:unit:watch": "vitest --watch"
+    "test:unit:watch": "vitest --watch",
+    "check-types": "tsc --noEmit"
   },
   "dependencies": {
     "vitest": "^3.1.2"
