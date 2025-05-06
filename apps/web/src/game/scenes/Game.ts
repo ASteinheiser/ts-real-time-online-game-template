@@ -1,6 +1,6 @@
 import { Scene } from 'phaser';
 import { Client, Room, getStateCallbacks } from 'colyseus.js';
-import { VELOCITY } from '@repo/core-game';
+import { PLAYER_MOVE_SPEED } from '@repo/core-game';
 import { EventBus } from '../EventBus';
 import { Player } from '../objects/Player';
 import { Hitbox } from '../objects/Hitbox';
@@ -169,8 +169,8 @@ export class Game extends Scene {
     const { x, y } = this.currentPlayer.entity;
     const { left, right, up, down } = this.inputPayload;
 
-    let newX = left ? x - VELOCITY : right ? x + VELOCITY : x;
-    let newY = up ? y - VELOCITY : down ? y + VELOCITY : y;
+    let newX = left ? x - PLAYER_MOVE_SPEED : right ? x + PLAYER_MOVE_SPEED : x;
+    let newY = up ? y - PLAYER_MOVE_SPEED : down ? y + PLAYER_MOVE_SPEED : y;
 
     if (newX < 0) newX = 0;
     if (newX > 1024) newX = 1024;

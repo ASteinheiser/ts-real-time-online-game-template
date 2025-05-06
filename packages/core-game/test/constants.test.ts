@@ -1,11 +1,23 @@
 import { describe, it, expect } from 'vitest';
-import { VELOCITY } from '../src/constants';
+import { PLAYER_MOVE_SPEED, PLAYER_WIDTH, PLAYER_HEIGHT } from '../src/constants';
 
 describe('core-game', () => {
   describe('constants', () => {
-    describe('VELOCITY', () => {
-      it('should be a number', () => {
-        expect(typeof VELOCITY).toBe('number');
+    describe('player', () => {
+      describe('PLAYER_WIDTH', () => {
+        it('should be a number', () => {
+          expect(typeof PLAYER_WIDTH).toBe('number');
+        });
+      });
+      describe('PLAYER_HEIGHT', () => {
+        it('should be a number', () => {
+          expect(typeof PLAYER_HEIGHT).toBe('number');
+        });
+      });
+      describe('PLAYER_MOVE_SPEED', () => {
+        it('should be a number', () => {
+          expect(typeof PLAYER_MOVE_SPEED).toBe('number');
+        });
       });
     });
   });

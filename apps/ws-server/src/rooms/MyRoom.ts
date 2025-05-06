@@ -1,7 +1,23 @@
 import { Room, Client } from '@colyseus/core';
 import { nanoid } from 'nanoid';
-import { VELOCITY } from '@repo/core-game';
 import { MyRoomState, Player, InputPayload, Enemy } from './schema/MyRoomState';
+import {
+  FIXED_TIME_STEP,
+  MAP_WIDTH,
+  MAP_HEIGHT,
+  PLAYER_MOVE_SPEED,
+  ATTACK_WIDTH,
+  ATTACK_HEIGHT,
+  ATTACK_OFFSET_X,
+  ATTACK_OFFSET_Y,
+  ATTACK_COOLDOWN,
+  ATTACK_DAMAGE__DELAY,
+  ATTACK_DAMAGE__FRAME_TIME,
+  ENEMY_SPAWN_RATE,
+  MAX_ENEMIES,
+  ENEMY_WIDTH,
+  ENEMY_HEIGHT,
+} from '@repo/core-game';
 
 // TODO: fix this. Currrent solution is basically mocking a basic local DB
 interface Result {
@@ -11,38 +27,10 @@ interface Result {
 }
 export const RESULTS: Record<string, Result> = {};
 
-// map dimensions
-const MAP_WIDTH = 1024;
-const MAP_HEIGHT = 768;
-
-// attack animation takes 0.625 seconds total (5 frames at 8fps)
-const ATTACK_COOLDOWN = 625;
-// attack damage frame is at .375 seconds (frame 3 / 5)
-const ATTACK_DAMAGE_DELAY = 375;
-// time it takes for one frame in the attack animation (8fps)
-const ATTACK_FRAME_TIME = 125;
-const ATTACK_DAMAGE_END = ATTACK_DAMAGE_DELAY + ATTACK_FRAME_TIME;
-
-// TODO: refactor this stuff
-const PLAYER_WIDTH = 47;
-const ATTACK_WIDTH = 6;
-const ATTACK_HEIGHT = 8;
-// offset from the center of the player to the center of the fist,
-// which is at the edge of the player's bounding box
-const ATTACK_OFFSET_X = PLAYER_WIDTH / 2 - ATTACK_WIDTH / 2;
-// magic number, this is how high the fist is above the center of the player
-const ATTACK_OFFSET_Y = 12.5;
-
-// handles how fast enemies spawn
-const ENEMY_SPAWN_RATE = 2000;
-const MAX_ENEMIES = 10;
-const ENEMY_SIZE = 64;
-
 export class MyRoom extends Room<MyRoomState> {
   maxClients = 4;
   state = new MyRoomState();
   elapsedTime = 0;
-  fixedTimeStep = 1000 / 128;
   lastEnemySpawnTime = 0;
 
   onCreate() {
@@ -55,8 +43,8 @@ export class MyRoom extends Room<MyRoomState> {
     this.setSimulationInterval((deltaTime) => {
       this.elapsedTime += deltaTime;
 
-      while (this.elapsedTime >= this.fixedTimeStep) {
-        this.elapsedTime -= this.fixedTimeStep;
+      while (this.elapsedTime >= FIXED_TIME_STEP) {
+        this.elapsedTime -= FIXED_TIME_STEP;
         this.fixedTick();
       }
     });
@@ -70,8 +58,8 @@ export class MyRoom extends Room<MyRoomState> {
         if (input.left) player.isFacingRight = false;
         else if (input.right) player.isFacingRight = true;
 
-        player.x += input.left ? -VELOCITY : input.right ? VELOCITY : 0;
-        player.y += input.up ? -VELOCITY : input.down ? VELOCITY : 0;
+        player.x += input.left ? -PLAYER_MOVE_SPEED : input.right ? PLAYER_MOVE_SPEED : 0;
+        player.y += input.up ? -PLAYER_MOVE_SPEED : input.down ? PLAYER_MOVE_SPEED : 0;
 
         // keep the player in bounds
         if (player.x < 0) player.x = 0;
@@ -86,7 +74,10 @@ export class MyRoom extends Room<MyRoomState> {
         const canAttack = timeSinceLastAttack >= ATTACK_COOLDOWN;
 
         // find the damage frames in the attack animation
-        if (timeSinceLastAttack >= ATTACK_DAMAGE_DELAY && timeSinceLastAttack < ATTACK_DAMAGE_END) {
+        if (
+          timeSinceLastAttack >= ATTACK_DAMAGE__DELAY &&
+          timeSinceLastAttack < ATTACK_DAMAGE__FRAME_TIME + ATTACK_DAMAGE__DELAY
+        ) {
           // calculate the damage frame
           player.attackDamageFrameX = player.isFacingRight
             ? player.x + ATTACK_OFFSET_X
@@ -96,10 +87,10 @@ export class MyRoom extends Room<MyRoomState> {
           // check if the attack hit an enemy
           for (const enemy of this.state.enemies) {
             if (
-              enemy.x - ENEMY_SIZE / 2 < player.attackDamageFrameX + ATTACK_WIDTH / 2 &&
-              enemy.x + ENEMY_SIZE / 2 > player.attackDamageFrameX - ATTACK_WIDTH / 2 &&
-              enemy.y - ENEMY_SIZE / 2 < player.attackDamageFrameY + ATTACK_HEIGHT / 2 &&
-              enemy.y + ENEMY_SIZE / 2 > player.attackDamageFrameY - ATTACK_HEIGHT / 2
+              enemy.x - ENEMY_WIDTH / 2 < player.attackDamageFrameX + ATTACK_WIDTH / 2 &&
+              enemy.x + ENEMY_WIDTH / 2 > player.attackDamageFrameX - ATTACK_WIDTH / 2 &&
+              enemy.y - ENEMY_HEIGHT / 2 < player.attackDamageFrameY + ATTACK_HEIGHT / 2 &&
+              enemy.y + ENEMY_HEIGHT / 2 > player.attackDamageFrameY - ATTACK_HEIGHT / 2
             ) {
               this.state.enemies.splice(this.state.enemies.indexOf(enemy), 1);
               player.killCount++;
@@ -142,8 +133,8 @@ export class MyRoom extends Room<MyRoomState> {
       const randomX = Math.round(Math.random()) * 2 - 1;
       const randomY = Math.round(Math.random()) * 2 - 1;
 
-      enemy.x += randomX * VELOCITY;
-      enemy.y += randomY * VELOCITY;
+      enemy.x += randomX * PLAYER_MOVE_SPEED;
+      enemy.y += randomY * PLAYER_MOVE_SPEED;
 
       // keep the enemy in bounds
       if (enemy.x < 0) enemy.x = 0;
