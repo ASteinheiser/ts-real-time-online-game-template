@@ -3,9 +3,13 @@ import { nanoid } from 'nanoid';
 import { VELOCITY } from '@repo/core-game';
 import { MyRoomState, Player, InputPayload, Enemy } from './schema/MyRoomState';
 
-// TODO: fix this. Currrent solution is basically mocking a DB
-export const RESULTS: Record<string, { username: string; attackCount: number; killCount: number }> =
-  {};
+// TODO: fix this. Currrent solution is basically mocking a basic local DB
+interface Result {
+  username: string;
+  attackCount: number;
+  killCount: number;
+}
+export const RESULTS: Record<string, Result> = {};
 
 // map dimensions
 const MAP_WIDTH = 1024;
