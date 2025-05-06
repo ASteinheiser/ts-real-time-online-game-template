@@ -133,9 +133,6 @@ importers:
       colyseus.js:
         specifier: ^0.16.16
         version: 0.16.16
-      esbuild:
-        specifier: ^0.25.4
-        version: 0.25.4
       mocha:
         specifier: ^11.2.2
         version: 11.2.2
@@ -148,6 +145,9 @@ importers:
       typescript:
         specifier: 5.5.4
         version: 5.5.4
+      vite:
+        specifier: ^5.0.0
+        version: 5.4.18(terser@5.39.0)
 
   infra: {}
 
