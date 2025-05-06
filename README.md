@@ -41,7 +41,7 @@ These commands are available from the root directory whether you decide to insta
 |---------|-------------|
 | `pnpm install` | Installs dependencies for each repo |
 | `pnpm dev` | Run local development servers for each app |
-| `pnpm ci:all-checks` | Runs the linter, type check and unit tests for the monorepo |
+| `pnpm ci:all-checks` | Runs the linter, type check and tests for the monorepo |
 | `pnpm lint` | Runs the code linting check in each repo |
 | `pnpm lint:fix` | Runs the linter and fixes code when possible |
 | `test:unit` | Runs the test suite in each repo and returns the results |
