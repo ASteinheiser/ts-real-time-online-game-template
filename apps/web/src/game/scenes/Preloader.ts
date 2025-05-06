@@ -1,4 +1,5 @@
 import { Scene } from 'phaser';
+import { PLAYER_WIDTH, PLAYER_HEIGHT, ENEMY_WIDTH, ENEMY_HEIGHT } from '@repo/core-game';
 
 export class Preloader extends Scene {
   constructor() {
@@ -27,12 +28,12 @@ export class Preloader extends Scene {
     this.load.setPath('assets');
 
     this.load.spritesheet('enemy', 'evil-dude.png', {
-      frameWidth: 64,
-      frameHeight: 64,
+      frameWidth: ENEMY_WIDTH,
+      frameHeight: ENEMY_HEIGHT,
     });
     this.load.spritesheet('player', 'muscle-duck-sprite.png', {
-      frameWidth: 47,
-      frameHeight: 53,
+      frameWidth: PLAYER_WIDTH,
+      frameHeight: PLAYER_HEIGHT,
     });
   }
 
