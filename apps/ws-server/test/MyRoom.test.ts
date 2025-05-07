@@ -45,4 +45,34 @@ describe('testing your Colyseus app', () => {
     assert.strictEqual(Object.keys(enemies).length, 1);
     assert.strictEqual(typeof enemies[0].id, 'string');
   });
+
+  it('should add multiple players to the room', async () => {
+    const room = await server.createRoom<MyRoomState>('my_room');
+
+    const username1 = 'custom-username-1';
+    const username2 = 'custom-username-2';
+    const username3 = 'custom-username-3';
+    const username4 = 'custom-username-4';
+
+    const client1 = await createClient({ server, room, username: username1 });
+    const client2 = await createClient({ server, room, username: username2 });
+    const client3 = await createClient({ server, room, username: username3 });
+    const client4 = await createClient({ server, room, username: username4 });
+
+    await room.waitForNextPatch();
+    const client1State = client1.state.toJSON();
+    const client2State = client2.state.toJSON();
+    const client3State = client3.state.toJSON();
+    const client4State = client4.state.toJSON();
+
+    assert.strictEqual(Object.keys(client1State.players).length, 4);
+    assert.strictEqual(Object.keys(client2State.players).length, 4);
+    assert.strictEqual(Object.keys(client3State.players).length, 4);
+    assert.strictEqual(Object.keys(client4State.players).length, 4);
+
+    assert.strictEqual(client1State.players[client1.sessionId].username, username1);
+    assert.strictEqual(client2State.players[client2.sessionId].username, username2);
+    assert.strictEqual(client3State.players[client3.sessionId].username, username3);
+    assert.strictEqual(client4State.players[client4.sessionId].username, username4);
+  });
 });
