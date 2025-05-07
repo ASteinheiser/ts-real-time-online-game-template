@@ -138,6 +138,117 @@ describe('core-game', () => {
           expect(newPosition).toEqual(expectedPosition);
         });
       });
+      describe('and the entity is moving up', () => {
+        it('should move the entity up and left', () => {
+          const entity = {
+            x: MAP_WIDTH / 2,
+            y: MAP_HEIGHT / 2,
+          };
+
+          const newPosition = calculateMovement({
+            ...entity,
+            ...noMovementArgs,
+            left: true,
+            up: true,
+          });
+
+          const expectedPosition = {
+            x: entity.x - PLAYER_MOVE_SPEED,
+            y: entity.y - PLAYER_MOVE_SPEED,
+          };
+
+          expect(newPosition).toEqual(expectedPosition);
+        });
+      });
+    });
+
+    describe('when the entity is moving down', () => {
+      it('should move the entity down', () => {
+        const entity = {
+          x: MAP_WIDTH / 2,
+          y: MAP_HEIGHT / 2,
+        };
+
+        const newPosition = calculateMovement({
+          ...entity,
+          ...noMovementArgs,
+          down: true,
+        });
+
+        const expectedPosition = {
+          x: entity.x,
+          y: entity.y + PLAYER_MOVE_SPEED,
+        };
+
+        expect(newPosition).toEqual(expectedPosition);
+      });
+
+      describe('and the entity is at the edge of the map (y = MAP_HEIGHT)', () => {
+        it('should return the entity to [x, MAP_HEIGHT]', () => {
+          const entity = {
+            x: MAP_WIDTH / 2,
+            y: MAP_HEIGHT,
+          };
+
+          const newPosition = calculateMovement({
+            ...entity,
+            ...noMovementArgs,
+            down: true,
+          });
+
+          const expectedPosition = {
+            x: entity.x,
+            y: MAP_HEIGHT,
+          };
+
+          expect(newPosition).toEqual(expectedPosition);
+        });
+      });
+
+      describe('and the entity is moving up', () => {
+        it('should not move the entity', () => {
+          const entity = {
+            x: MAP_WIDTH / 2,
+            y: MAP_HEIGHT / 2,
+          };
+
+          const newPosition = calculateMovement({
+            ...entity,
+            ...noMovementArgs,
+            down: true,
+            up: true,
+          });
+
+          const expectedPosition = {
+            x: entity.x,
+            y: entity.y,
+          };
+
+          expect(newPosition).toEqual(expectedPosition);
+        });
+      });
+      describe('and the entity is moving right', () => {
+        it('should move the entity down and right', () => {
+          const entity = {
+            x: MAP_WIDTH / 2,
+            y: MAP_HEIGHT / 2,
+          };
+
+          const newPosition = calculateMovement({
+            ...entity,
+            ...noMovementArgs,
+            down: true,
+            right: true,
+          });
+
+          const expectedPosition = {
+            x: entity.x + PLAYER_MOVE_SPEED,
+            y: entity.y + PLAYER_MOVE_SPEED,
+          };
+
+          expect(newPosition).toEqual(expectedPosition);
+        });
+      });
     });
   });
 });
