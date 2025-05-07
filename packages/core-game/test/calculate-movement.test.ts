@@ -4,14 +4,14 @@ import { MAP_WIDTH, MAP_HEIGHT, PLAYER_MOVE_SPEED } from '../src/constants';
 
 describe('core-game', () => {
   describe('calculateMovement', () => {
-    describe('when the entity is not moving', () => {
-      const noMovementArgs = {
-        left: false,
-        right: false,
-        up: false,
-        down: false,
-      };
+    const noMovementArgs = {
+      left: false,
+      right: false,
+      up: false,
+      down: false,
+    };
 
+    describe('when the entity is not moving', () => {
       describe('and the entity is in bounds', () => {
         it('should return the same position', () => {
           const entity = {
@@ -75,13 +75,6 @@ describe('core-game', () => {
     });
 
     describe('when the entity is moving left', () => {
-      const movementArgs = {
-        left: true,
-        right: false,
-        up: false,
-        down: false,
-      };
-
       it('should return the entity to the left', () => {
         const entity = {
           x: MAP_WIDTH / 2,
@@ -90,7 +83,8 @@ describe('core-game', () => {
 
         const newPosition = calculateMovement({
           ...entity,
-          ...movementArgs,
+          ...noMovementArgs,
+          left: true,
         });
 
         const expectedPosition = {
@@ -110,11 +104,34 @@ describe('core-game', () => {
 
           const newPosition = calculateMovement({
             ...entity,
-            ...movementArgs,
+            ...noMovementArgs,
+            left: true,
           });
 
           const expectedPosition = {
             x: 0,
+            y: entity.y,
+          };
+
+          expect(newPosition).toEqual(expectedPosition);
+        });
+      });
+      describe('and the entity is moving right', () => {
+        it('should not move the entity', () => {
+          const entity = {
+            x: MAP_WIDTH / 2,
+            y: MAP_HEIGHT / 2,
+          };
+
+          const newPosition = calculateMovement({
+            ...entity,
+            ...noMovementArgs,
+            left: true,
+            right: true,
+          });
+
+          const expectedPosition = {
+            x: entity.x,
             y: entity.y,
           };
 
