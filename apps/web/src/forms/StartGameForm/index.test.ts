@@ -1,8 +1,8 @@
-import { describe, test, expect } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { StartGameForm } from './index';
 
 describe('StartGameForm', () => {
-  test('should exist', () => {
+  it('should exist', () => {
     expect(StartGameForm).toBeDefined();
   });
 });
