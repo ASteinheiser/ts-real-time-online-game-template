@@ -1,6 +1,6 @@
 require: tsx
 spec: test/**/*.test.ts
-reporter: min
+reporter: spec
 watch: false
 watch-files:
   - src/**/*.ts
