@@ -249,4 +249,92 @@ describe('calculateMovement', () => {
       });
     });
   });
+
+  describe('when the entity is moving right', () => {
+    it('should move the entity right', () => {
+      const entity = {
+        x: MAP_WIDTH / 2,
+        y: MAP_HEIGHT / 2,
+      };
+
+      const newPosition = calculateMovement({
+        ...entity,
+        ...noMovementArgs,
+        right: true,
+      });
+
+      const expectedPosition = {
+        x: entity.x + PLAYER_MOVE_SPEED,
+        y: entity.y,
+      };
+
+      expect(newPosition).toEqual(expectedPosition);
+    });
+
+    describe('and the entity is at the edge of the map (x = MAP_WIDTH)', () => {
+      it('should return the entity to [MAP_WIDTH, y]', () => {
+        const entity = {
+          x: MAP_WIDTH,
+          y: MAP_HEIGHT / 2,
+        };
+
+        const newPosition = calculateMovement({
+          ...entity,
+          ...noMovementArgs,
+          right: true,
+        });
+
+        const expectedPosition = {
+          x: MAP_WIDTH,
+          y: entity.y,
+        };
+
+        expect(newPosition).toEqual(expectedPosition);
+      });
+    });
+  });
+
+  describe('when the entity is moving up', () => {
+    it('should move the entity up', () => {
+      const entity = {
+        x: MAP_WIDTH / 2,
+        y: MAP_HEIGHT / 2,
+      };
+
+      const newPosition = calculateMovement({
+        ...entity,
+        ...noMovementArgs,
+        up: true,
+      });
+
+      const expectedPosition = {
+        x: entity.x,
+        y: entity.y - PLAYER_MOVE_SPEED,
+      };
+
+      expect(newPosition).toEqual(expectedPosition);
+    });
+
+    describe('and the entity is at the edge of the map (y = 0)', () => {
+      it('should return the entity to [x, 0]', () => {
+        const entity = {
+          x: MAP_WIDTH / 2,
+          y: 0,
+        };
+
+        const newPosition = calculateMovement({
+          ...entity,
+          ...noMovementArgs,
+          up: true,
+        });
+
+        const expectedPosition = {
+          x: entity.x,
+          y: 0,
+        };
+
+        expect(newPosition).toEqual(expectedPosition);
+      });
+    });
+  });
 });
