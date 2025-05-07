@@ -7,6 +7,12 @@ export default mergeConfig(
     test: {
       name: 'web',
       watch: false,
+      reporters: 'verbose',
+      coverage: {
+        provider: 'v8',
+        reporter: ['text'],
+        all: false,
+      },
     },
   })
 );
