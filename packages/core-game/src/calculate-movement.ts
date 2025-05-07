@@ -23,8 +23,17 @@ export const calculateMovement = ({
   up,
   down,
 }: CalculateMovementArgs): CalculateMovementResult => {
-  let newX = left ? x - PLAYER_MOVE_SPEED : right ? x + PLAYER_MOVE_SPEED : x;
-  let newY = up ? y - PLAYER_MOVE_SPEED : down ? y + PLAYER_MOVE_SPEED : y;
+  let newX = x;
+  let newY = y;
+
+  if (!(left && right)) {
+    if (left) newX -= PLAYER_MOVE_SPEED;
+    if (right) newX += PLAYER_MOVE_SPEED;
+  }
+  if (!(up && down)) {
+    if (up) newY -= PLAYER_MOVE_SPEED;
+    if (down) newY += PLAYER_MOVE_SPEED;
+  }
 
   if (newX < 0) newX = 0;
   if (newX > MAP_WIDTH) newX = MAP_WIDTH;
