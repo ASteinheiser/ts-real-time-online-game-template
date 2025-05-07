@@ -1,34 +1,48 @@
 import 'mocha';
 import assert from 'assert';
 import { ColyseusTestServer, boot } from '@colyseus/testing';
-
 import appConfig from '../src/app.config';
 import { MyRoomState } from '../src/rooms/schema/MyRoomState';
+import { createClient } from './utils';
 
 describe('testing your Colyseus app', () => {
-  let colyseus: ColyseusTestServer;
+  let server: ColyseusTestServer;
 
-  before(async () => (colyseus = await boot(appConfig)));
-  after(async () => colyseus.shutdown());
+  before(async () => (server = await boot(appConfig)));
+  after(async () => server.shutdown());
 
-  beforeEach(async () => await colyseus.cleanup());
+  beforeEach(async () => await server.cleanup());
 
-  it('connecting into a room', async () => {
-    const room = await colyseus.createRoom<MyRoomState>('my_room');
+  it('should connect a client to a room', async () => {
+    const room = await server.createRoom<MyRoomState>('my_room');
 
-    const client1 = await colyseus.connectTo(room, { username: 'test-user' });
-    // register onMessage handler otherwise colyseus throws a warning
-    client1.onMessage('__playground_message_types', () => {});
+    const client = await createClient({ server, room });
 
-    assert.strictEqual(client1.sessionId, room.clients[0].sessionId);
+    assert.strictEqual(client.sessionId, room.clients[0].sessionId);
+  });
+
+  it('should add a player to the room', async () => {
+    const room = await server.createRoom<MyRoomState>('my_room');
+
+    const username = 'custom-username';
+    const client = await createClient({ server, room, username });
 
     await room.waitForNextPatch();
+    const clientState = client.state.toJSON();
 
-    const client1State = client1.state.toJSON();
+    assert.strictEqual(Object.keys(clientState.players).length, 1);
+    assert.strictEqual(clientState.players[client.sessionId].username, username);
+  });
 
-    assert.strictEqual(Object.keys(client1State.players).length, 1);
-    assert.strictEqual(client1State.players[client1.sessionId].username, 'test-user');
-    assert.strictEqual(Object.keys(client1State.enemies).length, 1);
-    assert.strictEqual(typeof client1State.enemies[0].id, 'string');
+  it('should add an enemy to the room', async () => {
+    const room = await server.createRoom<MyRoomState>('my_room');
+
+    const client = await createClient({ server, room });
+
+    await room.waitForNextPatch();
+    const clientState = client.state.toJSON();
+
+    assert.strictEqual(Object.keys(clientState.enemies).length, 1);
+    assert.strictEqual(typeof clientState.enemies[0].id, 'string');
   });
 });
