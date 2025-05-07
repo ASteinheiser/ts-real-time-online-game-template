@@ -28,21 +28,21 @@ describe('testing your Colyseus app', () => {
     const client = await createClient({ server, room, username });
 
     await room.waitForNextPatch();
-    const clientState = client.state.toJSON();
+    const { players } = client.state.toJSON();
 
-    assert.strictEqual(Object.keys(clientState.players).length, 1);
-    assert.strictEqual(clientState.players[client.sessionId].username, username);
+    assert.strictEqual(Object.keys(players).length, 1);
+    assert.strictEqual(players[client.sessionId].username, username);
   });
 
-  it('should add an enemy to the room', async () => {
+  it('should spawn an enemy in the room', async () => {
     const room = await server.createRoom<MyRoomState>('my_room');
 
     const client = await createClient({ server, room });
 
     await room.waitForNextPatch();
-    const clientState = client.state.toJSON();
+    const { enemies } = client.state.toJSON();
 
-    assert.strictEqual(Object.keys(clientState.enemies).length, 1);
-    assert.strictEqual(typeof clientState.enemies[0].id, 'string');
+    assert.strictEqual(Object.keys(enemies).length, 1);
+    assert.strictEqual(typeof enemies[0].id, 'string');
   });
 });
