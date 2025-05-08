@@ -1,8 +1,8 @@
 import assert from 'assert';
 import { ColyseusTestServer, boot } from '@colyseus/testing';
-import appConfig from '../src/app.config';
-import { MyRoomState } from '../src/rooms/schema/MyRoomState';
-import { createClient } from './utils';
+import appConfig from '../../src/app.config';
+import { MyRoomState } from '../../src/rooms/schema/MyRoomState';
+import { createClient } from '../utils';
 
 describe('testing your Colyseus app', () => {
   let server: ColyseusTestServer;

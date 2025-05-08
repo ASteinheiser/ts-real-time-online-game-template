@@ -1,5 +1,5 @@
 require: tsx
-spec: test/**/*.test.ts
+spec: test/unit/**/*.test.ts
 reporter: spec
 watch: false
 watch-files:
