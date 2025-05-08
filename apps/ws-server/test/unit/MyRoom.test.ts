@@ -53,10 +53,12 @@ describe('testing your Colyseus app', () => {
     const username3 = 'custom-username-3';
     const username4 = 'custom-username-4';
 
-    const client1 = await createClient({ server, room, username: username1 });
-    const client2 = await createClient({ server, room, username: username2 });
-    const client3 = await createClient({ server, room, username: username3 });
-    const client4 = await createClient({ server, room, username: username4 });
+    const [client1, client2, client3, client4] = await Promise.all([
+      createClient({ server, room, username: username1 }),
+      createClient({ server, room, username: username2 }),
+      createClient({ server, room, username: username3 }),
+      createClient({ server, room, username: username4 }),
+    ]);
 
     await room.waitForNextPatch();
     const client1State = client1.state.toJSON();
