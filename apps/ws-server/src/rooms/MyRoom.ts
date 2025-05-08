@@ -2,10 +2,10 @@ import { Room, Client } from '@colyseus/core';
 import { nanoid } from 'nanoid';
 import { MyRoomState, Player, InputPayload, Enemy } from './schema/MyRoomState';
 import {
+  calculateMovement,
   FIXED_TIME_STEP,
   MAP_WIDTH,
   MAP_HEIGHT,
-  PLAYER_MOVE_SPEED,
   ATTACK_WIDTH,
   ATTACK_HEIGHT,
   ATTACK_OFFSET_X,
@@ -19,7 +19,8 @@ import {
   ENEMY_HEIGHT,
 } from '@repo/core-game';
 
-// TODO: fix this. Currrent solution is basically mocking a basic local DB
+// Basic storage of results for all players in the room
+// Expires when the room is disposed
 interface Result {
   username: string;
   attackCount: number;
@@ -58,15 +59,9 @@ export class MyRoom extends Room<MyRoomState> {
         if (input.left) player.isFacingRight = false;
         else if (input.right) player.isFacingRight = true;
 
-        player.x += input.left ? -PLAYER_MOVE_SPEED : input.right ? PLAYER_MOVE_SPEED : 0;
-        player.y += input.up ? -PLAYER_MOVE_SPEED : input.down ? PLAYER_MOVE_SPEED : 0;
-
-        // keep the player in bounds
-        if (player.x < 0) player.x = 0;
-        else if (player.x > MAP_WIDTH) player.x = MAP_WIDTH;
-
-        if (player.y < 0) player.y = 0;
-        else if (player.y > MAP_HEIGHT) player.y = MAP_HEIGHT;
+        const { x: newX, y: newY } = calculateMovement({ ...player, ...input });
+        player.x = newX;
+        player.y = newY;
 
         // Check if enough time has passed since last attack
         const currentTime = Date.now();
@@ -129,19 +124,15 @@ export class MyRoom extends Room<MyRoomState> {
       this.state.enemies.push(enemy);
     }
 
+    // move the enemies randomly
     this.state.enemies.forEach((enemy) => {
-      const randomX = Math.round(Math.random()) * 2 - 1;
-      const randomY = Math.round(Math.random()) * 2 - 1;
+      const moveLeft = Boolean(Math.round(Math.random()) * 1);
+      const moveUp = Boolean(Math.round(Math.random()) * 1);
+      const input = { left: moveLeft, right: !moveLeft, up: moveUp, down: !moveUp };
 
-      enemy.x += randomX * PLAYER_MOVE_SPEED;
-      enemy.y += randomY * PLAYER_MOVE_SPEED;
-
-      // keep the enemy in bounds
-      if (enemy.x < 0) enemy.x = 0;
-      else if (enemy.x > MAP_WIDTH) enemy.x = MAP_WIDTH;
-
-      if (enemy.y < 0) enemy.y = 0;
-      else if (enemy.y > MAP_HEIGHT) enemy.y = MAP_HEIGHT;
+      const { x: newX, y: newY } = calculateMovement({ ...enemy, ...input });
+      enemy.x = newX;
+      enemy.y = newY;
     });
   }
 
