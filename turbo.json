@@ -18,14 +18,14 @@
       "cache": false,
       "persistent": true
     },
-    "generate:pwa-assets": {
-      "cache": false
-    },
     "check-types": {
       "dependsOn": ["^check-types"]
     },
     "ci:all-checks": {
       "dependsOn": ["lint", "check-types", "test:unit"]
+    },
+    "generate:pwa-assets": {
+      "cache": false
     },
     "dev": {
       "cache": false,
