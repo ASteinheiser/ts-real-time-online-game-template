@@ -3,6 +3,9 @@ productName: react-ts
 directories:
   buildResources: build
 files:
+  - dist/**/*
+  - package.json
+  - resources/**/*
   - '!src/*'
   - '!{electron.vite.config.ts,vitest.config.ts}'
   - '!{.eslintcache,eslint.config.js,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}'
