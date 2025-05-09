@@ -7,13 +7,17 @@ export const App = () => {
 
   return (
     <div>
-      <h1>Powered by electron-vite</h1>
-      <div>Build an Electron app with React and TypeScript</div>
-      <a target="_blank" rel="noreferrer" onClick={ipcHandle}>
-        <button>Send IPC</button>
-      </a>
+      <div style={{ marginBottom: '20px' }}>
+        <h1>Powered by electron-vite</h1>
+        <div>Build an Electron app with React and TypeScript</div>
+        <a target="_blank" rel="noreferrer" onClick={ipcHandle}>
+          <button>Send IPC</button>
+        </a>
+      </div>
 
-      {/* <webview src="http://localhost:4200" style={{ flexGrow: 1, width: '100%', height: '100%' }} /> */}
+      <div style={{ marginBottom: '80px' }}>
+        <iframe src="http://localhost:4200" style={{ width: '800px', height: '400px' }} />
+      </div>
 
       <div>
         <Versions />
