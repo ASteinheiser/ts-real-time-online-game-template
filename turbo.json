@@ -24,6 +24,9 @@
     "check-types": {
       "dependsOn": ["^check-types"]
     },
+    "ci:all-checks": {
+      "dependsOn": ["lint", "check-types", "test:unit"]
+    },
     "dev": {
       "cache": false,
       "persistent": true
@@ -36,9 +39,6 @@
     "preview": {
       "dependsOn": ["build"],
       "persistent": true
-    },
-    "ci:all-checks": {
-      "dependsOn": ["lint", "check-types", "test:unit"]
     },
     "build:win": {
       "dependsOn": ["electron#build"],
