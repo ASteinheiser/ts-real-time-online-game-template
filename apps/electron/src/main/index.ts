@@ -1,12 +1,13 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron';
 import { join } from 'path';
 import { electronApp, optimizer, is } from '@electron-toolkit/utils';
+import { MAP_WIDTH, MAP_HEIGHT } from '@repo/core-game';
 import icon from '../../resources/icon.png?asset';
 
 function createWindow(): void {
   const mainWindow = new BrowserWindow({
-    width: 900,
-    height: 670,
+    width: MAP_WIDTH + 50,
+    height: MAP_HEIGHT + 200,
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),

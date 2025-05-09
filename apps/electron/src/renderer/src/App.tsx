@@ -1,3 +1,4 @@
+import { MAP_WIDTH, MAP_HEIGHT } from '@repo/core-game';
 import { Versions } from './components/Versions';
 
 export const App = () => {
@@ -16,7 +17,7 @@ export const App = () => {
       </div>
 
       <div style={{ marginBottom: '80px' }}>
-        <iframe src="http://localhost:4200" style={{ width: '800px', height: '400px' }} />
+        <iframe src="http://localhost:4200" style={{ width: MAP_WIDTH, height: MAP_HEIGHT }} />
       </div>
 
       <div>

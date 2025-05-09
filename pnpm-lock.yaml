@@ -101,6 +101,9 @@ importers:
       '@electron-toolkit/utils':
         specifier: ^4.0.0
         version: 4.0.0(electron@36.2.0)
+      '@repo/core-game':
+        specifier: workspace:*
+        version: link:../../packages/core-game
       '@repo/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
