@@ -21,8 +21,8 @@
     "@repo/ui": "workspace:*",
     "colyseus.js": "^0.16.16",
     "phaser": "^3.88.2",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react": "catalog:",
+    "react-dom": "catalog:"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
