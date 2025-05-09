@@ -14,6 +14,7 @@ catalog:
   react-dom: ^18.3.1
   "@types/react": ^19.0.1
   "@types/react-dom": ^19.0.2
+  "@types/node": ^22.14.1
   electron: ^36.2.0
   vite: ^6.3.5
   vitest: ^3.1.3
