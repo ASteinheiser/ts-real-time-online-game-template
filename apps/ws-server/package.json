@@ -22,15 +22,15 @@
     "@colyseus/testing": "^0.16.3",
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
-    "@types/express": "^5.0.1",
+    "@types/express": "catalog:",
     "@types/mocha": "^10.0.10",
     "c8": "^10.1.3",
-    "colyseus.js": "^0.16.16",
+    "colyseus.js": "catalog:",
     "mocha": "^11.2.2",
     "nodemon": "^3.1.10",
-    "tsx": "^4.19.4",
-    "typescript": "5.5.4",
-    "vite": "^5.0.0"
+    "tsx": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:"
   },
   "dependencies": {
     "@colyseus/core": "^0.16.17",
@@ -39,8 +39,8 @@
     "@colyseus/schema": "^3.0.35",
     "@colyseus/tools": "^0.16.8",
     "@repo/core-game": "workspace:*",
-    "colyseus": "^0.16.4",
-    "express": "^5.1.0",
-    "nanoid": "^5.1.5"
+    "colyseus": "catalog:",
+    "express": "catalog:",
+    "nanoid": "catalog:"
   }
 }
