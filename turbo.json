@@ -39,6 +39,18 @@
     },
     "ci:all-checks": {
       "dependsOn": ["lint", "check-types", "test:unit"]
+    },
+    "build:win": {
+      "dependsOn": ["electron#build"],
+      "outputs": ["dist/**"]
+    },
+    "build:mac": {
+      "dependsOn": ["electron#build"],
+      "outputs": ["dist/**"]
+    },
+    "build:linux": {
+      "dependsOn": ["electron#build"],
+      "outputs": ["dist/**"]
     }
   }
 }

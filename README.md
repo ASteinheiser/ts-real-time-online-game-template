@@ -51,6 +51,9 @@ These commands are available from the root directory whether you decide to insta
 | `pnpm check-types` | Runs the typescript check in each repo |
 | `pnpm build` | Builds each app including sub-repos |
 | `pnpm preview` | Builds each app and runs a local server using the output |
+| `pnpm build:win` | Builds the desktop app (via Electron) for Windows |
+| `pnpm build:mac` | Builds the desktop app (via Electron) for MacOS |
+| `pnpm build:linux` | Builds the desktop app (via Electron) for Linux |
 
 ## Hosting setup
 

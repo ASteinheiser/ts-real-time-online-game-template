@@ -17,7 +17,10 @@
     "generate:pwa-assets": "turbo run generate:pwa-assets",
     "check-types": "turbo run check-types",
     "build": "turbo run build",
-    "preview": "turbo run preview"
+    "preview": "turbo run preview",
+    "build:win": "turbo run build:win",
+    "build:mac": "turbo run build:mac",
+    "build:linux": "turbo run build:linux"
   },
   "devDependencies": {
     "eslint": "^9.25.1",
