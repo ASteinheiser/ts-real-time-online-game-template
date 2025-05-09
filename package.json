@@ -23,8 +23,8 @@
     "build:linux": "turbo run build:linux"
   },
   "devDependencies": {
-    "eslint": "^9.25.1",
-    "prettier": "^3.5.3",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
     "turbo": "^2.5.2"
   },
   "pnpm": {

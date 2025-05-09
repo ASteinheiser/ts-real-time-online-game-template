@@ -6,6 +6,12 @@ settings:
 
 catalogs:
   default:
+    eslint:
+      specifier: ^9.26.0
+      version: 9.26.0
+    prettier:
+      specifier: ^3.5.3
+      version: 3.5.3
     react:
       specifier: ^18.3.1
       version: 18.3.1
@@ -18,10 +24,10 @@ importers:
   .:
     devDependencies:
       eslint:
-        specifier: ^9.25.1
+        specifier: 'catalog:'
         version: 9.26.0(jiti@2.4.2)
       prettier:
-        specifier: ^3.5.3
+        specifier: 'catalog:'
         version: 3.5.3
       turbo:
         specifier: ^2.5.2

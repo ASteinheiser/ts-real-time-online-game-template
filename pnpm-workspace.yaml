@@ -4,5 +4,7 @@ packages:
   - "infra/"
 
 catalog:
+  eslint: ^9.26.0
+  prettier: ^3.5.3
   react: ^18.3.1
   react-dom: ^18.3.1
