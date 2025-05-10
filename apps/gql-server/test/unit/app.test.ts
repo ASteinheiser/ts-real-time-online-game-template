@@ -1,7 +1,7 @@
 import assert from 'assert';
 import { app } from '../../src/app';
 
-describe('server', () => {
+describe('app', () => {
   it('should be defined', () => {
     assert.ok(app);
   });
