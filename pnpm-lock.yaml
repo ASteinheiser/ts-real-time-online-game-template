@@ -159,6 +159,43 @@ importers:
         specifier: 'catalog:'
         version: 3.1.3(@types/debug@4.1.12)(@types/node@22.15.14)(jiti@2.4.2)(lightningcss@1.29.2)(terser@5.39.0)(tsx@4.19.4)
 
+  apps/gql-server:
+    dependencies:
+      express:
+        specifier: 'catalog:'
+        version: 5.1.0
+      nanoid:
+        specifier: 'catalog:'
+        version: 5.1.5
+    devDependencies:
+      '@repo/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+      '@types/express':
+        specifier: 'catalog:'
+        version: 5.0.1
+      '@types/node':
+        specifier: 'catalog:'
+        version: 22.15.14
+      '@vitest/coverage-v8':
+        specifier: 'catalog:'
+        version: 3.1.3(vitest@3.1.3(@types/debug@4.1.12)(@types/node@22.15.14)(jiti@2.4.2)(lightningcss@1.29.2)(terser@5.39.0)(tsx@4.19.4))
+      tsx:
+        specifier: 'catalog:'
+        version: 4.19.4
+      typescript:
+        specifier: 'catalog:'
+        version: 5.8.3
+      vite:
+        specifier: 'catalog:'
+        version: 6.3.5(@types/node@22.15.14)(jiti@2.4.2)(lightningcss@1.29.2)(terser@5.39.0)(tsx@4.19.4)
+      vitest:
+        specifier: 'catalog:'
+        version: 3.1.3(@types/debug@4.1.12)(@types/node@22.15.14)(jiti@2.4.2)(lightningcss@1.29.2)(terser@5.39.0)(tsx@4.19.4)
+
   apps/web:
     dependencies:
       '@repo/core-game':
