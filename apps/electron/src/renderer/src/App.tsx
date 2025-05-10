@@ -19,7 +19,7 @@ export const App = () => {
 
       <iframe src="http://localhost:4200" style={{ width: MAP_WIDTH, height: MAP_HEIGHT }} />
 
-      <div className="pt-4 pb-2">
+      <div className="flex flex-row justify-end pt-4 pb-2">
         <Versions />
       </div>
     </div>
