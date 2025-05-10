@@ -38,6 +38,7 @@
     },
     "preview": {
       "dependsOn": ["build"],
+      "cache": false,
       "persistent": true
     },
     "build:win": {
