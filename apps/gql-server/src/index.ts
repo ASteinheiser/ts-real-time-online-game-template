@@ -1,14 +1,7 @@
-import express, { json } from 'express';
+import { app } from './app';
 
-const app = express();
-const port = process.env.PORT || 4208;
+const PORT = process.env.PORT || 4208;
 
-app.use(json());
-
-app.get('/health', (_, res) => {
-  res.json({ status: 'ok' });
-});
-
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });

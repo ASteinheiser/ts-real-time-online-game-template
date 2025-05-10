@@ -1,7 +1,8 @@
-import { describe, it, expect } from 'vitest';
+import assert from 'assert';
+import { app } from '../src/app';
 
 describe('server', () => {
   it('should be defined', () => {
-    expect(true).toBe(true);
+    assert.ok(app);
   });
 });

@@ -8,8 +8,8 @@
   "scripts": {
     "lint": "eslint",
     "lint:fix": "eslint --fix",
-    "test:unit": "vitest",
-    "test:unit:watch": "vitest --watch",
+    "test:unit": "mocha --config test/.mocharc.yaml",
+    "test:unit:watch": "nodemon --ext ts --exec \"c8 --config test/.c8rc.json mocha --config test/.mocharc.yaml\"",
     "check-types": "tsc --noEmit",
     "dev": "tsx watch src/index.ts",
     "build": "tsc && vite build",
@@ -20,12 +20,14 @@
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@types/express": "catalog:",
+    "@types/mocha": "catalog:",
     "@types/node": "catalog:",
-    "@vitest/coverage-v8": "catalog:",
+    "c8": "catalog:",
+    "mocha": "catalog:",
+    "nodemon": "catalog:",
     "tsx": "catalog:",
     "typescript": "catalog:",
-    "vite": "catalog:",
-    "vitest": "catalog:"
+    "vite": "catalog:"
   },
   "dependencies": {
     "express": "catalog:",

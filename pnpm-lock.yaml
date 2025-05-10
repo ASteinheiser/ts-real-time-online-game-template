@@ -12,6 +12,9 @@ catalogs:
     '@types/express':
       specifier: ^5.0.1
       version: 5.0.1
+    '@types/mocha':
+      specifier: ^10.0.10
+      version: 10.0.10
     '@types/node':
       specifier: ^22.14.1
       version: 22.15.14
@@ -27,6 +30,9 @@ catalogs:
     '@vitest/coverage-v8':
       specifier: ^3.1.3
       version: 3.1.3
+    c8:
+      specifier: ^10.1.3
+      version: 10.1.3
     colyseus:
       specifier: ^0.16.4
       version: 0.16.4
@@ -42,9 +48,15 @@ catalogs:
     express:
       specifier: ^5.1.0
       version: 5.1.0
+    mocha:
+      specifier: ^11.2.2
+      version: 11.2.2
     nanoid:
       specifier: ^5.1.5
       version: 5.1.5
+    nodemon:
+      specifier: ^3.1.10
+      version: 3.1.10
     phaser:
       specifier: ^3.88.2
       version: 3.88.2
@@ -177,12 +189,21 @@ importers:
       '@types/express':
         specifier: 'catalog:'
         version: 5.0.1
+      '@types/mocha':
+        specifier: 'catalog:'
+        version: 10.0.10
       '@types/node':
         specifier: 'catalog:'
         version: 22.15.14
-      '@vitest/coverage-v8':
+      c8:
         specifier: 'catalog:'
-        version: 3.1.3(vitest@3.1.3(@types/debug@4.1.12)(@types/node@22.15.14)(jiti@2.4.2)(lightningcss@1.29.2)(terser@5.39.0)(tsx@4.19.4))
+        version: 10.1.3
+      mocha:
+        specifier: 'catalog:'
+        version: 11.2.2
+      nodemon:
+        specifier: 'catalog:'
+        version: 3.1.10
       tsx:
         specifier: 'catalog:'
         version: 4.19.4
@@ -192,9 +213,6 @@ importers:
       vite:
         specifier: 'catalog:'
         version: 6.3.5(@types/node@22.15.14)(jiti@2.4.2)(lightningcss@1.29.2)(terser@5.39.0)(tsx@4.19.4)
-      vitest:
-        specifier: 'catalog:'
-        version: 3.1.3(@types/debug@4.1.12)(@types/node@22.15.14)(jiti@2.4.2)(lightningcss@1.29.2)(terser@5.39.0)(tsx@4.19.4)
 
   apps/web:
     dependencies:
@@ -309,22 +327,22 @@ importers:
         specifier: 'catalog:'
         version: 5.0.1
       '@types/mocha':
-        specifier: ^10.0.10
+        specifier: 'catalog:'
         version: 10.0.10
       '@types/node':
         specifier: 'catalog:'
         version: 22.15.14
       c8:
-        specifier: ^10.1.3
+        specifier: 'catalog:'
         version: 10.1.3
       colyseus.js:
         specifier: 'catalog:'
         version: 0.16.16
       mocha:
-        specifier: ^11.2.2
+        specifier: 'catalog:'
         version: 11.2.2
       nodemon:
-        specifier: ^3.1.10
+        specifier: 'catalog:'
         version: 3.1.10
       tsx:
         specifier: 'catalog:'
