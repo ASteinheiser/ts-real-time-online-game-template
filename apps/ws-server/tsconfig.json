@@ -4,7 +4,6 @@
   "include": ["src", "test"],
   "compilerOptions": {
     "experimentalDecorators": true,
-    "outDir": "dist",
     "strictNullChecks": false,
     "useDefineForClassFields": false
   }
