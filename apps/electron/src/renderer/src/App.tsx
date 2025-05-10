@@ -8,7 +8,7 @@ export const App = () => {
   };
 
   return (
-    <div className={`max-w-[${MAP_WIDTH}px] mx-auto`}>
+    <div className="mx-auto" style={{ maxWidth: MAP_WIDTH }}>
       <div className="flex flex-row pt-2 pb-4 justify-between items-center">
         <div className="flex flex-col gap-2">
           <h1 className="text-2xl">Powered by electron-vite</h1>
