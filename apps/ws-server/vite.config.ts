@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
+import { builtinModules } from 'module';
 
 export default defineConfig({
   build: {
@@ -16,28 +17,13 @@ export default defineConfig({
       },
       external: [
         // Node.js built-ins
-        'fs',
-        'path',
-        'http',
-        'https',
-        'url',
-        'util',
-        'os',
-        'stream',
-        'crypto',
-        'zlib',
-        'events',
-        'assert',
-        'buffer',
-        // External npm dependencies
+        ...builtinModules,
+        // npm dependencies that are NOT ESM-compatible
         '@colyseus/core',
         '@colyseus/monitor',
         '@colyseus/playground',
         '@colyseus/schema',
         '@colyseus/tools',
-        'express',
-        'colyseus',
-        'nanoid',
       ],
     },
   },
