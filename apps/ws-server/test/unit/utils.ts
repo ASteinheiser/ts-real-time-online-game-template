@@ -1,6 +1,6 @@
 import { ColyseusTestServer } from '@colyseus/testing';
 import { Room } from '@colyseus/core';
-import { MyRoomState } from '../src/rooms/schema/MyRoomState';
+import { MyRoomState } from '../../src/rooms/schema/MyRoomState';
 
 interface CreateClientArgs {
   server: ColyseusTestServer;
