@@ -9,8 +9,8 @@
   "scripts": {
     "lint": "eslint",
     "lint:fix": "eslint --fix",
-    "test:unit": "vitest",
-    "test:unit:watch": "vitest --watch --coverage",
+    "test": "vitest",
+    "test:watch": "vitest --watch --coverage",
     "check-types": "tsc --noEmit",
     "dev": "electron-vite dev",
     "preview": "electron-vite preview",

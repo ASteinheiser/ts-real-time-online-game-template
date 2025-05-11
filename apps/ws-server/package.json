@@ -13,8 +13,8 @@
     "build": "tsc && vite build",
     "start": "node dist/index.js",
     "preview": "npm run start",
-    "test:unit": "mocha --config test/.mocharc.yaml",
-    "test:unit:watch": "nodemon --ext ts --exec \"c8 --config test/.c8rc.json mocha --config test/.mocharc.yaml\"",
+    "test": "mocha --config test/.mocharc.yaml",
+    "test:watch": "nodemon --ext ts --exec \"c8 --config test/.c8rc.json mocha --config test/.mocharc.yaml\"",
     "test:load": "tsx test/load/test.ts --room my_room --numClients 2 --endpoint ws://localhost:4204"
   },
   "devDependencies": {

@@ -8,8 +8,8 @@
     "lint:fix": {
       "dependsOn": ["^lint:fix"]
     },
-    "test:unit": {},
-    "test:unit:watch": {
+    "test": {},
+    "test:watch": {
       "cache": false,
       "persistent": true
     },
@@ -22,7 +22,7 @@
       "dependsOn": ["^check-types"]
     },
     "ci:all-checks": {
-      "dependsOn": ["lint", "check-types", "test:unit"]
+      "dependsOn": ["lint", "check-types", "test"]
     },
     "generate:pwa-assets": {
       "cache": false

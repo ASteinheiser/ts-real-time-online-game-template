@@ -1,8 +1,8 @@
 require: tsx
-spec: test/unit/**/*.test.ts
+spec: test/integration/**/*.test.ts
 reporter: spec
 watch: false
 watch-files:
   - src/**/*.ts
-  - test/unit/**/*.test.ts
+  - test/integration/**/*.test.ts
 timeout: 15000

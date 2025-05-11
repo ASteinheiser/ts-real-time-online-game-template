@@ -8,8 +8,8 @@
   "scripts": {
     "lint": "eslint",
     "lint:fix": "eslint --fix",
-    "test:unit": "mocha --config test/.mocharc.yaml",
-    "test:unit:watch": "nodemon --ext ts --exec \"c8 --config test/.c8rc.json mocha --config test/.mocharc.yaml\"",
+    "test": "mocha --config test/.mocharc.yaml",
+    "test:watch": "nodemon --ext ts --exec \"c8 --config test/.c8rc.json mocha --config test/.mocharc.yaml\"",
     "check-types": "tsc --noEmit",
     "dev": "tsx watch src/index.ts",
     "build": "tsc && vite build",

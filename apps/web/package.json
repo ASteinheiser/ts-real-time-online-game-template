@@ -8,8 +8,8 @@
   "scripts": {
     "lint": "eslint",
     "lint:fix": "eslint --fix",
-    "test:unit": "vitest --config vite/vitest.config.ts",
-    "test:unit:watch": "vitest --config vite/vitest.config.ts --watch --coverage",
+    "test": "vitest --config vite/vitest.config.ts",
+    "test:watch": "vitest --config vite/vitest.config.ts --watch --coverage",
     "generate:pwa-assets": "pwa-assets-generator --preset minimal public/logo.svg",
     "check-types": "tsc --noEmit",
     "dev": "vite --config vite/dev.config.ts --clearScreen false",
