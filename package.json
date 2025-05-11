@@ -29,12 +29,11 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
+      "@apollo/protobufjs",
+      "@parcel/watcher",
       "electron",
       "electron-winstaller",
-      "esbuild"
-    ],
-    "ignoredBuiltDependencies": [
-      "@parcel/watcher",
+      "esbuild",
       "msgpackr-extract",
       "sharp"
     ]
