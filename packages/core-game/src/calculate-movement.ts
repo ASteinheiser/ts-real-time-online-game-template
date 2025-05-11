@@ -5,6 +5,11 @@ export interface EntityPosition {
   y: number;
 }
 
+export interface EntitySize {
+  width: number;
+  height: number;
+}
+
 export interface MovementInput {
   left: boolean;
   right: boolean;
@@ -12,12 +17,14 @@ export interface MovementInput {
   down: boolean;
 }
 
-export type CalculateMovementArgs = EntityPosition & MovementInput;
+export type CalculateMovementArgs = EntityPosition & EntitySize & MovementInput;
 export type CalculateMovementResult = EntityPosition;
 
 export const calculateMovement = ({
   x,
   y,
+  width,
+  height,
   left,
   right,
   up,
@@ -35,10 +42,15 @@ export const calculateMovement = ({
     if (down) newY += PLAYER_MOVE_SPEED;
   }
 
-  if (newX < 0) newX = 0;
-  if (newX > MAP_WIDTH) newX = MAP_WIDTH;
-  if (newY < 0) newY = 0;
-  if (newY > MAP_HEIGHT) newY = MAP_HEIGHT;
+  const xRadius = width / 2;
+  const yRadius = height / 2;
+  const mapBoundX = MAP_WIDTH - xRadius;
+  const mapBoundY = MAP_HEIGHT - yRadius;
+
+  if (newX < xRadius) newX = xRadius;
+  if (newX > mapBoundX) newX = mapBoundX;
+  if (newY < yRadius) newY = yRadius;
+  if (newY > mapBoundY) newY = mapBoundY;
 
   return { x: newX, y: newY };
 };
