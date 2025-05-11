@@ -1,4 +1,4 @@
-import { ENEMY_WIDTH, ENEMY_HEIGHT } from '@repo/core-game';
+import { ENEMY_SIZE } from '@repo/core-game';
 
 export class Enemy {
   entity: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
@@ -6,7 +6,7 @@ export class Enemy {
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
     this.entity = scene.physics.add.sprite(x, y, 'enemy');
-    this.hitbox = scene.add.rectangle(x, y, ENEMY_WIDTH, ENEMY_HEIGHT);
+    this.hitbox = scene.add.rectangle(x, y, ENEMY_SIZE.width, ENEMY_SIZE.height);
     this.hitbox.setStrokeStyle(1, 0xff00ff);
   }
 

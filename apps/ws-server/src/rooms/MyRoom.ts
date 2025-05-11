@@ -4,6 +4,7 @@ import { MyRoomState, Player, InputPayload, Enemy } from './schema/MyRoomState';
 import {
   calculateMovement,
   FIXED_TIME_STEP,
+  PLAYER_SIZE,
   MAP_WIDTH,
   MAP_HEIGHT,
   ATTACK_WIDTH,
@@ -15,8 +16,7 @@ import {
   ATTACK_DAMAGE__FRAME_TIME,
   ENEMY_SPAWN_RATE,
   MAX_ENEMIES,
-  ENEMY_WIDTH,
-  ENEMY_HEIGHT,
+  ENEMY_SIZE,
 } from '@repo/core-game';
 
 // Basic storage of results for all players in the room
@@ -59,7 +59,7 @@ export class MyRoom extends Room<MyRoomState> {
         if (input.left) player.isFacingRight = false;
         else if (input.right) player.isFacingRight = true;
 
-        const { x: newX, y: newY } = calculateMovement({ ...player, ...input });
+        const { x: newX, y: newY } = calculateMovement({ ...player, ...PLAYER_SIZE, ...input });
         player.x = newX;
         player.y = newY;
 
@@ -82,10 +82,10 @@ export class MyRoom extends Room<MyRoomState> {
           // check if the attack hit an enemy
           for (const enemy of this.state.enemies) {
             if (
-              enemy.x - ENEMY_WIDTH / 2 < player.attackDamageFrameX + ATTACK_WIDTH / 2 &&
-              enemy.x + ENEMY_WIDTH / 2 > player.attackDamageFrameX - ATTACK_WIDTH / 2 &&
-              enemy.y - ENEMY_HEIGHT / 2 < player.attackDamageFrameY + ATTACK_HEIGHT / 2 &&
-              enemy.y + ENEMY_HEIGHT / 2 > player.attackDamageFrameY - ATTACK_HEIGHT / 2
+              enemy.x - ENEMY_SIZE.width / 2 < player.attackDamageFrameX + ATTACK_WIDTH / 2 &&
+              enemy.x + ENEMY_SIZE.width / 2 > player.attackDamageFrameX - ATTACK_WIDTH / 2 &&
+              enemy.y - ENEMY_SIZE.height / 2 < player.attackDamageFrameY + ATTACK_HEIGHT / 2 &&
+              enemy.y + ENEMY_SIZE.height / 2 > player.attackDamageFrameY - ATTACK_HEIGHT / 2
             ) {
               this.state.enemies.splice(this.state.enemies.indexOf(enemy), 1);
               player.killCount++;
@@ -130,7 +130,7 @@ export class MyRoom extends Room<MyRoomState> {
       const moveUp = Boolean(Math.round(Math.random()) * 1);
       const input = { left: moveLeft, right: !moveLeft, up: moveUp, down: !moveUp };
 
-      const { x: newX, y: newY } = calculateMovement({ ...enemy, ...input });
+      const { x: newX, y: newY } = calculateMovement({ ...enemy, ...ENEMY_SIZE, ...input });
       enemy.x = newX;
       enemy.y = newY;
     });

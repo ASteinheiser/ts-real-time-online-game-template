@@ -1,8 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   PLAYER_MOVE_SPEED,
-  PLAYER_WIDTH,
-  PLAYER_HEIGHT,
+  PLAYER_SIZE,
   FIXED_TIME_STEP,
   MAP_WIDTH,
   MAP_HEIGHT,
@@ -31,19 +30,24 @@ describe('constants', () => {
   });
 
   describe('player', () => {
-    describe('PLAYER_WIDTH', () => {
-      it('should be a number', () => {
-        expect(typeof PLAYER_WIDTH).toBe('number');
-      });
-    });
-    describe('PLAYER_HEIGHT', () => {
-      it('should be a number', () => {
-        expect(typeof PLAYER_HEIGHT).toBe('number');
-      });
-    });
     describe('PLAYER_MOVE_SPEED', () => {
       it('should be a number', () => {
         expect(typeof PLAYER_MOVE_SPEED).toBe('number');
+      });
+    });
+    describe('PLAYER_SIZE', () => {
+      it('should be an object', () => {
+        expect(typeof PLAYER_SIZE).toBe('object');
+      });
+    });
+    describe('PLAYER_SIZE.width', () => {
+      it('should be a number', () => {
+        expect(typeof PLAYER_SIZE.width).toBe('number');
+      });
+    });
+    describe('PLAYER_SIZE.height', () => {
+      it('should be a number', () => {
+        expect(typeof PLAYER_SIZE.height).toBe('number');
       });
     });
   });

@@ -10,8 +10,10 @@ export const MAP_HEIGHT = 768;
 
 // #region Player
 export const PLAYER_MOVE_SPEED = 2;
-export const PLAYER_WIDTH = 47;
-export const PLAYER_HEIGHT = 53;
+export const PLAYER_SIZE = {
+  width: 47,
+  height: 53,
+};
 // #endregion
 
 // #region Attack
@@ -19,7 +21,7 @@ export const ATTACK_WIDTH = 6;
 export const ATTACK_HEIGHT = 8;
 // offset from the center of the player to the center of the fist,
 // which is at the edge of the player's bounding box
-export const ATTACK_OFFSET_X = PLAYER_WIDTH / 2 - ATTACK_WIDTH / 2;
+export const ATTACK_OFFSET_X = PLAYER_SIZE.width / 2 - ATTACK_WIDTH / 2;
 // magic number, this is how high the fist is above the center of the player
 export const ATTACK_OFFSET_Y = 12.5;
 // attack animation takes 0.625 seconds total (5 frames at 8fps)
@@ -33,6 +35,8 @@ export const ATTACK_DAMAGE__FRAME_TIME = 125;
 // #region Enemy
 export const ENEMY_SPAWN_RATE = 2000;
 export const MAX_ENEMIES = 10;
-export const ENEMY_WIDTH = 64;
-export const ENEMY_HEIGHT = 64;
+export const ENEMY_SIZE = {
+  width: 64,
+  height: 64,
+};
 // #endregion

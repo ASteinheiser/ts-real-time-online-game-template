@@ -1,6 +1,6 @@
 import { Scene } from 'phaser';
 import { Client, Room, getStateCallbacks } from 'colyseus.js';
-import { calculateMovement, FIXED_TIME_STEP } from '@repo/core-game';
+import { calculateMovement, FIXED_TIME_STEP, PLAYER_SIZE } from '@repo/core-game';
 import { EventBus } from '../EventBus';
 import { Player } from '../objects/Player';
 import { Hitbox } from '../objects/Hitbox';
@@ -167,7 +167,7 @@ export class Game extends Scene {
     const { x, y } = this.currentPlayer.entity;
     const { left, right, up, down } = this.inputPayload;
 
-    const newPosition = calculateMovement({ x, y, left, right, up, down });
+    const newPosition = calculateMovement({ x, y, ...PLAYER_SIZE, left, right, up, down });
     this.currentPlayer.move(newPosition);
 
     for (const sessionId in this.playerEntities) {
