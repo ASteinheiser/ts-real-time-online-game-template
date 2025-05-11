@@ -1,7 +1,8 @@
-import { app } from './app';
+import { startStandaloneServer } from '@apollo/server/standalone';
+import { server } from './server';
 
-const PORT = process.env.PORT || 4208;
+const PORT = Number(process.env.PORT) || 4208;
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+const { url } = await startStandaloneServer(server, { listen: { port: PORT } });
+
+console.log(`🚀 Server listening at: ${url}`);

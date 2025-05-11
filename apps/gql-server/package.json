@@ -19,7 +19,6 @@
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
-    "@types/express": "catalog:",
     "@types/mocha": "catalog:",
     "@types/node": "catalog:",
     "c8": "catalog:",
@@ -30,7 +29,8 @@
     "vite": "catalog:"
   },
   "dependencies": {
-    "express": "catalog:",
+    "@apollo/server": "catalog:",
+    "graphql": "catalog:",
     "nanoid": "catalog:"
   }
 }
