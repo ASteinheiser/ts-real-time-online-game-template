@@ -45,7 +45,7 @@ These commands are available from the root directory whether you decide to insta
 | `pnpm lint` | Runs the code linting check in each repo |
 | `pnpm lint:fix` | Runs the linter and fixes code when possible |
 | `pnpm test` | Runs the test suites in each repo and returns the result |
-| `pnpm test:watch` | Runs the test suite in each repo and watches for changes |
+| `pnpm test:watch` | Runs the test suites in each repo and watches for changes |
 | `pnpm test:load` | Builds/runs the `ws-server` and runs the load test against it |
 | `pnpm generate:pwa-assets` | Generates PWA images via `apps/web/public/logo.svg` |
 | `pnpm check-types` | Runs the typescript check in each repo |
