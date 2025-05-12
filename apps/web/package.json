@@ -24,7 +24,6 @@
     "@repo/ui": "workspace:*",
     "colyseus.js": "catalog:",
     "graphql": "catalog:",
-    "graphql-tag": "catalog:",
     "phaser": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:"

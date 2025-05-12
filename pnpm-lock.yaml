@@ -63,9 +63,6 @@ catalogs:
     graphql:
       specifier: ^16.11.0
       version: 16.11.0
-    graphql-tag:
-      specifier: ^2.12.6
-      version: 2.12.6
     mocha:
       specifier: ^11.2.2
       version: 11.2.2
@@ -261,9 +258,6 @@ importers:
       graphql:
         specifier: 'catalog:'
         version: 16.11.0
-      graphql-tag:
-        specifier: 'catalog:'
-        version: 2.12.6(graphql@16.11.0)
       phaser:
         specifier: 'catalog:'
         version: 3.88.2

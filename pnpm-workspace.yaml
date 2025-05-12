@@ -10,7 +10,6 @@ catalog:
   colyseus: ^0.16.4
   colyseus.js: ^0.16.16
   graphql: ^16.11.0
-  graphql-tag: ^2.12.6
   "@apollo/server": ^4.12.0
   "@apollo/client": ^3.13.8
   "@graphql-codegen/cli": ^5.0.6
