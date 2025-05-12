@@ -10,7 +10,10 @@ catalog:
   colyseus: ^0.16.4
   colyseus.js: ^0.16.16
   graphql: ^16.11.0
+  graphql-tag: ^2.12.6
   "@apollo/server": ^4.12.0
+  "@graphql-codegen/cli": ^5.0.6
+  "@parcel/watcher": ^2.5.1
   phaser: ^3.88.2
   react: ^18.3.1
   react-dom: ^18.3.1

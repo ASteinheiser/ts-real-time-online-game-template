@@ -15,6 +15,8 @@
     "test:watch": "turbo run test:watch",
     "test:load": "turbo run test:load",
     "generate:pwa-assets": "turbo run generate:pwa-assets",
+    "generate:gql-types": "turbo run generate:gql-types",
+    "generate:gql-types:watch": "turbo run generate:gql-types:watch",
     "check-types": "turbo run check-types",
     "build": "turbo run build",
     "preview": "turbo run preview",

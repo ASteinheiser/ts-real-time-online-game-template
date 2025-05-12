@@ -4,11 +4,10 @@ A _highly opinionated_ template for creating real-time, online games using [Type
 
 ## Developer Quickstart
 
-If you are familiar with Node.js and `pnpm`, you can quickly start development with:
+If you are familiar with Node.js and `pnpm`, you can skip to [Useful Commands](#useful-commands) or quickly start development with:
 ```bash
 pnpm i
 pnpm dev
-pnpm ci:all-checks # runs lint, tests, etc.
 ```
 
 #### Otherwise, you should:
@@ -33,9 +32,22 @@ turbo ls
 turbo run
 ```
 
-## Available Commands
+## Useful Commands
 
 These commands are available from the root directory whether you decide to install the `turbo` cli locally or not...
+
+| Command | Description |
+|---------|-------------|
+| `pnpm dev` | Run local development servers for each app |
+| `pnpm ci:all-checks` | Runs the linter, typecheck and tests for each repo |
+| `pnpm lint:fix` | Runs the linter and fixes code when possible |
+| `pnpm test:watch` | Runs the test suites in each repo and watches for changes |
+| `pnpm test:load` | Builds/runs the `ws-server` and runs the load test against it |
+| `pnpm generate:pwa-assets` | Generates PWA images via `apps/web/public/logo.svg` |
+| `pnpm preview` | Builds each app and runs a local server using the output |
+| `pnpm build:[win\|mac\|linux]` | Builds the desktop app (via Electron) |
+
+## Available Commands
 
 | Command | Description |
 |---------|-------------|
@@ -48,6 +60,8 @@ These commands are available from the root directory whether you decide to insta
 | `pnpm test:watch` | Runs the test suites in each repo and watches for changes |
 | `pnpm test:load` | Builds/runs the `ws-server` and runs the load test against it |
 | `pnpm generate:pwa-assets` | Generates PWA images via `apps/web/public/logo.svg` |
+| `pnpm generate:gql-types` | Generates the GraphQL types in each repo |
+| `pnpm generate:gql-types:watch` | Generates the GraphQL types and watches each repo  |
 | `pnpm check-types` | Runs the typescript check in each repo |
 | `pnpm build` | Builds each app including sub-repos |
 | `pnpm preview` | Builds each app and runs a local server using the output |

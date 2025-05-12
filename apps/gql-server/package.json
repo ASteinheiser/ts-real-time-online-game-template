@@ -10,6 +10,8 @@
     "lint:fix": "eslint --fix",
     "test": "mocha --config test/.mocharc.yaml",
     "test:watch": "nodemon --ext ts --exec \"c8 --config test/.c8rc.json mocha --config test/.mocharc.yaml\"",
+    "generate:gql-types": "graphql-codegen",
+    "generate:gql-types:watch": "graphql-codegen --watch",
     "check-types": "tsc --noEmit",
     "dev": "tsx watch src/index.ts",
     "build": "tsc && vite build",
@@ -17,6 +19,10 @@
     "preview": "npm run start"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "catalog:",
+    "@graphql-codegen/typescript": "^4.1.6",
+    "@graphql-codegen/typescript-resolvers": "^4.5.1",
+    "@parcel/watcher": "catalog:",
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@types/mocha": "catalog:",
