@@ -1,3 +1,5 @@
+import { Resolvers } from './generated-types';
+
 const books = [
   {
     title: 'The Awakening',
@@ -9,7 +11,7 @@ const books = [
   },
 ];
 
-export const resolvers = {
+export const resolvers: Resolvers = {
   Query: {
     books: () => books,
   },
