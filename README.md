@@ -10,6 +10,13 @@ pnpm i
 pnpm dev
 ```
 
+When you run `dev`, you should see:
+- Native desktop window pop up with the game inside it
+- Web game at http://localhost:4200
+- Colyseus playground at http://localhost:4204
+- Colyseus monitor tool at http://localhost:4204/monitor
+- Apollo GraphQL playground at http://localhost:4208
+
 #### Otherwise, you should:
 
 First <ins>ensure</ins> you are using the <ins>correct version</ins> of <ins>Node.js</ins>. You can validate this by comparing your local version of node (`node -v`) with the `.nvmrc`.
