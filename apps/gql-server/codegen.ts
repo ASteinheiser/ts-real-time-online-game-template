@@ -4,7 +4,7 @@ const config: CodegenConfig = {
   schema: './src/graphql/schema.graphql',
   emitLegacyCommonJSImports: false,
   generates: {
-    './src/graphql/resolvers-types.ts': {
+    './src/graphql/generated-types.ts': {
       config: {
         useIndexSignature: true,
       },
