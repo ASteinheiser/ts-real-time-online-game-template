@@ -10,6 +10,8 @@
     "lint:fix": "eslint --fix",
     "test": "vitest --config vite/vitest.config.ts",
     "test:watch": "vitest --config vite/vitest.config.ts --watch --coverage",
+    "generate:gql-types": "graphql-codegen",
+    "generate:gql-types:watch": "graphql-codegen --watch",
     "generate:pwa-assets": "pwa-assets-generator --preset minimal public/logo.svg",
     "check-types": "tsc --noEmit",
     "dev": "vite --config vite/dev.config.ts --clearScreen false",
@@ -17,14 +19,19 @@
     "preview": "vite preview --config vite/dev.config.ts"
   },
   "dependencies": {
+    "@apollo/client": "catalog:",
     "@repo/core-game": "workspace:*",
     "@repo/ui": "workspace:*",
     "colyseus.js": "catalog:",
+    "graphql": "catalog:",
+    "graphql-tag": "catalog:",
     "phaser": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "catalog:",
+    "@parcel/watcher": "catalog:",
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@tailwindcss/postcss": "catalog:",
