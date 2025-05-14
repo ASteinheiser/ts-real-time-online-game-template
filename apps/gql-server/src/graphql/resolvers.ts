@@ -1,18 +1,10 @@
 import { Resolvers } from './generated-types';
+import type { Context } from '../context';
 
-const books = [
-  {
-    title: 'The Awakening',
-    author: 'Kate Chopin',
-  },
-  {
-    title: 'City of Glass',
-    author: 'Paul Auster',
-  },
-];
-
-export const resolvers: Resolvers = {
+export const resolvers: Resolvers<Context> = {
   Query: {
-    books: () => books,
+    books: async (_, __, { dataSources }) => {
+      return dataSources.booksDb.getBooks();
+    },
   },
 };
