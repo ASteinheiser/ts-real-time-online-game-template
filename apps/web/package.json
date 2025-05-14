@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "@graphql-codegen/cli": "catalog:",
+    "@graphql-typed-document-node/core": "catalog:",
     "@parcel/watcher": "catalog:",
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
