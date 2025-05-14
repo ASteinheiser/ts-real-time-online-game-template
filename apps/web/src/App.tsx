@@ -3,10 +3,25 @@ import { IRefPhaserGame, PhaserGame } from './game/PhaserGame';
 import { MainMenu } from './game/scenes/MainMenu';
 import { EventBus } from './game/EventBus';
 import { StartGameForm } from './forms/StartGameForm';
+import { useQuery, gql } from '@apollo/client';
+import { GetBooksQuery, GetBooksQueryVariables } from './graphql/generated-types/graphql';
+
+const GET_BOOKS = gql`
+  query GetBooks {
+    books {
+      title
+      author
+    }
+  }
+`;
 
 export const App = () => {
   const phaserRef = useRef<IRefPhaserGame | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const { data } = useQuery<GetBooksQuery, GetBooksQueryVariables>(GET_BOOKS);
+
+  console.log({ gqlData: data });
 
   useEffect(() => {
     EventBus.on('menu-open__game-start', () => {
