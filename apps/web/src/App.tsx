@@ -4,7 +4,7 @@ import { MainMenu } from './game/scenes/MainMenu';
 import { EventBus } from './game/EventBus';
 import { StartGameForm } from './forms/StartGameForm';
 import { useQuery, gql } from '@apollo/client';
-import { GetBooksQuery, GetBooksQueryVariables } from './graphql/generated-types/graphql';
+import { GetBooksQuery, GetBooksQueryVariables } from './graphql';
 
 const GET_BOOKS = gql`
   query GetBooks {
