@@ -4,7 +4,7 @@ import appConfig from '../../src/app.config';
 import { MyRoomState } from '../../src/rooms/schema/MyRoomState';
 import { createClient } from './utils';
 
-describe('testing your Colyseus app', () => {
+describe('Colyseus WebSocket Server', () => {
   let server: ColyseusTestServer;
 
   before(async () => (server = await boot(appConfig)));
