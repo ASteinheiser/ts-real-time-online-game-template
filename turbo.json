@@ -14,7 +14,7 @@
       "persistent": true
     },
     "test:load": {
-      "with": ["ws-server#preview"],
+      "with": ["game-server#preview"],
       "cache": false,
       "persistent": true
     },

@@ -49,7 +49,7 @@ These commands are available from the root directory whether you decide to insta
 | `pnpm ci:all-checks` | Runs the linter, typecheck and tests for each repo |
 | `pnpm lint:fix` | Runs the linter and fixes code when possible |
 | `pnpm test:watch` | Runs the test suites in each repo and watches for changes |
-| `pnpm test:load` | Builds/runs the `ws-server` and runs the load test against it |
+| `pnpm test:load` | Builds/runs the `game-server` and runs the load test against it |
 | `pnpm generate:pwa-assets` | Generates PWA images via `apps/web/public/logo.svg` |
 | `pnpm preview` | Builds each app and runs a local server using the output |
 | `pnpm build:[win\|mac\|linux]` | Builds the desktop app (via Electron) |
@@ -65,7 +65,7 @@ These commands are available from the root directory whether you decide to insta
 | `pnpm lint:fix` | Runs the linter and fixes code when possible |
 | `pnpm test` | Runs the test suites in each repo and returns the result |
 | `pnpm test:watch` | Runs the test suites in each repo and watches for changes |
-| `pnpm test:load` | Builds/runs the `ws-server` and runs the load test against it |
+| `pnpm test:load` | Builds/runs the `game-server` and runs the load test against it |
 | `pnpm generate:pwa-assets` | Generates PWA images via `apps/web/public/logo.svg` |
 | `pnpm generate:gql-types` | Generates the GraphQL types in each repo |
 | `pnpm generate:gql-types:watch` | Generates the GraphQL types and watches each repo  |
