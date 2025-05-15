@@ -1,8 +1,12 @@
 import config from '@colyseus/tools';
 import { monitor } from '@colyseus/monitor';
 import { playground } from '@colyseus/playground';
-
+import { expressMiddleware } from '@as-integrations/express5';
+import express from 'express';
+import cors from 'cors';
+import { server as GQLServer } from './graphql';
 import { MyRoom, RESULTS } from './rooms/MyRoom';
+import { createContext } from './graphql/context';
 
 export default config({
   initializeGameServer: (gameServer) => {
@@ -12,11 +16,17 @@ export default config({
     gameServer.define('my_room', MyRoom);
   },
 
-  initializeExpress: (app) => {
-    /**
-     * Bind your custom express routes here:
-     * Read more: https://expressjs.com/en/starter/basic-routing.html
-     */
+  initializeExpress: async (app) => {
+    await GQLServer.start();
+
+    app.use(
+      '/graphql',
+      cors<cors.CorsRequest>(),
+      express.json(),
+      expressMiddleware(GQLServer, { context: createContext })
+    );
+
+    // TODO: remove this
     app.get('/game-results', (_, res) => {
       res.send(RESULTS);
     });
@@ -39,7 +49,7 @@ export default config({
 
   beforeListen: () => {
     /**
-     * Before before gameServer.listen() is called.
+     * Before gameServer.listen() is called.
      */
   },
 });

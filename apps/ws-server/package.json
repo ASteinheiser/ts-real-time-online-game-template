@@ -15,13 +15,20 @@
     "preview": "npm run start",
     "test": "mocha --config test/.mocharc.yaml",
     "test:watch": "nodemon --ext ts --exec \"c8 --config test/.c8rc.json mocha --config test/.mocharc.yaml\"",
-    "test:load": "tsx test/load/test.ts --room my_room --numClients 2 --endpoint ws://localhost:4204"
+    "test:load": "tsx test/load/test.ts --room my_room --numClients 2 --endpoint ws://localhost:4204",
+    "generate:gql-types": "graphql-codegen",
+    "generate:gql-types:watch": "graphql-codegen --watch"
   },
   "devDependencies": {
     "@colyseus/loadtest": "^0.16.1",
     "@colyseus/testing": "^0.16.3",
+    "@graphql-codegen/cli": "catalog:",
+    "@graphql-codegen/typescript": "^4.1.6",
+    "@graphql-codegen/typescript-resolvers": "^4.5.1",
+    "@parcel/watcher": "catalog:",
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
+    "@types/cors": "^2.8.18",
     "@types/express": "catalog:",
     "@types/mocha": "catalog:",
     "@types/node": "catalog:",
@@ -34,6 +41,8 @@
     "vite": "catalog:"
   },
   "dependencies": {
+    "@apollo/server": "catalog:",
+    "@as-integrations/express5": "^1.0.0",
     "@colyseus/core": "^0.16.17",
     "@colyseus/monitor": "^0.16.7",
     "@colyseus/playground": "^0.16.4",
@@ -41,7 +50,9 @@
     "@colyseus/tools": "^0.16.8",
     "@repo/core-game": "workspace:*",
     "colyseus": "catalog:",
+    "cors": "^2.8.5",
     "express": "catalog:",
+    "graphql": "catalog:",
     "nanoid": "catalog:"
   }
 }
