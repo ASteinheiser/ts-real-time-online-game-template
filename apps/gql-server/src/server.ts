@@ -3,7 +3,10 @@ import path from 'node:path';
 import { ApolloServer } from '@apollo/server';
 import { resolvers } from './graphql/resolvers';
 
-const typeDefs = readFileSync(path.join(import.meta.dirname, 'graphql/schema.graphql'), 'utf8');
+export const typeDefs = readFileSync(
+  path.join(import.meta.dirname, 'graphql/schema.graphql'),
+  'utf8'
+);
 
 export const server = new ApolloServer({
   typeDefs,
