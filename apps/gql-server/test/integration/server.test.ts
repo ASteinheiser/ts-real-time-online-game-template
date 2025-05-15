@@ -1,8 +1,5 @@
 import assert from 'assert';
-import { ApolloServer } from '@apollo/server';
-import { server, typeDefs } from '../../src/server';
-import { Context } from '../../src/context';
-import { resolvers } from '../../src/graphql/resolvers';
+import { server } from '../../src/server';
 import { BooksDataSource } from '../../src/data-source/Books';
 
 describe('server', () => {
@@ -19,11 +16,6 @@ describe('server', () => {
         }
       }
     `;
-
-    const server = new ApolloServer<Context>({
-      typeDefs,
-      resolvers,
-    });
 
     const booksDb = new BooksDataSource();
     booksDb.getBooks = async () => [
