@@ -10,3 +10,5 @@ export const server = new ApolloServer<Context>({
   typeDefs,
   resolvers,
 });
+
+await server.start();

@@ -17,10 +17,6 @@ export default config({
   },
 
   initializeExpress: async (app) => {
-    if (!GQLServer.assertStarted) {
-      await GQLServer.start();
-    }
-
     app.use(
       '/graphql',
       cors<cors.CorsRequest>(),
