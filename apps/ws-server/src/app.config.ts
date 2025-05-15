@@ -17,7 +17,9 @@ export default config({
   },
 
   initializeExpress: async (app) => {
-    await GQLServer.start();
+    if (!GQLServer.assertStarted) {
+      await GQLServer.start();
+    }
 
     app.use(
       '/graphql',
