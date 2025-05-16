@@ -9,3 +9,4 @@ dist-ssr
 .cache
 *.tsbuildinfo
 coverage
+.rollup.cache

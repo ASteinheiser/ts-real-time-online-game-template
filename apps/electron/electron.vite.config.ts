@@ -2,20 +2,15 @@ import { defineConfig, externalizeDepsPlugin } from 'electron-vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 
-const externalDepsPlugin = externalizeDepsPlugin({
-  // We need vite to build these files
-  exclude: ['@repo/core-game'],
-});
-
 export default defineConfig({
   main: {
-    plugins: [externalDepsPlugin],
+    plugins: [externalizeDepsPlugin()],
     build: {
       outDir: 'dist/main',
     },
   },
   preload: {
-    plugins: [externalDepsPlugin],
+    plugins: [externalizeDepsPlugin()],
     build: {
       outDir: 'dist/preload',
     },
