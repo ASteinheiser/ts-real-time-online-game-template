@@ -47,10 +47,8 @@ These commands are available from the root directory whether you decide to insta
 |---------|-------------|
 | `pnpm dev` | Run local development servers for each app |
 | `pnpm ci:all-checks` | Runs the linter, typecheck and tests for each repo |
-| `pnpm lint:fix` | Runs the linter and fixes code when possible |
 | `pnpm test:watch` | Runs the test suites in each repo and watches for changes |
-| `pnpm test:load` | Builds/runs the `game-server` and runs the load test against it |
-| `pnpm generate:pwa-assets` | Generates PWA images via `apps/web/public/logo.svg` |
+| `pnpm test:load` | Builds and runs the `game-server` then starts the load test |
 | `pnpm preview` | Builds each app and runs a local server using the output |
 | `pnpm build:[win\|mac\|linux]` | Builds the desktop app (via Electron) |
 
@@ -59,18 +57,19 @@ These commands are available from the root directory whether you decide to insta
 | Command | Description |
 |---------|-------------|
 | `pnpm install` | Installs dependencies for each repo |
-| `pnpm dev` | Run local development servers for each app |
 | `pnpm ci:all-checks` | Runs the linter, typecheck and tests for each repo |
 | `pnpm lint` | Runs the code linting check in each repo |
 | `pnpm lint:fix` | Runs the linter and fixes code when possible |
 | `pnpm test` | Runs the test suites in each repo and returns the result |
 | `pnpm test:watch` | Runs the test suites in each repo and watches for changes |
-| `pnpm test:load` | Builds/runs the `game-server` and runs the load test against it |
-| `pnpm generate:pwa-assets` | Generates PWA images via `apps/web/public/logo.svg` |
+| `pnpm test:load` | Builds and runs the `game-server` then starts the load test |
+| `pnpm check-types` | Runs the typescript check in each repo |
 | `pnpm generate:gql-types` | Generates the GraphQL types in each repo |
 | `pnpm generate:gql-types:watch` | Generates the GraphQL types and watches each repo  |
-| `pnpm check-types` | Runs the typescript check in each repo |
-| `pnpm build` | Builds each app including sub-repos |
+| `pnpm dev` | Run local development servers for each app |
+| `pnpm generate:app-icons` | Generates PWA and Electron app icons from `apps/web/public/logo.svg` |
+| `pnpm generate:pwa-assets` | Generates PWA assets from `apps/web/public/logo.svg` |
+| `pnpm build` | Generates icons and builds each app including sub-repos |
 | `pnpm preview` | Builds each app and runs a local server using the output |
 | `pnpm build:win` | Builds the desktop app (via Electron) for Windows |
 | `pnpm build:mac` | Builds the desktop app (via Electron) for MacOS |
