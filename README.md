@@ -2,6 +2,19 @@
 
 A _highly opinionated_ template for creating real-time, online games using [TypeScript](https://www.typescriptlang.org/)! Quickly create mmo-style games using [React](https://react.dev/) + [Phaser](https://phaser.io/) for rendering, [Colyseus](https://colyseus.io/) for websockets, [Electron](https://www.electronjs.org/) for native builds, and [SST](https://sst.dev/) ([IaC](https://en.wikipedia.org/wiki/Infrastructure_as_code)) for deployment! Also has support for [Progressive Web Apps](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps) (PWA). Oh, and lots and lots of [Vite](https://vite.dev/) for builds and testing!
 
+#### Comes with 3 apps:
+
+- `electron`: Frontend rendering for the game written in TypeScript using Electron, React, Phaser, Colyseus and GraphQL. When built, compiles an executable that runs a version of Chromium to render the game.
+- `game-server`: Backend server that handles the game state and data via WebSockets and GraphQL. Written in TypeScript with Colyseus, Express and [Apollo GraphQL](https://www.apollographql.com/docs).
+- `web`: Static webpage that can serve as a marketing site, homepage, wiki, roadmap, devlog, etc. Written in Typescript with React and GraphQL.
+
+#### And 4 packages:
+
+- `core-game`: Main logic for the game. Shareable for server use as well as client-side prediction ([CSP](https://en.wikipedia.org/wiki/Client-side_prediction))
+- `ui`: Shared Tailwindcss theme and Shadcn/ui components
+- `typescript-config`: Shared TypeScript configs
+- `eslint-config`: Shared ESlint configs
+
 ## Developer Quickstart
 
 If you are familiar with Node.js and `pnpm`, you can skip to [Useful Commands](#useful-commands) or quickly start development with:
@@ -11,17 +24,20 @@ pnpm dev
 ```
 
 When you run `dev`, you should see:
-- Native desktop window pop up with the game inside it
-- Web game at http://localhost:4200
+- Native desktop window with the game
 - Colyseus playground at http://localhost:4204
 - Colyseus monitor tool at http://localhost:4204/monitor
-- Apollo GraphQL playground at http://localhost:4208
+- Apollo GraphQL playground at http://localhost:4204/graphql
+- Web page at http://localhost:4200
 
 #### Otherwise, you should:
 
 First <ins>ensure</ins> you are using the <ins>correct version</ins> of <ins>Node.js</ins>. You can validate this by comparing your local version of node (`node -v`) with the `.nvmrc`.
 
-NOTE: The `.nvmrc` uses an alias for the node version. I highly recommend managing your local node version with [`nvm`](https://github.com/nvm-sh/nvm). This will allow you to quickly swap to the correct version with: `nvm use`.
+NOTE: The `.nvmrc` uses an alias for the node version. I highly recommend managing your local node version with [`nvm`](https://github.com/nvm-sh/nvm). This will allow you to quickly swap to the correct version with:
+```
+nvm use
+```
 
 This project uses [`pnpm`](https://pnpm.io/) for it's dependency mangement. You can install it with `npm`:
 ```
@@ -57,7 +73,6 @@ These commands are available from the root directory whether you decide to insta
 | Command | Description |
 |---------|-------------|
 | `pnpm install` | Installs dependencies for each repo |
-| `pnpm ci:all-checks` | Runs the linter, typecheck and tests for each repo |
 | `pnpm lint` | Runs the code linting check in each repo |
 | `pnpm lint:fix` | Runs the linter and fixes code when possible |
 | `pnpm test` | Runs the test suites in each repo and returns the result |
@@ -66,6 +81,7 @@ These commands are available from the root directory whether you decide to insta
 | `pnpm check-types` | Runs the typescript check in each repo |
 | `pnpm generate:gql-types` | Generates the GraphQL types in each repo |
 | `pnpm generate:gql-types:watch` | Generates the GraphQL types and watches each repo  |
+| `pnpm ci:all-checks` | Runs the linter, typecheck and tests for each repo |
 | `pnpm dev` | Run local development servers for each app |
 | `pnpm generate:app-icons` | Generates PWA/Electron icons from `apps/web/public/logo.svg` |
 | `pnpm generate:pwa-assets` | Generates PWA assets from `apps/web/public/logo.svg` |
