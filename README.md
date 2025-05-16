@@ -66,7 +66,12 @@ These commands are available from the root directory whether you decide to insta
 | `pnpm test:watch` | Runs the test suites in each repo and watches for changes |
 | `pnpm test:load` | Builds and runs the `game-server` then starts the load test |
 | `pnpm preview` | Builds each app and runs a local server using the output |
-| `pnpm build:[win\|mac\|linux]` | Builds the desktop app (via Electron) |
+| `pnpm build:[win\|mac\|linux]` | Builds the desktop app via Electron |
+
+NOTE: In case you need to clear all local deps, caches, builds, etc:
+```
+./clean-install.sh
+```
 
 ## Available Commands
 
