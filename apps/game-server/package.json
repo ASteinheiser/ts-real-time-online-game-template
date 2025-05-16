@@ -12,7 +12,7 @@
     "generate:gql-types": "graphql-codegen",
     "generate:gql-types:watch": "graphql-codegen --watch",
     "dev": "tsx watch src/index.ts",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build && cp src/graphql/schema.graphql dist/schema.graphql",
     "start": "node dist/index.js",
     "preview": "npm run start",
     "test": "mocha --config test/.mocharc.yaml",
