@@ -21,24 +21,28 @@
     "check-types": {
       "dependsOn": ["^check-types"]
     },
-    "ci:all-checks": {
-      "dependsOn": ["lint", "check-types", "test", "generate:gql-types"]
-    },
-    "generate:pwa-assets": {
-      "cache": false
-    },
     "generate:gql-types": {},
     "generate:gql-types:watch": {
       "cache": false,
       "persistent": true
+    },
+    "ci:all-checks": {
+      "dependsOn": ["lint", "generate:gql-types", "check-types", "test"]
     },
     "dev": {
       "with": ["generate:gql-types:watch"],
       "cache": false,
       "persistent": true
     },
+    "generate:pwa-assets": {
+      "cache": false
+    },
+    "generate:app-icons": {
+      "dependsOn": ["generate:pwa-assets"],
+      "cache": false
+    },
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["generate:app-icons", "ci:all-checks", "^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": ["dist/**"]
     },

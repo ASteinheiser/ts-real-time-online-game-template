@@ -14,6 +14,7 @@
     "test": "turbo run test",
     "test:watch": "turbo run test:watch",
     "test:load": "turbo run test:load",
+    "generate:app-icons": "turbo run generate:app-icons",
     "generate:pwa-assets": "turbo run generate:pwa-assets",
     "generate:gql-types": "turbo run generate:gql-types",
     "generate:gql-types:watch": "turbo run generate:gql-types:watch",
