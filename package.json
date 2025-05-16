@@ -33,6 +33,7 @@
     "onlyBuiltDependencies": [
       "@apollo/protobufjs",
       "@parcel/watcher",
+      "@tailwindcss/oxide",
       "electron",
       "electron-winstaller",
       "esbuild",

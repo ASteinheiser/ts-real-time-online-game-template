@@ -1,5 +1,6 @@
 import { defineConfig, externalizeDepsPlugin } from 'electron-vite';
 import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
 
 const externalDepsPlugin = externalizeDepsPlugin({
   // We need vite to build these files
@@ -20,7 +21,7 @@ export default defineConfig({
     },
   },
   renderer: {
-    plugins: [react()],
+    plugins: [react(), tailwindcss()],
     server: {
       port: 4202,
     },
