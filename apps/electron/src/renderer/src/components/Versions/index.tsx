@@ -5,9 +5,9 @@ export const Versions = () => {
 
   return (
     <ul className="flex flex-row gap-4">
-      <li className="text-md">Electron v{versions.electron}</li>
-      <li className="text-md">Chromium v{versions.chrome}</li>
-      <li className="text-md">Node v{versions.node}</li>
+      <li className="text-md font-montserrat">Electron v{versions.electron}</li>
+      <li className="text-md font-montserrat">Chromium v{versions.chrome}</li>
+      <li className="text-md font-montserrat">Node v{versions.node}</li>
     </ul>
   );
 };
