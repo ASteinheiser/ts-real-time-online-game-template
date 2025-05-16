@@ -6,7 +6,7 @@ A _highly opinionated_ template for creating real-time, online games using [Type
 
 - `electron`: Frontend rendering for the game written in TypeScript using Electron, React, Phaser, Colyseus and GraphQL. When built, compiles an executable that runs a version of Chromium to render the game.
 - `game-server`: Backend server that handles the game state and data via WebSockets and GraphQL. Written in TypeScript with Colyseus, Express and [Apollo GraphQL](https://www.apollographql.com/docs).
-- `web`: Static webpage that can serve as a marketing site, homepage, wiki, roadmap, devlog, etc. Written in Typescript with React and GraphQL.
+- `web`: Static webpage that can serve as a marketing site, homepage, wiki, roadmap, devlog, etc. Written in Typescript with React and GraphQL. Could also be used to serve the Phaser/Colyseus game.
 
 #### And 4 packages:
 
