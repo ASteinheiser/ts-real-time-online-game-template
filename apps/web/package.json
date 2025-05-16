@@ -8,23 +8,20 @@
   "scripts": {
     "lint": "eslint",
     "lint:fix": "eslint --fix",
-    "test": "vitest --config vite/vitest.config.ts",
-    "test:watch": "vitest --config vite/vitest.config.ts --watch --coverage",
+    "test": "vitest",
+    "test:watch": "vitest --watch --coverage",
     "generate:gql-types": "graphql-codegen",
     "generate:gql-types:watch": "graphql-codegen --watch",
     "generate:pwa-assets": "pwa-assets-generator --preset minimal public/logo.svg",
     "check-types": "tsc --noEmit",
-    "dev": "vite --config vite/dev.config.ts --clearScreen false",
-    "build": "tsc && vite build --config vite/prod.config.ts",
-    "preview": "vite preview --config vite/dev.config.ts"
+    "dev": "vite --clearScreen false",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
     "@apollo/client": "catalog:",
-    "@repo/core-game": "workspace:*",
     "@repo/ui": "workspace:*",
-    "colyseus.js": "catalog:",
     "graphql": "catalog:",
-    "phaser": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:"
   },
@@ -42,7 +39,6 @@
     "@vitest/coverage-v8": "catalog:",
     "postcss": "catalog:",
     "tailwindcss": "catalog:",
-    "terser": "^5.39.0",
     "typescript": "catalog:",
     "vite": "catalog:",
     "vite-plugin-pwa": "^1.0.0",

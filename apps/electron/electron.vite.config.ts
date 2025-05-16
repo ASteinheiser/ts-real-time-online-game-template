@@ -1,16 +1,20 @@
-import { resolve } from 'path';
 import { defineConfig, externalizeDepsPlugin } from 'electron-vite';
 import react from '@vitejs/plugin-react';
 
+const externalDepsPlugin = externalizeDepsPlugin({
+  // We need vite to build these files
+  exclude: ['@repo/core-game'],
+});
+
 export default defineConfig({
   main: {
-    plugins: [externalizeDepsPlugin()],
+    plugins: [externalDepsPlugin],
     build: {
       outDir: 'dist/main',
     },
   },
   preload: {
-    plugins: [externalizeDepsPlugin()],
+    plugins: [externalDepsPlugin],
     build: {
       outDir: 'dist/preload',
     },
@@ -22,11 +26,6 @@ export default defineConfig({
     },
     build: {
       outDir: 'dist/renderer',
-    },
-    resolve: {
-      alias: {
-        '@renderer': resolve('src/renderer/src'),
-      },
     },
   },
 });

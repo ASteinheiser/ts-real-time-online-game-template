@@ -7,7 +7,7 @@ import icon from '../../resources/icon.png?asset';
 function createWindow(): void {
   const mainWindow = new BrowserWindow({
     width: MAP_WIDTH + 50,
-    height: MAP_HEIGHT + 160,
+    height: MAP_HEIGHT + 120,
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),

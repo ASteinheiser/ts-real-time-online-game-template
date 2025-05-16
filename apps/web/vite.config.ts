@@ -2,8 +2,16 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
+const PORT = 4200;
+
 export default defineConfig({
   base: './',
+  server: {
+    port: PORT,
+  },
+  preview: {
+    port: PORT,
+  },
   plugins: [
     react(),
     VitePWA({
@@ -40,21 +48,4 @@ export default defineConfig({
       },
     }),
   ],
-  logLevel: 'warn',
-  build: {
-    chunkSizeWarningLimit: 1200,
-    minify: 'terser',
-    terserOptions: {
-      compress: { passes: 2 },
-      mangle: true,
-      format: { comments: false },
-    },
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          phaser: ['phaser'],
-        },
-      },
-    },
-  },
 });
