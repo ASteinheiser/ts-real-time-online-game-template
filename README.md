@@ -67,7 +67,7 @@ These commands are available from the root directory whether you decide to insta
 | `pnpm generate:gql-types` | Generates the GraphQL types in each repo |
 | `pnpm generate:gql-types:watch` | Generates the GraphQL types and watches each repo  |
 | `pnpm dev` | Run local development servers for each app |
-| `pnpm generate:app-icons` | Generates PWA and Electron app icons from `apps/web/public/logo.svg` |
+| `pnpm generate:app-icons` | Generates PWA/Electron icons from `apps/web/public/logo.svg` |
 | `pnpm generate:pwa-assets` | Generates PWA assets from `apps/web/public/logo.svg` |
 | `pnpm build` | Generates icons and builds each app including sub-repos |
 | `pnpm preview` | Builds each app and runs a local server using the output |
