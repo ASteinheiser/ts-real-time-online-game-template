@@ -20,8 +20,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
       manifest: {
-        name: 'Demo Game',
-        short_name: 'Demo Game',
+        name: 'Marketing Site',
+        short_name: 'Marketing Site',
         theme_color: '#0f0f0f',
         icons: [
           {
