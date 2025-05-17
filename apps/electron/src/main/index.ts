@@ -4,6 +4,8 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils';
 import { MAP_WIDTH, MAP_HEIGHT } from '@repo/core-game';
 import icon from '../../resources/icon.png?asset';
 
+const WIN_APP_USER_MODEL_ID = 'iamandrew.demo-game';
+
 function createWindow(): void {
   const mainWindow = new BrowserWindow({
     width: MAP_WIDTH + 50,
@@ -40,7 +42,7 @@ function createWindow(): void {
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
   // Set app user model id for windows
-  electronApp.setAppUserModelId('com.electron');
+  electronApp.setAppUserModelId(WIN_APP_USER_MODEL_ID);
 
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.
