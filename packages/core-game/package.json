@@ -22,7 +22,7 @@
     "test": "vitest",
     "test:watch": "vitest --watch --coverage",
     "check-types": "tsc --noEmit",
-    "dev": "vite build --watch",
+    "dev": "vite build --watch --emptyOutDir=false",
     "build": "vite build"
   },
   "devDependencies": {
