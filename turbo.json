@@ -46,12 +46,10 @@
       "cache": false,
       "persistent": true
     },
-    "generate:pwa-assets": {
-      "cache": false
-    },
+    "generate:pwa-assets": {},
     "generate:app-icons": {
       "dependsOn": ["generate:pwa-assets"],
-      "cache": false
+      "inputs": ["../web/public/logo.svg"]
     },
     "build": {
       "dependsOn": ["generate:app-icons", "ci:all-checks", "^build"],
