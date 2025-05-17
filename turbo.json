@@ -29,8 +29,12 @@
     "ci:all-checks": {
       "dependsOn": ["lint", "generate:gql-types", "check-types", "test"]
     },
+    "db:start": {
+      "cache": false,
+      "persistent": true
+    },
     "dev": {
-      "with": ["generate:gql-types:watch"],
+      "with": ["generate:gql-types:watch", "db:start"],
       "cache": false,
       "persistent": true
     },
@@ -48,6 +52,7 @@
     },
     "preview": {
       "dependsOn": ["build"],
+      "with": ["db:start"],
       "cache": false,
       "persistent": true
     },

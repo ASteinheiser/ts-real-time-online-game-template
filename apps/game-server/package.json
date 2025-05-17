@@ -17,7 +17,8 @@
     "preview": "npm run start",
     "test": "mocha --config test/.mocharc.yaml",
     "test:watch": "nodemon --ext ts --exec \"c8 --config test/.c8rc.json mocha --config test/.mocharc.yaml\"",
-    "test:load": "tsx test/load/test.ts --room my_room --numClients 2 --endpoint ws://localhost:4204"
+    "test:load": "tsx test/load/test.ts --room my_room --numClients 2 --endpoint ws://localhost:4204",
+    "db:start": "docker-compose -f docker-compose.yaml up"
   },
   "devDependencies": {
     "@colyseus/loadtest": "^0.16.1",

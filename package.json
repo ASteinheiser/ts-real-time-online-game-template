@@ -19,6 +19,7 @@
     "dev": "turbo run dev",
     "generate:app-icons": "turbo run generate:app-icons",
     "generate:pwa-assets": "turbo run generate:pwa-assets",
+    "db:start": "turbo run db:start",
     "build": "turbo run build",
     "preview": "turbo run preview",
     "build:win": "turbo run build:win",

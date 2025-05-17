@@ -29,13 +29,13 @@ When you run `dev`, you should see:
 - Colyseus monitor tool at http://localhost:4204/monitor
 - Apollo GraphQL playground at http://localhost:4204/graphql
 - Web page at http://localhost:4200
-- PostgreSQL DB at postgresql://user:password@localhost:5432/game_db
+- PostgreSQL DB at postgresql://guest:guest@localhost:5432/game_db
 
 #### Otherwise, you should:
 
-Install the `docker-compose` cli, which can be [installed via Docker Desktop](https://docs.docker.com/compose/install/).
+Install the `docker-compose` cli, which can be [installed via Docker Desktop](https://docs.docker.com/compose/install/). Make sure you have Docker Desktop running!
 
-Now <ins>ensure</ins> you are using the <ins>correct version</ins> of <ins>Node.js</ins>. You can validate this by comparing your local version of node (`node -v`) with the `.nvmrc`.
+<b>Ensure</b> you are using the <ins>correct version</ins> of <ins>Node.js</ins>. You can validate this by comparing your local version of node (`node -v`) with the `.nvmrc`.
 
 NOTE: The `.nvmrc` uses an alias for the node version. I highly recommend managing your local node version with [`nvm`](https://github.com/nvm-sh/nvm). This will allow you to quickly swap to the correct version with:
 ```
@@ -90,6 +90,7 @@ NOTE: In case you need to clear all local deps, caches, builds, etc:
 | `pnpm generate:gql-types` | Generates the GraphQL types in each repo |
 | `pnpm generate:gql-types:watch` | Generates the GraphQL types and watches each repo  |
 | `pnpm ci:all-checks` | Runs the linter, typecheck and tests for each repo |
+| `pnpm db:start` | Uses `docker-compose` to start a local PostgreSQL DB |
 | `pnpm dev` | Run local development servers for each app |
 | `pnpm generate:app-icons` | Generates PWA/Electron icons from `apps/web/public/logo.svg` |
 | `pnpm generate:pwa-assets` | Generates PWA assets from `apps/web/public/logo.svg` |
