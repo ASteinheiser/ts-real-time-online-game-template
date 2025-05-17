@@ -17,7 +17,7 @@ A _highly opinionated_ template for creating real-time, online games using [Type
 
 ## Developer Quickstart
 
-If you are familiar with Node.js and `pnpm`, you can skip to [Useful Commands](#useful-commands) or quickly start development with:
+If you are familiar with `pnpm` and `docker-compose`, you can skip to [Useful Commands](#useful-commands) or quickly start development with:
 ```bash
 pnpm i
 pnpm dev
@@ -29,10 +29,13 @@ When you run `dev`, you should see:
 - Colyseus monitor tool at http://localhost:4204/monitor
 - Apollo GraphQL playground at http://localhost:4204/graphql
 - Web page at http://localhost:4200
+- PostgreSQL DB at postgresql://user:password@localhost:5432/game_db
 
 #### Otherwise, you should:
 
-First <ins>ensure</ins> you are using the <ins>correct version</ins> of <ins>Node.js</ins>. You can validate this by comparing your local version of node (`node -v`) with the `.nvmrc`.
+Install the `docker-compose` cli, which can be [installed via Docker Desktop](https://docs.docker.com/compose/install/).
+
+Now <ins>ensure</ins> you are using the <ins>correct version</ins> of <ins>Node.js</ins>. You can validate this by comparing your local version of node (`node -v`) with the `.nvmrc`.
 
 NOTE: The `.nvmrc` uses an alias for the node version. I highly recommend managing your local node version with [`nvm`](https://github.com/nvm-sh/nvm). This will allow you to quickly swap to the correct version with:
 ```
