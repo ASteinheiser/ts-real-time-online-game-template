@@ -46,10 +46,12 @@
       "cache": false,
       "persistent": true
     },
-    "generate:pwa-assets": {},
+    "generate:pwa-assets": {
+      "inputs": ["public/logo.svg"]
+    },
     "generate:app-icons": {
       "dependsOn": ["generate:pwa-assets"],
-      "inputs": ["../web/public/logo.svg"]
+      "inputs": ["../web/public/pwa-512x512.png"]
     },
     "build": {
       "dependsOn": ["generate:app-icons", "ci:all-checks", "^build"],
