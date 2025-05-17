@@ -10,3 +10,4 @@ dist-ssr
 *.tsbuildinfo
 coverage
 .rollup.cache
+**/prisma/generated

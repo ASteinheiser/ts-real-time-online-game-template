@@ -20,6 +20,7 @@ A _highly opinionated_ template for creating real-time, online games using [Type
 If you are familiar with `pnpm` and `docker-compose`, you can skip to [Useful Commands](#useful-commands) or quickly start development with:
 ```bash
 pnpm i
+pnpm db:sync
 pnpm dev
 ```
 
@@ -66,12 +67,13 @@ These commands are available from the root directory whether you decide to insta
 |---------|-------------|
 | `pnpm dev` | Run local development servers for each app |
 | `pnpm ci:all-checks` | Runs the linter, typecheck and tests for each repo |
+| `pnpm db:[start\|stop\|sync]` | Uses `docker-compose` and `prisma` to manage a local PostgreSQL DB |
 | `pnpm test:watch` | Runs the test suites in each repo and watches for changes |
 | `pnpm test:load` | Builds and runs the `game-server` then starts the load test |
 | `pnpm preview` | Builds each app and runs a local server using the output |
 | `pnpm build:[win\|mac\|linux]` | Builds the desktop app via Electron |
 
-NOTE: In case you need to clear all local deps, caches, builds, etc:
+<b>NOTE</b>: In case you need to clear all local deps, caches, builds, etc:
 ```
 ./scripts/clean-install.sh
 ```
@@ -91,6 +93,8 @@ NOTE: In case you need to clear all local deps, caches, builds, etc:
 | `pnpm generate:gql-types:watch` | Generates the GraphQL types and watches each repo  |
 | `pnpm ci:all-checks` | Runs the linter, typecheck and tests for each repo |
 | `pnpm db:start` | Uses `docker-compose` to start a local PostgreSQL DB |
+| `pnpm db:stop` | Uses `docker-compose` to stop the local PostgreSQL DB |
+| `pnpm db:sync` | Uses `prisma` to manage the local DB based on the `schema.prisma` |
 | `pnpm dev` | Run local development servers for each app |
 | `pnpm generate:app-icons` | Generates PWA/Electron icons from `apps/web/public/logo.svg` |
 | `pnpm generate:pwa-assets` | Generates PWA assets from `apps/web/public/logo.svg` |

@@ -7,7 +7,14 @@ import eslintConfigPrettier from 'eslint-config-prettier';
 export const ALL_JS_FILES = '**/*.{js,mjs,cjs,ts,jsx,tsx}';
 
 export default defineConfig([
-  globalIgnores(['node_modules/*', 'dist/*', '**/generated-types.ts', '**/generated-types/**', '.rollup.cache/*']),
+  globalIgnores([
+    'node_modules/*',
+    'dist/*',
+    '.rollup.cache/*',
+    '**/generated-types.ts',
+    '**/generated-types/**',
+    '**/prisma/generated/**',
+  ]),
   {
     files: [ALL_JS_FILES],
     plugins: { js },

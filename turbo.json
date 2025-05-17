@@ -31,11 +31,18 @@
       "dependsOn": ["lint", "generate:gql-types", "check-types", "test"]
     },
     "db:start": {
+      "cache": false
+    },
+    "db:stop": {
+      "cache": false
+    },
+    "db:sync": {
+      "dependsOn": ["db:start"],
       "cache": false,
-      "persistent": true
+      "interactive": true
     },
     "dev": {
-      "with": ["generate:gql-types:watch", "db:start"],
+      "with": ["generate:gql-types:watch"],
       "cache": false,
       "persistent": true
     },
@@ -53,7 +60,6 @@
     },
     "preview": {
       "dependsOn": ["build"],
-      "with": ["db:start"],
       "cache": false,
       "persistent": true
     },

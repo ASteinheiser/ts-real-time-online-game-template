@@ -18,7 +18,9 @@
     "test": "mocha --config test/.mocharc.yaml",
     "test:watch": "nodemon --ext ts --exec \"c8 --config test/.c8rc.json mocha --config test/.mocharc.yaml\"",
     "test:load": "tsx test/load/test.ts --room my_room --numClients 2 --endpoint ws://localhost:4204",
-    "db:start": "docker-compose -f docker-compose.yaml up"
+    "db:start": "docker-compose -f docker-compose.yaml up -d",
+    "db:stop": "docker-compose -f docker-compose.yaml down",
+    "db:sync": "prisma migrate dev"
   },
   "devDependencies": {
     "@colyseus/loadtest": "^0.16.1",
@@ -37,6 +39,7 @@
     "colyseus.js": "catalog:",
     "mocha": "catalog:",
     "nodemon": "catalog:",
+    "prisma": "catalog:",
     "tsx": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:"
@@ -49,6 +52,7 @@
     "@colyseus/playground": "^0.16.4",
     "@colyseus/schema": "^3.0.35",
     "@colyseus/tools": "^0.16.8",
+    "@prisma/client": "catalog:",
     "@repo/core-game": "workspace:*",
     "colyseus": "catalog:",
     "cors": "^2.8.5",

@@ -20,6 +20,8 @@
     "generate:app-icons": "turbo run generate:app-icons",
     "generate:pwa-assets": "turbo run generate:pwa-assets",
     "db:start": "turbo run db:start",
+    "db:stop": "turbo run db:stop",
+    "db:sync": "turbo run db:sync",
     "build": "turbo run build",
     "preview": "turbo run preview",
     "build:win": "turbo run build:win",
@@ -35,11 +37,14 @@
     "onlyBuiltDependencies": [
       "@apollo/protobufjs",
       "@parcel/watcher",
+      "@prisma/client",
+      "@prisma/engines",
       "@tailwindcss/oxide",
       "electron",
       "electron-winstaller",
       "esbuild",
       "msgpackr-extract",
+      "prisma",
       "sharp"
     ]
   }

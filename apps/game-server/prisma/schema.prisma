@@ -1,0 +1,14 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://guest:guest@localhost:5432/game_db"
+}
+
+model User {
+  id       String @id @unique
+  username String @unique @db.VarChar(255)
+}
