@@ -114,18 +114,18 @@
 }
 
 @layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-roboto;
+  }
+
   .font-roboto {
     @apply font-roboto;
   }
 
   .font-montserrat {
     @apply font-montserrat;
-  }
-
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground font-roboto;
   }
 }
