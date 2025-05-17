@@ -15,7 +15,7 @@
     "generate:pwa-assets": "pwa-assets-generator --preset minimal public/logo.svg",
     "check-types": "tsc --noEmit",
     "dev": "vite --clearScreen false",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {

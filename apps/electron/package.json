@@ -17,7 +17,7 @@
     "check-types": "tsc --noEmit",
     "dev": "electron-vite dev",
     "preview": "electron-vite preview",
-    "build": "tsc && electron-vite build",
+    "build": "electron-vite build",
     "build:win": "electron-builder --win",
     "build:mac": "electron-builder --mac",
     "build:linux": "electron-builder --linux"
