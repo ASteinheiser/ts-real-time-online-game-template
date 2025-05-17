@@ -72,7 +72,7 @@
   --sidebar-ring: oklch(0.606 0.25 292.717);
 }
 
-@theme inline {
+@theme inline static {
   --font-roboto: "Roboto", sans-serif;
   --font-montserrat: "Montserrat", sans-serif;
   --color-background: var(--background);
@@ -114,6 +114,14 @@
 }
 
 @layer base {
+  .font-roboto {
+    @apply font-roboto;
+  }
+
+  .font-montserrat {
+    @apply font-montserrat;
+  }
+
   * {
     @apply border-border outline-ring/50;
   }

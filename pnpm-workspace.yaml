@@ -30,8 +30,6 @@ catalog:
   "@rollup/plugin-typescript": ^12.1.2
   tailwindcss: ^4.1.4
   "@tailwindcss/vite": ^4.1.7
-  postcss: ^8.5.3
-  "@tailwindcss/postcss": ^4.1.4
   nanoid: ^5.1.5
   express: ^5.1.0
   "@types/express": ^5.0.1
