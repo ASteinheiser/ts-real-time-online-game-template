@@ -25,7 +25,7 @@ pnpm dev
 ```
 
 When you run `dev`, you should see:
-- Native desktop window with the game
+- Native desktop window with the game connected to ws://localhost:4204
 - Colyseus playground at http://localhost:4204
 - Colyseus monitor tool at http://localhost:4204/monitor
 - Apollo GraphQL playground at http://localhost:4204/graphql
