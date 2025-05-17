@@ -70,7 +70,7 @@ These commands are available from the root directory whether you decide to insta
 
 NOTE: In case you need to clear all local deps, caches, builds, etc:
 ```
-./clean-install.sh
+./scripts/clean-install.sh
 ```
 
 ## Available Commands
