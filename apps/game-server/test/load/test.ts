@@ -2,7 +2,7 @@ import { Client } from 'colyseus.js';
 import { cli, Options } from '@colyseus/loadtest';
 import { MyRoomState } from '../../src/rooms/schema/MyRoomState';
 
-const JOIN_DELAY_MS = 200;
+const JOIN_DELAY_MS = 500;
 
 export async function main(options: Options) {
   await new Promise((resolve) => setTimeout(resolve, JOIN_DELAY_MS));

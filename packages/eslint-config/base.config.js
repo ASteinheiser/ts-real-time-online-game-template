@@ -13,7 +13,7 @@ export default defineConfig([
     '.rollup.cache/*',
     '**/generated-types.ts',
     '**/generated-types/**',
-    '**/prisma/generated/**',
+    '**/prisma-client/**',
   ]),
   {
     files: [ALL_JS_FILES],

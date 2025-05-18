@@ -13,7 +13,7 @@
     },
     "generate:db-types": {
       "inputs": ["prisma/schema.prisma"],
-      "outputs": ["prisma/generated/**"]
+      "outputs": ["**/prisma-client/**"]
     },
     "generate:db-types:watch": {
       "cache": false,

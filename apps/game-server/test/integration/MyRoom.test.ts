@@ -1,13 +1,17 @@
 import assert from 'assert';
 import { ColyseusTestServer, boot } from '@colyseus/testing';
-import appConfig from '../../src/app.config';
+import { setupApp } from '../../src/app.config';
 import { MyRoomState } from '../../src/rooms/schema/MyRoomState';
 import { createClient } from './utils';
+import type { PrismaClient } from '../../src/prisma-client';
 
 describe('Colyseus WebSocket Server', () => {
   let server: ColyseusTestServer;
 
-  before(async () => (server = await boot(appConfig)));
+  const prisma = {} as PrismaClient;
+  const app = setupApp({ prisma });
+
+  before(async () => (server = await boot(app)));
   after(async () => server.shutdown());
 
   beforeEach(async () => await server.cleanup());
