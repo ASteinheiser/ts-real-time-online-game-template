@@ -49,11 +49,13 @@
       "persistent": true
     },
     "generate:pwa-assets": {
-      "inputs": ["public/logo.svg"]
+      "inputs": ["public/logo.svg"],
+      "outputs": ["public/favicon.ico", "public/*.png"]
     },
     "generate:app-icons": {
       "dependsOn": ["generate:pwa-assets"],
-      "cache": false
+      "inputs": ["../../apps/web/public/logo.svg"],
+      "outputs": ["build/icon.png", "resources/icon.png"]
     },
     "build": {
       "dependsOn": ["generate:app-icons", "ci:all-checks", "^build"],
