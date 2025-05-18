@@ -3,9 +3,6 @@ import { cli, Options } from '@colyseus/loadtest';
 import { MyRoomState } from '../../src/rooms/schema/MyRoomState';
 
 export async function main(options: Options) {
-  // wait 3 seconds before starting load test
-  await new Promise((resolve) => setTimeout(resolve, 3000));
-
   const client = new Client(options.endpoint);
   const room = await client.joinOrCreate<MyRoomState>(options.roomName);
 

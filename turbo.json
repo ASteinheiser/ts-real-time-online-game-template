@@ -37,6 +37,7 @@
       "interactive": true
     },
     "test:load": {
+      "dependsOn": ["game-server#build"],
       "with": ["game-server#preview"],
       "cache": false,
       "persistent": true
