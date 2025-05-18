@@ -23,7 +23,8 @@
       "dependsOn": ["^check-types"]
     },
     "generate:gql-types": {
-      "inputs": ["$TURBO_DEFAULT$", "../../apps/game-server/src/graphql/schema.graphql"]
+      "inputs": ["$TURBO_DEFAULT$", "../../apps/game-server/src/graphql/schema.graphql"],
+      "outputs": ["**/graphql/generated-types/**", "**/graphql/generated-types.ts"]
     },
     "generate:gql-types:watch": {
       "cache": false,
@@ -58,7 +59,7 @@
       "outputs": ["build/icon.png", "resources/icon.png"]
     },
     "build": {
-      "dependsOn": ["generate:app-icons", "ci:all-checks", "^build"],
+      "dependsOn": ["^build", "generate:app-icons", "ci:all-checks"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": ["dist/**"]
     },
