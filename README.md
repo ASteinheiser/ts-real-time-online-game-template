@@ -83,7 +83,9 @@ These commands are available from the root directory whether you decide to insta
 
 ## Dealing with the PostgreSQL DB
 
-`prisma generate` will generate the necessary TypeScript files during `dev`, `build`, etc., if you're using the monorepo commands. However, if you change the DB schema via `apps/game-server/prisma/schema.prisma`, then you'll need to run:
+`pnpm generate:db-types` will run during `dev`, `build`, etc., if you're using the monorepo commands.
+
+However, if you change the DB schema via `apps/game-server/prisma/schema.prisma`, then you'll need to run:
 ```
 pnpm db:sync
 ```
@@ -103,6 +105,8 @@ This will update your local DB, generate a SQL migration and update your types.
 | `pnpm check-types` | Runs the typescript check in each repo |
 | `pnpm generate:gql-types` | Generates the GraphQL types in each repo |
 | `pnpm generate:gql-types:watch` | Generates the GraphQL types and watches each repo  |
+| `pnpm generate:db-types` | Generates DB types via `prisma.schema` |
+| `pnpm generate:db-types:watch` | Generates DB types via `prisma.schema` and watches for changes |
 | `pnpm ci:all-checks` | Runs the linter, typecheck and tests for each repo |
 | `pnpm db:start` | Uses `docker-compose` to start a local PostgreSQL DB |
 | `pnpm db:stop` | Uses `docker-compose` to stop the local PostgreSQL DB |
