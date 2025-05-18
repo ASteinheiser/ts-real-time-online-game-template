@@ -8,9 +8,11 @@
   "scripts": {
     "lint": "eslint",
     "lint:fix": "eslint --fix",
-    "check-types": "tsc --noEmit",
     "generate:gql-types": "graphql-codegen",
     "generate:gql-types:watch": "graphql-codegen --watch",
+    "generate:db-types": "prisma generate",
+    "generate:db-types:watch": "prisma generate --watch",
+    "check-types": "tsc --noEmit",
     "dev": "tsx watch src/index.ts",
     "build": "vite build && cp src/graphql/schema.graphql dist/schema.graphql",
     "start": "node dist/index.js",

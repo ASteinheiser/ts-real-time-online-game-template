@@ -30,8 +30,16 @@
       "cache": false,
       "persistent": true
     },
+    "generate:db-types": {
+      "inputs": ["prisma/schema.prisma"],
+      "outputs": ["prisma/generated/**"]
+    },
+    "generate:db-types:watch": {
+      "cache": false,
+      "persistent": true
+    },
     "ci:all-checks": {
-      "dependsOn": ["generate:gql-types", "check-types", "lint", "test"]
+      "dependsOn": ["generate:db-types", "generate:gql-types", "check-types", "lint", "test"]
     },
     "db:start": {
       "cache": false
@@ -40,12 +48,12 @@
       "cache": false
     },
     "db:sync": {
-      "dependsOn": ["db:start"],
       "cache": false,
+      "persistent": true,
       "interactive": true
     },
     "dev": {
-      "with": ["generate:gql-types:watch"],
+      "with": ["generate:gql-types:watch", "generate:db-types:watch"],
       "cache": false,
       "persistent": true
     },
