@@ -73,8 +73,8 @@
 }
 
 @theme inline static {
-  --font-roboto: "Roboto", sans-serif;
-  --font-montserrat: "Montserrat", sans-serif;
+  --font-body: "Roboto", sans-serif;
+  --font-title: "Montserrat", sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -118,16 +118,16 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground font-roboto;
+    @apply bg-background text-foreground font-body;
   }
 }
 
 @layer utilities {
-  .font-roboto {
-    @apply font-roboto;
+  .font-body {
+    @apply font-body;
   }
 
-  .font-montserrat {
-    @apply font-montserrat;
+  .font-title {
+    @apply font-title;
   }
 }

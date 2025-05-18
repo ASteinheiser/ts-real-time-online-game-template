@@ -17,7 +17,7 @@ export const App = () => {
 
   return (
     <div className="flex justify-center items-center h-screen">
-      <span className="text-2xl font-bold font-montserrat">
+      <span className="text-2xl font-bold font-title">
         Yo what is up this is a demo marketing site for a game!
       </span>
     </div>
