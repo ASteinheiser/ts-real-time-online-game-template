@@ -120,7 +120,9 @@
   body {
     @apply bg-background text-foreground font-roboto;
   }
+}
 
+@layer utilities {
   .font-roboto {
     @apply font-roboto;
   }
