@@ -20,6 +20,7 @@ A _highly opinionated_ template for creating real-time, online games using [Type
 If you are familiar with `pnpm` and `docker-compose`, you can skip to [Useful Commands](#useful-commands) or quickly start development with:
 ```bash
 pnpm i
+pnpm db:start
 pnpm db:sync
 pnpm dev
 ```
@@ -67,9 +68,9 @@ These commands are available from the root directory whether you decide to insta
 
 | Command | Description |
 |---------|-------------|
+| `pnpm db:[start\|stop\|sync]` | Uses `docker-compose` and `prisma` to manage a local PostgreSQL DB |
 | `pnpm dev` | Run local development servers for each app |
 | `pnpm ci:all-checks` | Runs the linter, typecheck and tests for each repo |
-| `pnpm db:[start\|stop\|sync]` | Uses `docker-compose` and `prisma` to manage a local PostgreSQL DB |
 | `pnpm test:watch` | Runs the test suites in each repo and watches for changes |
 | `pnpm test:load` | Builds and runs the `game-server` then starts the load test |
 | `pnpm preview` | Builds each app and runs a local server using the output |
@@ -79,6 +80,15 @@ These commands are available from the root directory whether you decide to insta
 ```
 ./scripts/clean-install.sh
 ```
+
+## Dealing with the PostgreSQL DB
+
+`prisma generate` will generate the necessary TypeScript files during `dev`, `build`, etc., if you're using the monorepo commands. However, if you change the DB schema via `apps/game-server/prisma/schema.prisma`, then you'll need to run:
+```
+pnpm db:sync
+```
+
+This will update your local DB, generate a SQL migration and update your types.
 
 ## Available Commands
 
