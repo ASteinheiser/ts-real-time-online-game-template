@@ -63,6 +63,8 @@ turbo run
 
 These commands are available from the root directory whether you decide to install the `turbo` cli locally or not...
 
+<b>NOTE</b>: Commands should <ins>almost always</ins> be ran from the root directory. The package manager, `pnpm`, uses `turbo` to manage and run scripts. Since code can be shared between repos, `turbo` helps ensure that scripts run in a certain order when necessary.
+
 | Command | Description |
 |---------|-------------|
 | `pnpm dev` | Run local development servers for each app |
