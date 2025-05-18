@@ -22,13 +22,15 @@
     "check-types": {
       "dependsOn": ["^check-types"]
     },
-    "generate:gql-types": {},
+    "generate:gql-types": {
+      "inputs": ["$TURBO_DEFAULT$", "../../apps/game-server/src/graphql/schema.graphql"]
+    },
     "generate:gql-types:watch": {
       "cache": false,
       "persistent": true
     },
     "ci:all-checks": {
-      "dependsOn": ["lint", "generate:gql-types", "check-types", "test"]
+      "dependsOn": ["generate:gql-types", "check-types", "lint", "test"]
     },
     "db:start": {
       "cache": false
@@ -51,7 +53,7 @@
     },
     "generate:app-icons": {
       "dependsOn": ["generate:pwa-assets"],
-      "inputs": ["../web/public/pwa-512x512.png"]
+      "cache": false
     },
     "build": {
       "dependsOn": ["generate:app-icons", "ci:all-checks", "^build"],
