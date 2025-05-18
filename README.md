@@ -70,8 +70,8 @@ These commands are available from the root directory whether you decide to insta
 |---------|-------------|
 | `pnpm db:[start\|stop\|sync]` | Uses `docker-compose` and `prisma` to manage a local PostgreSQL DB |
 | `pnpm dev` | Run local development servers for each app |
-| `pnpm ci:all-checks` | Runs the linter, typecheck and tests for each repo |
-| `pnpm test:watch` | Runs the test suites in each repo and watches for changes |
+| `pnpm test` | Runs the typecheck, linter and tests for each repo |
+| `pnpm test:watch` | Runs the test suite in each repo and watches for changes |
 | `pnpm test:load` | Builds and runs the `game-server` then starts the load test |
 | `pnpm preview` | Builds each app and runs a local server using the output |
 | `pnpm build:[win\|mac\|linux]` | Builds the desktop app via Electron |
@@ -92,22 +92,23 @@ pnpm db:sync
 
 This will update your local DB, generate a SQL migration and update your types.
 
+<b>NOTE</b>: This project uses Turbo UI ([tui](https://turborepo.com/blog/turbo-2-0#new-terminal-ui)) and some tasks are interactive, such as `test:watch` and `db:sync`. When you want to interact with a window, press "i", then interact as normal. Press "ctrl" + "z" to leave interactive mode.
+
 ## Available Commands
 
 | Command | Description |
 |---------|-------------|
 | `pnpm install` | Installs dependencies for each repo |
+| `pnpm test` | Runs the typecheck, linter and tests for each repo |
+| `pnpm test:watch` | Runs the test suite in each repo and watches for changes |
+| `pnpm test:load` | Builds and runs the `game-server` then starts the load test |
 | `pnpm lint` | Runs the code linting check in each repo |
 | `pnpm lint:fix` | Runs the linter and fixes code when possible |
-| `pnpm test` | Runs the test suites in each repo and returns the result |
-| `pnpm test:watch` | Runs the test suites in each repo and watches for changes |
-| `pnpm test:load` | Builds and runs the `game-server` then starts the load test |
 | `pnpm check-types` | Runs the typescript check in each repo |
 | `pnpm generate:gql-types` | Generates the GraphQL types in each repo |
 | `pnpm generate:gql-types:watch` | Generates the GraphQL types and watches each repo  |
 | `pnpm generate:db-types` | Generates DB types via `prisma.schema` |
 | `pnpm generate:db-types:watch` | Generates DB types via `prisma.schema` and watches for changes |
-| `pnpm ci:all-checks` | Runs the linter, typecheck and tests for each repo |
 | `pnpm db:start` | Uses `docker-compose` to start a local PostgreSQL DB |
 | `pnpm db:stop` | Uses `docker-compose` to stop the local PostgreSQL DB |
 | `pnpm db:sync` | Uses `prisma` to manage the local DB based on the `schema.prisma` |

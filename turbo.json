@@ -1,27 +1,8 @@
 {
   "$schema": "https://turborepo.com/schema.json",
   "ui": "tui",
-  "concurrency": "15",
+  "concurrency": "11",
   "tasks": {
-    "lint": {
-      "dependsOn": ["^lint"]
-    },
-    "lint:fix": {
-      "dependsOn": ["^lint:fix"]
-    },
-    "test": {},
-    "test:watch": {
-      "cache": false,
-      "persistent": true
-    },
-    "test:load": {
-      "with": ["game-server#preview"],
-      "cache": false,
-      "persistent": true
-    },
-    "check-types": {
-      "dependsOn": ["^check-types"]
-    },
     "generate:gql-types": {
       "inputs": ["$TURBO_DEFAULT$", "../../apps/game-server/src/graphql/schema.graphql"],
       "outputs": ["**/graphql/generated-types/**", "**/graphql/generated-types.ts"]
@@ -38,8 +19,27 @@
       "cache": false,
       "persistent": true
     },
-    "ci:all-checks": {
-      "dependsOn": ["generate:db-types", "generate:gql-types", "check-types", "lint", "test"]
+    "check-types": {
+      "dependsOn": ["^check-types", "generate:db-types", "generate:gql-types"]
+    },
+    "lint": {
+      "dependsOn": ["^lint", "check-types"]
+    },
+    "lint:fix": {
+      "dependsOn": ["^lint:fix"]
+    },
+    "test": {
+      "dependsOn": ["lint"]
+    },
+    "test:watch": {
+      "cache": false,
+      "persistent": true,
+      "interactive": true
+    },
+    "test:load": {
+      "with": ["game-server#preview"],
+      "cache": false,
+      "persistent": true
     },
     "db:start": {
       "cache": false
@@ -67,7 +67,7 @@
       "outputs": ["build/icon.png", "resources/icon.png"]
     },
     "build": {
-      "dependsOn": ["^build", "generate:app-icons", "ci:all-checks"],
+      "dependsOn": ["^build", "generate:app-icons", "test"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": ["dist/**"]
     },
