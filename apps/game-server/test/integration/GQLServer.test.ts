@@ -44,6 +44,9 @@ describe('GQLServer', () => {
             booksDb,
             profilesDb,
           },
+          user: {
+            id: 'abc',
+          },
         },
       }
     );
