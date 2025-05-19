@@ -27,4 +27,10 @@ export class ProfilesRepository {
       },
     });
   }
+
+  async deleteProfile(userId: string) {
+    return this.prisma.profile.delete({
+      where: { userId },
+    });
+  }
 }

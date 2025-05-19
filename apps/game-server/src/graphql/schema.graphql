@@ -11,3 +11,8 @@ type Query {
   books: [Book]
   profile: Profile
 }
+
+type Mutation {
+  createProfile(userName: String!): Profile
+  deleteProfile: Boolean
+}

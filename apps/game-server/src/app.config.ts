@@ -28,7 +28,7 @@ export const setupApp = ({ prisma }: SetupAppArgs) => {
         cors<cors.CorsRequest>(),
         express.json(),
         expressMiddleware(GQLServer, {
-          context: () => createContext({ prisma }),
+          context: () => createContext({ prisma, user: { id: 'abc' } }),
         })
       );
 

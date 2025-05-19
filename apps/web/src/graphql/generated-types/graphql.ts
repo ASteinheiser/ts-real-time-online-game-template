@@ -22,6 +22,17 @@ export type Book = {
   title?: Maybe<Scalars['String']['output']>;
 };
 
+export type Mutation = {
+  __typename?: 'Mutation';
+  createProfile?: Maybe<Profile>;
+  deleteProfile?: Maybe<Scalars['Boolean']['output']>;
+};
+
+
+export type MutationCreateProfileArgs = {
+  userName: Scalars['String']['input'];
+};
+
 export type Profile = {
   __typename?: 'Profile';
   userName?: Maybe<Scalars['String']['output']>;
