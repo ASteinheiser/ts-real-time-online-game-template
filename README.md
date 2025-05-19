@@ -81,7 +81,13 @@ These commands are available from the root directory whether you decide to insta
 ./scripts/clean-install.sh
 ```
 
-## Dealing with the PostgreSQL DB
+## Working with the PostgreSQL DB
+
+If this is your first time running the project, you'll need to start the DB with `docker-compose` and sync the tables with `prisma`:
+```
+pnpm db:start
+pnpm db:sync
+```
 
 `pnpm generate:db-types` will run during `dev`, `build`, etc., if you're using the monorepo commands.
 
