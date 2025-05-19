@@ -3,6 +3,11 @@ type Book {
   author: String
 }
 
+type Profile {
+  userName: String
+}
+
 type Query {
   books: [Book]
+  profile: Profile
 }

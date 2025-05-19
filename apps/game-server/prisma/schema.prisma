@@ -8,7 +8,7 @@ datasource db {
   url      = "postgresql://guest:guest@localhost:5432/game_db"
 }
 
-model User {
-  id       String @id @unique
-  username String @unique @db.VarChar(255)
+model Profile {
+  userId   String @id @unique
+  userName String @unique @db.VarChar(255)
 }

@@ -22,9 +22,15 @@ export type Book = {
   title?: Maybe<Scalars['String']['output']>;
 };
 
+export type Profile = {
+  __typename?: 'Profile';
+  userName?: Maybe<Scalars['String']['output']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   books?: Maybe<Array<Maybe<Book>>>;
+  profile?: Maybe<Profile>;
 };
 
 export type GetBooksQueryVariables = Exact<{ [key: string]: never; }>;

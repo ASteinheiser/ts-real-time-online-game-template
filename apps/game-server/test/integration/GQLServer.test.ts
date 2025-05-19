@@ -1,7 +1,7 @@
 import assert from 'assert';
 import { server } from '../../src/graphql';
 import { BooksRepository } from '../../src/repo/Books';
-import { UsersRepository } from '../../src/repo/Users';
+import { ProfilesRepository } from '../../src/repo/Profiles';
 import type { PrismaClient } from '../../src/prisma-client';
 
 describe('GQLServer', () => {
@@ -32,7 +32,7 @@ describe('GQLServer', () => {
         author: 'Harper Lee',
       },
     ];
-    const usersDb = new UsersRepository({} as PrismaClient);
+    const profilesDb = new ProfilesRepository({} as PrismaClient);
 
     const result = await server.executeOperation(
       {
@@ -42,7 +42,7 @@ describe('GQLServer', () => {
         contextValue: {
           dataSources: {
             booksDb,
-            usersDb,
+            profilesDb,
           },
         },
       }

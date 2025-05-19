@@ -1,6 +1,6 @@
 import { ContextFunction } from '@apollo/server';
 import { BooksRepository } from '../repo/Books';
-import { UsersRepository } from '../repo/Users';
+import { ProfilesRepository } from '../repo/Profiles';
 import type { PrismaClient } from '../prisma-client';
 
 interface CreateContextArgs {
@@ -10,7 +10,7 @@ interface CreateContextArgs {
 export interface Context {
   dataSources: {
     booksDb: BooksRepository;
-    usersDb: UsersRepository;
+    profilesDb: ProfilesRepository;
   };
 }
 
@@ -18,7 +18,7 @@ export const createContext: ContextFunction<[CreateContextArgs], Context> = asyn
   return {
     dataSources: {
       booksDb: new BooksRepository(),
-      usersDb: new UsersRepository(prisma),
+      profilesDb: new ProfilesRepository(prisma),
     },
   };
 };

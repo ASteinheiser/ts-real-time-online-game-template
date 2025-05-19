@@ -21,9 +21,15 @@ export type Book = {
   title?: Maybe<Scalars['String']['output']>;
 };
 
+export type Profile = {
+  __typename?: 'Profile';
+  userName?: Maybe<Scalars['String']['output']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   books?: Maybe<Array<Maybe<Book>>>;
+  profile?: Maybe<Profile>;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -100,6 +106,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = ResolversObject<{
   Book: ResolverTypeWrapper<Book>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  Profile: ResolverTypeWrapper<Profile>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
 }>;
@@ -108,6 +115,7 @@ export type ResolversTypes = ResolversObject<{
 export type ResolversParentTypes = ResolversObject<{
   Book: Book;
   Boolean: Scalars['Boolean']['output'];
+  Profile: Profile;
   Query: {};
   String: Scalars['String']['output'];
 }>;
@@ -118,12 +126,19 @@ export type BookResolvers<ContextType = any, ParentType extends ResolversParentT
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type ProfileResolvers<ContextType = any, ParentType extends ResolversParentTypes['Profile'] = ResolversParentTypes['Profile']> = ResolversObject<{
+  userName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   books?: Resolver<Maybe<Array<Maybe<ResolversTypes['Book']>>>, ParentType, ContextType>;
+  profile?: Resolver<Maybe<ResolversTypes['Profile']>, ParentType, ContextType>;
 }>;
 
 export type Resolvers<ContextType = any> = ResolversObject<{
   Book?: BookResolvers<ContextType>;
+  Profile?: ProfileResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
 }>;
 
