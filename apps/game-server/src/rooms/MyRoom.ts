@@ -18,6 +18,7 @@ import {
   MAX_ENEMIES,
   ENEMY_SIZE,
 } from '@repo/core-game';
+import { PrismaClient } from '../prisma-client';
 
 // Basic storage of results for all players in the room
 // Expires when the room is disposed
@@ -28,13 +29,20 @@ interface Result {
 }
 export const RESULTS: Record<string, Result> = {};
 
+interface MyRoomArgs {
+  prisma: PrismaClient;
+}
+
 export class MyRoom extends Room<MyRoomState> {
   maxClients = 4;
   state = new MyRoomState();
   elapsedTime = 0;
   lastEnemySpawnTime = 0;
+  prisma: PrismaClient;
 
-  onCreate() {
+  onCreate({ prisma }: MyRoomArgs) {
+    this.prisma = prisma;
+
     this.onMessage('playerInput', (client, payload: InputPayload) => {
       const player = this.state.players.get(client.sessionId);
 

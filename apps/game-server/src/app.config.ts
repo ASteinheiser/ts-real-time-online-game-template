@@ -19,7 +19,7 @@ export const setupApp = ({ prisma }: SetupAppArgs) => {
       /**
        * Define your room handlers:
        */
-      gameServer.define('my_room', MyRoom);
+      gameServer.define('my_room', MyRoom, { prisma });
     },
 
     initializeExpress: async (app) => {
