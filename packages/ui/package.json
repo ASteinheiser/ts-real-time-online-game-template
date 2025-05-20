@@ -9,10 +9,11 @@
     ".": "./src/index.ts",
     "./theme.css": "./dist/theme.css",
     "./utils": "./src/utils.ts",
-    "./button": "./src/components/button.tsx",
-    "./dialog": "./src/components/dialog.tsx",
-    "./input": "./src/components/input.tsx",
-    "./label": "./src/components/label.tsx"
+    "./button": "./src/components/Button.tsx",
+    "./dialog": "./src/components/Dialog.tsx",
+    "./input": "./src/components/Input.tsx",
+    "./label": "./src/components/Label.tsx",
+    "./loading-spinner": "./src/components/LoadingSpinner.tsx"
   },
   "scripts": {
     "postinstall": "npm run build",
