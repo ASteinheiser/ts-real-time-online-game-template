@@ -21,9 +21,11 @@
   "dependencies": {
     "@apollo/client": "catalog:",
     "@repo/ui": "workspace:*",
+    "@supabase/supabase-js": "catalog:",
     "graphql": "catalog:",
     "react": "catalog:",
-    "react-dom": "catalog:"
+    "react-dom": "catalog:",
+    "react-router-dom": "catalog:"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "catalog:",
