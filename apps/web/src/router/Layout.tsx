@@ -5,7 +5,10 @@ export const Layout = () => {
   return (
     <>
       <TopNav />
-      <Outlet />
+
+      <div className="max-w-screen-lg mx-auto">
+        <Outlet />
+      </div>
     </>
   );
 };

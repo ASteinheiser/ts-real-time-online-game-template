@@ -1,3 +1,42 @@
+import { Link, LinkProps, useLocation } from 'react-router-dom';
+import { useSession } from '../../router/SessionContext';
+
 export const TopNav = () => {
-  return <div>TopNav</div>;
+  const { session } = useSession();
+
+  return (
+    <div className="fixed z-100 w-full bg-secondary">
+      <div className="max-w-screen-lg mx-auto flex justify-between items-center p-4">
+        <Link to="/">
+          <img src="/logo.svg" alt="logo" className="w-12 h-12 hover:animate-pulse" />
+        </Link>
+
+        {session ? (
+          <div className="flex gap-12">
+            <NavLink to="/download">Download</NavLink>
+            <NavLink to="/profile">Profile</NavLink>
+          </div>
+        ) : (
+          <NavLink to="/auth/login">Login</NavLink>
+        )}
+      </div>
+    </div>
+  );
+};
+
+interface NavLinkProps extends LinkProps {
+  children: React.ReactNode;
+}
+
+const NavLink = ({ children, ...props }: NavLinkProps) => {
+  const location = useLocation();
+
+  const active = location.pathname === props.to;
+  const additionalStyles = active ? 'text-primary' : '';
+
+  return (
+    <Link {...props}>
+      <div className={`font-title text-lg hover:underline ${additionalStyles}`}>{children}</div>
+    </Link>
+  );
 };
