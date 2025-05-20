@@ -1,18 +1,14 @@
-import { createBrowserRouter, Outlet } from 'react-router-dom';
-import { SessionProvider } from './SessionContext';
-import { Home } from '../pages/Home';
-import { NotFound } from '../pages/NotFound';
+import { createBrowserRouter } from 'react-router-dom';
 import { AuthRoute } from './AuthRoute';
+import { Layout } from './Layout';
+import { NotFound } from '../pages/NotFound';
+import { Home } from '../pages/Home';
 import { Profile } from '../pages/Profile';
 
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: (
-      <SessionProvider>
-        <Outlet />
-      </SessionProvider>
-    ),
+    element: <Layout />,
     children: [
       {
         path: '/',
