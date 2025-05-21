@@ -9,10 +9,20 @@ export const resolvers: Resolvers<Context> = {
     profile: async (_, __, { dataSources, user }) => {
       return dataSources.profilesDb.getProfileByUserId(user.id);
     },
+    userExists: async (_, { userName }, { dataSources }) => {
+      const profile = await dataSources.profilesDb.getProfileByUserName(userName);
+      return Boolean(profile);
+    },
   },
   Mutation: {
     createProfile: async (_, { userName }, { dataSources, user }) => {
       return dataSources.profilesDb.createProfile({
+        userId: user.id,
+        userName,
+      });
+    },
+    updateProfile: async (_, { userName }, { dataSources, user }) => {
+      return dataSources.profilesDb.updateProfile({
         userId: user.id,
         userName,
       });

@@ -28,6 +28,13 @@ export class ProfilesRepository {
     });
   }
 
+  async updateProfile({ userId, userName }: Profile) {
+    return this.prisma.profile.update({
+      where: { userId },
+      data: { userName },
+    });
+  }
+
   async deleteProfile(userId: string) {
     return this.prisma.profile.delete({
       where: { userId },

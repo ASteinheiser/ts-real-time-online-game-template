@@ -10,9 +10,11 @@ type Profile {
 type Query {
   books: [Book]
   profile: Profile
+  userExists(userName: String!): Boolean
 }
 
 type Mutation {
   createProfile(userName: String!): Profile
+  updateProfile(userName: String!): Profile
   deleteProfile: Boolean
 }

@@ -26,10 +26,16 @@ export type Mutation = {
   __typename?: 'Mutation';
   createProfile?: Maybe<Profile>;
   deleteProfile?: Maybe<Scalars['Boolean']['output']>;
+  updateProfile?: Maybe<Profile>;
 };
 
 
 export type MutationCreateProfileArgs = {
+  userName: Scalars['String']['input'];
+};
+
+
+export type MutationUpdateProfileArgs = {
   userName: Scalars['String']['input'];
 };
 
@@ -42,6 +48,12 @@ export type Query = {
   __typename?: 'Query';
   books?: Maybe<Array<Maybe<Book>>>;
   profile?: Maybe<Profile>;
+  userExists?: Maybe<Scalars['Boolean']['output']>;
+};
+
+
+export type QueryUserExistsArgs = {
+  userName: Scalars['String']['input'];
 };
 
 export type GetBooksQueryVariables = Exact<{ [key: string]: never; }>;

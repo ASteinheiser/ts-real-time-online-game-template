@@ -26,10 +26,16 @@ export type Mutation = {
   __typename?: 'Mutation';
   createProfile?: Maybe<Profile>;
   deleteProfile?: Maybe<Scalars['Boolean']['output']>;
+  updateProfile?: Maybe<Profile>;
 };
 
 
 export type MutationCreateProfileArgs = {
+  userName: Scalars['String']['input'];
+};
+
+
+export type MutationUpdateProfileArgs = {
   userName: Scalars['String']['input'];
 };
 
@@ -42,6 +48,12 @@ export type Query = {
   __typename?: 'Query';
   books?: Maybe<Array<Maybe<Book>>>;
   profile?: Maybe<Profile>;
+  userExists?: Maybe<Scalars['Boolean']['output']>;
+};
+
+
+export type QueryUserExistsArgs = {
+  userName: Scalars['String']['input'];
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -143,6 +155,7 @@ export type BookResolvers<ContextType = any, ParentType extends ResolversParentT
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
   createProfile?: Resolver<Maybe<ResolversTypes['Profile']>, ParentType, ContextType, RequireFields<MutationCreateProfileArgs, 'userName'>>;
   deleteProfile?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  updateProfile?: Resolver<Maybe<ResolversTypes['Profile']>, ParentType, ContextType, RequireFields<MutationUpdateProfileArgs, 'userName'>>;
 }>;
 
 export type ProfileResolvers<ContextType = any, ParentType extends ResolversParentTypes['Profile'] = ResolversParentTypes['Profile']> = ResolversObject<{
@@ -153,6 +166,7 @@ export type ProfileResolvers<ContextType = any, ParentType extends ResolversPare
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   books?: Resolver<Maybe<Array<Maybe<ResolversTypes['Book']>>>, ParentType, ContextType>;
   profile?: Resolver<Maybe<ResolversTypes['Profile']>, ParentType, ContextType>;
+  userExists?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<QueryUserExistsArgs, 'userName'>>;
 }>;
 
 export type Resolvers<ContextType = any> = ResolversObject<{
