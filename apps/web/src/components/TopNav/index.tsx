@@ -6,7 +6,7 @@ export const TopNav = () => {
 
   return (
     <div className="fixed z-100 w-full bg-secondary">
-      <div className="max-w-screen-lg mx-auto flex justify-between items-center p-4">
+      <div className="max-w-screen-lg mx-auto flex justify-between items-center py-4 px-10">
         <Link to="/">
           <img src="/logo.svg" alt="logo" className="w-12 h-12 hover:animate-pulse" />
         </Link>
@@ -32,11 +32,11 @@ const NavLink = ({ children, ...props }: NavLinkProps) => {
   const location = useLocation();
 
   const active = location.pathname === props.to;
-  const additionalStyles = active ? 'text-primary' : '';
+  const activeStateStyles = active ? 'border-primary' : 'border-transparent hover:border-white';
 
   return (
     <Link {...props}>
-      <div className={`font-title text-lg hover:underline ${additionalStyles}`}>{children}</div>
+      <div className={`font-title text-lg border-b-2 ${activeStateStyles}`}>{children}</div>
     </Link>
   );
 };
