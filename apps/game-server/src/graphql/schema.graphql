@@ -4,7 +4,7 @@ type Book {
 }
 
 type Profile {
-  userName: String
+  userName: String!
 }
 
 type Query {

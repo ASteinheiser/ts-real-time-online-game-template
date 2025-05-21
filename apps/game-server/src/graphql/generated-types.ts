@@ -35,7 +35,7 @@ export type MutationCreateProfileArgs = {
 
 export type Profile = {
   __typename?: 'Profile';
-  userName?: Maybe<Scalars['String']['output']>;
+  userName: Scalars['String']['output'];
 };
 
 export type Query = {
@@ -146,7 +146,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 }>;
 
 export type ProfileResolvers<ContextType = any, ParentType extends ResolversParentTypes['Profile'] = ResolversParentTypes['Profile']> = ResolversObject<{
-  userName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  userName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 

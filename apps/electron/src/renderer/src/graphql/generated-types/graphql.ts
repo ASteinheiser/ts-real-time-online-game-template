@@ -35,7 +35,7 @@ export type MutationCreateProfileArgs = {
 
 export type Profile = {
   __typename?: 'Profile';
-  userName?: Maybe<Scalars['String']['output']>;
+  userName: Scalars['String']['output'];
 };
 
 export type Query = {
