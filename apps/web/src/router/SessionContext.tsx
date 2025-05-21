@@ -3,12 +3,12 @@ import { Session } from '@supabase/supabase-js';
 import { gql, useApolloClient } from '@apollo/client';
 import { supabase } from '../supabase-client';
 import { Loading } from '../pages/Loading';
-import { GetProfileQuery } from '../graphql';
+import { Web_GetProfileQuery } from '../graphql';
 
-export type Profile = NonNullable<GetProfileQuery['profile']>;
+export type Profile = NonNullable<Web_GetProfileQuery['profile']>;
 
 const GET_PROFILE = gql`
-  query GetProfile {
+  query Web_GetProfile {
     profile {
       userName
     }
@@ -54,7 +54,9 @@ export const SessionProvider = ({ children }: SessionProviderProps) => {
         return;
       }
 
-      const { data, error } = await client.query<GetProfileQuery>({ query: GET_PROFILE });
+      const { data, error } = await client.query<Web_GetProfileQuery>({
+        query: GET_PROFILE,
+      });
       if (error) {
         console.error(error);
       }

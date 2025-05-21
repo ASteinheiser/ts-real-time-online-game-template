@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { gql, useMutation } from '@apollo/client';
 import { Button, Input, Label, LoadingSpinner } from '@repo/ui';
-import { CreateProfileMutation, CreateProfileMutationVariables } from '../../graphql';
+import { Web_CreateProfileMutation, Web_CreateProfileMutationVariables } from '../../graphql';
 
 const CREATE_PROFILE = gql`
-  mutation CreateProfile($userName: String!) {
+  mutation Web_CreateProfile($userName: String!) {
     createProfile(userName: $userName) {
       userName
     }
@@ -14,8 +14,8 @@ const CREATE_PROFILE = gql`
 export const ProfileCreate = () => {
   const [userName, setUserName] = useState('');
   const [createProfile, { loading }] = useMutation<
-    CreateProfileMutation,
-    CreateProfileMutationVariables
+    Web_CreateProfileMutation,
+    Web_CreateProfileMutationVariables
   >(CREATE_PROFILE);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

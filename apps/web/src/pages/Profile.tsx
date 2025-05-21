@@ -3,20 +3,20 @@ import { gql, useMutation, useQuery } from '@apollo/client';
 import { Button, Input, Label, LoadingSpinner } from '@repo/ui';
 import { useSession } from '../router/SessionContext';
 import {
-  GetUserExistsQuery,
-  GetUserExistsQueryVariables,
-  UpdateUserNameMutation,
-  UpdateUserNameMutationVariables,
+  Web_GetUserExistsQuery,
+  Web_GetUserExistsQueryVariables,
+  Web_UpdateUserNameMutation,
+  Web_UpdateUserNameMutationVariables,
 } from '../graphql';
 
 const GET_USER_EXISTS = gql`
-  query GetUserExists($userName: String!) {
+  query Web_GetUserExists($userName: String!) {
     userExists(userName: $userName)
   }
 `;
 
 const UPDATE_USER_NAME = gql`
-  mutation UpdateUserName($userName: String!) {
+  mutation Web_UpdateUserName($userName: String!) {
     updateProfile(userName: $userName) {
       userName
     }
@@ -28,13 +28,13 @@ export const Profile = () => {
   const [userName, setUserName] = useState(profile?.userName ?? '');
 
   const { data, loading: userExistsLoading } = useQuery<
-    GetUserExistsQuery,
-    GetUserExistsQueryVariables
+    Web_GetUserExistsQuery,
+    Web_GetUserExistsQueryVariables
   >(GET_USER_EXISTS, { variables: { userName } });
 
   const [updateUserName, { loading: updateUserNameLoading }] = useMutation<
-    UpdateUserNameMutation,
-    UpdateUserNameMutationVariables
+    Web_UpdateUserNameMutation,
+    Web_UpdateUserNameMutationVariables
   >(UPDATE_USER_NAME);
 
   const loading = userExistsLoading || updateUserNameLoading;
