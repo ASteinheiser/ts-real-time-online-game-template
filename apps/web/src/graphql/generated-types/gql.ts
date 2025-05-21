@@ -15,10 +15,12 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  */
 type Documents = {
     "\n  query GetBooks {\n    books {\n      title\n      author\n    }\n  }\n": typeof types.GetBooksDocument,
+    "\n  mutation CreateProfile($userName: String!) {\n    createProfile(userName: $userName) {\n      userName\n    }\n  }\n": typeof types.CreateProfileDocument,
     "\n  query GetProfile {\n    profile {\n      userName\n    }\n  }\n": typeof types.GetProfileDocument,
 };
 const documents: Documents = {
     "\n  query GetBooks {\n    books {\n      title\n      author\n    }\n  }\n": types.GetBooksDocument,
+    "\n  mutation CreateProfile($userName: String!) {\n    createProfile(userName: $userName) {\n      userName\n    }\n  }\n": types.CreateProfileDocument,
     "\n  query GetProfile {\n    profile {\n      userName\n    }\n  }\n": types.GetProfileDocument,
 };
 
@@ -40,6 +42,10 @@ export function graphql(source: string): unknown;
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  query GetBooks {\n    books {\n      title\n      author\n    }\n  }\n"): (typeof documents)["\n  query GetBooks {\n    books {\n      title\n      author\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation CreateProfile($userName: String!) {\n    createProfile(userName: $userName) {\n      userName\n    }\n  }\n"): (typeof documents)["\n  mutation CreateProfile($userName: String!) {\n    createProfile(userName: $userName) {\n      userName\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
