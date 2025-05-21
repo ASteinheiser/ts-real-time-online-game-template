@@ -1,9 +1,8 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { Session } from '@supabase/supabase-js';
-import { gql } from '@apollo/client';
+import { gql, useApolloClient } from '@apollo/client';
 import { supabase } from '../supabase-client';
 import { Loading } from '../pages/Loading';
-import { client } from '../graphql/client';
 import { GetProfileQuery, GetProfileQueryVariables } from '../graphql';
 
 export type Profile = NonNullable<GetProfileQuery['profile']>;
@@ -36,6 +35,8 @@ interface SessionProviderProps {
 }
 
 export const SessionProvider = ({ children }: SessionProviderProps) => {
+  const client = useApolloClient();
+
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
