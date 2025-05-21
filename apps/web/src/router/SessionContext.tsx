@@ -1,13 +1,27 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { Session } from '@supabase/supabase-js';
+import { gql } from '@apollo/client';
 import { supabase } from '../supabase-client';
 import { Loading } from '../pages/Loading';
+import { client } from '../graphql/client';
+import { GetProfileQuery, GetProfileQueryVariables } from '../graphql';
+
+export type Profile = NonNullable<GetProfileQuery['profile']>;
+
+const GET_PROFILE = gql`
+  query GetProfile {
+    profile {
+      userName
+    }
+  }
+`;
 
 interface SessionContextType {
   session: Session | null;
+  profile: Profile | null;
 }
 
-const SessionContext = createContext<SessionContextType>({ session: null });
+const SessionContext = createContext<SessionContextType>({ session: null, profile: null });
 
 export const useSession = () => {
   const context = useContext(SessionContext);
@@ -23,13 +37,31 @@ interface SessionProviderProps {
 
 export const SessionProvider = ({ children }: SessionProviderProps) => {
   const [session, setSession] = useState<Session | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const authStateListener = supabase.auth.onAuthStateChange(async (_, session) => {
       setSession(session);
+      await getProfile(session);
       setIsLoading(false);
     });
+
+    const getProfile = async (session: Session | null) => {
+      if (!session) {
+        setProfile(null);
+        return;
+      }
+
+      const { data, error } = await client.query<GetProfileQuery, GetProfileQueryVariables>({
+        query: GET_PROFILE,
+      });
+      if (error) {
+        console.error(error);
+      }
+
+      setProfile(data?.profile ?? null);
+    };
 
     return () => {
       authStateListener.data.subscription.unsubscribe();
@@ -37,7 +69,7 @@ export const SessionProvider = ({ children }: SessionProviderProps) => {
   }, [supabase]);
 
   return (
-    <SessionContext.Provider value={{ session }}>
+    <SessionContext.Provider value={{ session, profile }}>
       {isLoading ? <Loading /> : children}
     </SessionContext.Provider>
   );
