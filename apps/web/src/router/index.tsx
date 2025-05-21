@@ -4,6 +4,9 @@ import { Layout } from './Layout';
 import { NotFound } from '../pages/NotFound';
 import { Home } from '../pages/Home';
 import { Profile } from '../pages/Profile';
+import { Login } from '../pages/auth/Login';
+import { Signup } from '../pages/auth/Signup';
+import { ProfileCreate } from '../pages/auth/ProfileCreate';
 
 export const router = createBrowserRouter([
   {
@@ -14,14 +17,14 @@ export const router = createBrowserRouter([
         path: '/',
         element: <Home />,
       },
-      // {
-      //   path: '/auth/sign-in',
-      //   element: <SignInPage />,
-      // },
-      // {
-      //   path: '/auth/sign-up',
-      //   element: <SignUpPage />,
-      // },
+      {
+        path: '/auth/login',
+        element: <Login />,
+      },
+      {
+        path: '/auth/signup',
+        element: <Signup />,
+      },
       {
         path: '/',
         element: <AuthRoute />,
@@ -29,6 +32,10 @@ export const router = createBrowserRouter([
           {
             path: '/profile',
             element: <Profile />,
+          },
+          {
+            path: '/create-profile',
+            element: <ProfileCreate />,
           },
         ],
       },
