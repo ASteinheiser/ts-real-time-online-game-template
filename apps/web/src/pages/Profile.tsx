@@ -1,19 +1,9 @@
 import { useState } from 'react';
-import { gql, useMutation, useQuery } from '@apollo/client';
+import { gql, useMutation } from '@apollo/client';
 import { Button, Input, Label, LoadingSpinner } from '@repo/ui';
 import { useSession } from '../router/SessionContext';
-import {
-  Web_GetUserExistsQuery,
-  Web_GetUserExistsQueryVariables,
-  Web_UpdateUserNameMutation,
-  Web_UpdateUserNameMutationVariables,
-} from '../graphql';
-
-const GET_USER_EXISTS = gql`
-  query Web_GetUserExists($userName: String!) {
-    userExists(userName: $userName)
-  }
-`;
+import { useUserNameExists } from '../hooks/useUserNameExists';
+import { Web_UpdateUserNameMutation, Web_UpdateUserNameMutationVariables } from '../graphql';
 
 const UPDATE_USER_NAME = gql`
   mutation Web_UpdateUserName($userName: String!) {
@@ -25,12 +15,10 @@ const UPDATE_USER_NAME = gql`
 
 export const Profile = () => {
   const { profile } = useSession();
+
   const [userName, setUserName] = useState(profile?.userName ?? '');
 
-  const { data, loading: userExistsLoading } = useQuery<
-    Web_GetUserExistsQuery,
-    Web_GetUserExistsQueryVariables
-  >(GET_USER_EXISTS, { variables: { userName } });
+  const { userNameExists, loading: userExistsLoading } = useUserNameExists(userName);
 
   const [updateUserName, { loading: updateUserNameLoading }] = useMutation<
     Web_UpdateUserNameMutation,
@@ -38,7 +26,7 @@ export const Profile = () => {
   >(UPDATE_USER_NAME);
 
   const loading = userExistsLoading || updateUserNameLoading;
-  const isUserNameAvailable = data?.userExists;
+  const isUserNameAvailable = userNameExists !== undefined && !userNameExists;
   const isUserNameChanged = !!userName && userName !== profile?.userName;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
