@@ -39,11 +39,12 @@ export const useUserNameExists = (userName: string): UseUserNameExistsResult => 
       const { data, error } = await queryUserNameExists({
         variables: { userName: debouncedUserName },
       });
-      if (error) setError(error);
+      setError(error);
       setUserNameExists(data?.userExists ?? undefined);
     } catch (error) {
       console.error(error);
       setError(error as ApolloError);
+      setUserNameExists(undefined);
     } finally {
       setLoading(false);
     }
