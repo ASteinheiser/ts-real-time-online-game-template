@@ -5,7 +5,7 @@ export const TopNav = () => {
   const { session } = useSession();
 
   return (
-    <div className="fixed z-100 w-full bg-secondary">
+    <div className="fixed z-100 w-full bg-background/50 backdrop-blur-sm">
       <div className="max-w-screen-lg mx-auto flex justify-between items-center py-4 px-10">
         <Link to="/">
           <img src="/logo.svg" alt="logo" className="w-12 h-12 hover:animate-pulse" />
