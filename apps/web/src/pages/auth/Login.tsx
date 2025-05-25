@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Input, Label, LoadingSpinner } from '@repo/ui';
+import { Button, Input, Label, LoadingSpinner, toast } from '@repo/ui';
 import { useSession } from '../../router/SessionContext';
 
 export const Login = () => {
@@ -13,13 +13,17 @@ export const Login = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!email || !password) return;
+    if (!email || !password) {
+      toast.error('Please fill in all fields');
+      return;
+    }
 
     setLoading(true);
     try {
       await login(email, password);
     } catch (error) {
       console.error(error);
+      toast.error('Failed to login, please try again');
     } finally {
       setLoading(false);
     }
@@ -36,6 +40,7 @@ export const Login = () => {
         <Label>Password</Label>
         <Input
           name="password"
+          type="password"
           value={password}
           onChange={({ target }) => setPassword(target.value)}
         />

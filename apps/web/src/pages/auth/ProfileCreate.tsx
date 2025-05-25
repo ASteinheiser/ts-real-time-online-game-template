@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { gql, useMutation } from '@apollo/client';
-import { Button, Input, Label, LoadingSpinner } from '@repo/ui';
+import { Button, Input, Label, LoadingSpinner, toast } from '@repo/ui';
 import { Web_CreateProfileMutation, Web_CreateProfileMutationVariables } from '../../graphql';
 import { useUserNameExists } from '../../hooks/useUserNameExists';
 
@@ -28,9 +28,21 @@ export const ProfileCreate = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!userName || !isUserNameAvailable) return;
+    if (!userName) {
+      toast.error('Please enter a username');
+      return;
+    }
+    if (!isUserNameAvailable) {
+      toast.error('Username is already taken');
+      return;
+    }
 
-    await createProfile({ variables: { userName } });
+    try {
+      await createProfile({ variables: { userName } });
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to create profile, please try again');
+    }
   };
 
   return (

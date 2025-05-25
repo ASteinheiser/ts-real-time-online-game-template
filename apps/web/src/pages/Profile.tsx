@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { gql, useMutation } from '@apollo/client';
-import { Button, Input, Label, LoadingSpinner } from '@repo/ui';
+import { Button, Input, Label, LoadingSpinner, toast } from '@repo/ui';
 import { useSession } from '../router/SessionContext';
 import { useUserNameExists } from '../hooks/useUserNameExists';
 import { Web_UpdateUserNameMutation, Web_UpdateUserNameMutationVariables } from '../graphql';
@@ -31,10 +31,23 @@ export const Profile = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!isUserNameChanged) return;
 
-    if (!isUserNameAvailable || !isUserNameChanged || !userName) return;
+    if (!userName) {
+      toast.error('Please enter a username');
+      return;
+    }
+    if (!isUserNameAvailable) {
+      toast.error('Username is already taken');
+      return;
+    }
 
-    await updateUserName({ variables: { userName } });
+    try {
+      await updateUserName({ variables: { userName } });
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to update username, please try again');
+    }
   };
 
   return (
@@ -52,7 +65,7 @@ export const Profile = () => {
           <span className="text-red-500">Username is already taken</span>
         )}
 
-        <Button type="submit" disabled={loading}>
+        <Button type="submit" disabled={loading || !isUserNameChanged}>
           {loading ? <LoadingSpinner /> : 'Save'}
         </Button>
       </form>

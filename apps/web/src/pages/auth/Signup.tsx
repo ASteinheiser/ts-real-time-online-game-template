@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Input, Label, LoadingSpinner } from '@repo/ui';
+import { Button, Input, Label, LoadingSpinner, toast } from '@repo/ui';
 import { useSession } from '../../router/SessionContext';
 
 export const Signup = () => {
@@ -14,10 +14,13 @@ export const Signup = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!email || !password || !confirmPassword) return;
+    if (!email || !password || !confirmPassword) {
+      toast.error('Please fill in all fields');
+      return;
+    }
 
     if (password !== confirmPassword) {
-      console.error('Passwords do not match');
+      toast.error('Passwords do not match');
       return;
     }
 
@@ -26,6 +29,7 @@ export const Signup = () => {
       await signup(email, password);
     } catch (error) {
       console.error(error);
+      toast.error('Failed to signup, please try again');
     } finally {
       setLoading(false);
     }
