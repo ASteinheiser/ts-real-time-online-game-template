@@ -18,9 +18,18 @@ export type Profile = NonNullable<Web_GetProfileQuery['profile']>;
 interface SessionContextType {
   session: Session | null;
   profile: Profile | null;
+  login: (email: string, password: string) => Promise<void>;
+  signup: (email: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
 }
 
-const SessionContext = createContext<SessionContextType>({ session: null, profile: null });
+const SessionContext = createContext<SessionContextType>({
+  session: null,
+  profile: null,
+  login: async () => {},
+  signup: async () => {},
+  logout: async () => {},
+});
 
 export const useSession = () => {
   const context = useContext(SessionContext);
@@ -68,8 +77,20 @@ export const SessionProvider = ({ children }: SessionProviderProps) => {
     };
   }, [supabase]);
 
+  const login = async (email: string, password: string) => {
+    await supabase.auth.signInWithPassword({ email, password });
+  };
+
+  const signup = async (email: string, password: string) => {
+    await supabase.auth.signUp({ email, password });
+  };
+
+  const logout = async () => {
+    await supabase.auth.signOut();
+  };
+
   return (
-    <SessionContext.Provider value={{ session, profile }}>
+    <SessionContext.Provider value={{ session, profile, login, signup, logout }}>
       {isLoading ? <Loading /> : children}
     </SessionContext.Provider>
   );
