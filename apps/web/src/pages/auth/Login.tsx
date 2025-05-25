@@ -30,33 +30,34 @@ export const Login = () => {
   };
 
   return (
-    <div className="flex flex-col gap-4 max-w-sm mx-auto">
-      <h1 className="text-2xl font-bold font-title">Login</h1>
+    <div className="flex flex-col gap-4 max-w-xs mx-auto">
+      <h1 className="text-2xl font-bold font-title text-center">Log In</h1>
 
       <form onSubmit={handleSubmit}>
-        <Label>Email</Label>
-        <Input name="email" value={email} onChange={({ target }) => setEmail(target.value)} />
+        <div className="flex flex-col gap-2">
+          <Label className="text-md">Email</Label>
+          <Input name="email" value={email} onChange={({ target }) => setEmail(target.value)} />
 
-        <Label>Password</Label>
-        <Input
-          name="password"
-          type="password"
-          value={password}
-          onChange={({ target }) => setPassword(target.value)}
-        />
+          <Label className="text-md">Password</Label>
+          <Input
+            name="password"
+            type="password"
+            value={password}
+            onChange={({ target }) => setPassword(target.value)}
+          />
+        </div>
 
-        <div className="flex mt-4 justify-between">
-          <Button type="button" variant="ghost">
-            <Link to="/auth/forgot-password">Forgot password</Link>
+        <div className="flex flex-col gap-4 mt-6">
+          <Button type="submit" disabled={loading}>
+            {loading ? <LoadingSpinner /> : 'Log In'}
           </Button>
 
-          <div className="flex gap-4">
-            <Button type="button" variant="secondary">
-              <Link to="/auth/signup">Signup</Link>
+          <div className="flex flex-row gap-4">
+            <Button asChild variant="ghost" className="flex-1">
+              <Link to="/auth/forgot-password">Forgot password</Link>
             </Button>
-
-            <Button type="submit" disabled={loading}>
-              {loading ? <LoadingSpinner /> : 'Login'}
+            <Button asChild variant="secondary" className="flex-1">
+              <Link to="/auth/signup">Sign Up</Link>
             </Button>
           </div>
         </div>
