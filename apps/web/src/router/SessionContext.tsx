@@ -5,8 +5,6 @@ import { supabase } from '../supabase-client';
 import { Loading } from '../pages/Loading';
 import { Web_GetProfileQuery } from '../graphql';
 
-export type Profile = NonNullable<Web_GetProfileQuery['profile']>;
-
 const GET_PROFILE = gql`
   query Web_GetProfile {
     profile {
@@ -14,6 +12,8 @@ const GET_PROFILE = gql`
     }
   }
 `;
+
+export type Profile = NonNullable<Web_GetProfileQuery['profile']>;
 
 interface SessionContextType {
   session: Session | null;
@@ -60,7 +60,6 @@ export const SessionProvider = ({ children }: SessionProviderProps) => {
       if (error) {
         console.error(error);
       }
-
       setProfile(data?.profile ?? null);
     };
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ApolloError, gql, useLazyQuery } from '@apollo/client';
+import { ApolloError, gql, useApolloClient } from '@apollo/client';
 import { Web_GetUserExistsQuery, Web_GetUserExistsQueryVariables } from '../graphql';
 import { useDebounce } from './useDebounce';
 
@@ -16,16 +16,13 @@ interface UseUserNameExistsResult {
 }
 
 export const useUserNameExists = (userName: string): UseUserNameExistsResult => {
+  const client = useApolloClient();
+
   const [userNameExists, setUserNameExists] = useState<boolean>();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<ApolloError>();
 
   const debouncedUserName = useDebounce(userName, 500);
-
-  const [queryUserNameExists] = useLazyQuery<
-    Web_GetUserExistsQuery,
-    Web_GetUserExistsQueryVariables
-  >(GET_USER_NAME_EXISTS);
 
   useEffect(() => {
     if (debouncedUserName !== '') {
@@ -36,9 +33,14 @@ export const useUserNameExists = (userName: string): UseUserNameExistsResult => 
   const checkUserNameExists = async () => {
     setLoading(true);
     try {
-      const { data, error } = await queryUserNameExists({
+      const { data, error } = await client.query<
+        Web_GetUserExistsQuery,
+        Web_GetUserExistsQueryVariables
+      >({
+        query: GET_USER_NAME_EXISTS,
         variables: { userName: debouncedUserName },
       });
+
       setError(error);
       setUserNameExists(data?.userExists ?? undefined);
     } catch (error) {
