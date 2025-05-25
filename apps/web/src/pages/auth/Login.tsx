@@ -30,7 +30,7 @@ export const Login = () => {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 max-w-sm mx-auto">
       <h1 className="text-2xl font-bold font-title">Login</h1>
 
       <form onSubmit={handleSubmit}>
@@ -45,13 +45,21 @@ export const Login = () => {
           onChange={({ target }) => setPassword(target.value)}
         />
 
-        <Button type="submit" disabled={loading}>
-          {loading ? <LoadingSpinner /> : 'Login'}
-        </Button>
+        <div className="flex mt-4 justify-between">
+          <Button type="button" variant="ghost">
+            <Link to="/auth/forgot-password">Forgot password</Link>
+          </Button>
 
-        <Button type="button">
-          <Link to="/auth/signup">Signup</Link>
-        </Button>
+          <div className="flex gap-4">
+            <Button type="button" variant="secondary">
+              <Link to="/auth/signup">Signup</Link>
+            </Button>
+
+            <Button type="submit" disabled={loading}>
+              {loading ? <LoadingSpinner /> : 'Login'}
+            </Button>
+          </div>
+        </div>
       </form>
     </div>
   );
