@@ -36,7 +36,11 @@ const NavLink = ({ children, ...props }: NavLinkProps) => {
 
   return (
     <Link {...props}>
-      <div className={`font-title text-lg border-b-2 ${activeStateStyles}`}>{children}</div>
+      <div
+        className={`font-title text-lg border-b-2 ${activeStateStyles} transition-all duration-300 ease-in-out`}
+      >
+        {children}
+      </div>
     </Link>
   );
 };
