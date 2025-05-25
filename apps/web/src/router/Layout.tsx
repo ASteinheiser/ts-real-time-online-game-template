@@ -18,7 +18,7 @@ export const Layout = () => {
     <>
       <TopNav />
 
-      <div className="max-w-screen-lg mx-auto">
+      <div className="max-w-screen-lg mx-auto pt-24">
         <Outlet />
       </div>
     </>
