@@ -7,13 +7,7 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./theme.css": "./dist/theme.css",
-    "./utils": "./src/utils.ts",
-    "./button": "./src/components/Button.tsx",
-    "./dialog": "./src/components/Dialog.tsx",
-    "./input": "./src/components/Input.tsx",
-    "./label": "./src/components/Label.tsx",
-    "./loading-spinner": "./src/components/LoadingSpinner.tsx"
+    "./theme.css": "./dist/theme.css"
   },
   "scripts": {
     "postinstall": "npm run build",
@@ -28,7 +22,8 @@
     "@radix-ui/react-label": "^2.1.4",
     "@radix-ui/react-slot": "^1.2.0",
     "react": "catalog:",
-    "react-dom": "catalog:"
+    "react-dom": "catalog:",
+    "sonner": "^2.0.3"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
