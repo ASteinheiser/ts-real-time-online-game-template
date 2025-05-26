@@ -31,7 +31,9 @@ interface NavLinkProps extends LinkProps {
 const NavLink = ({ children, ...props }: NavLinkProps) => {
   const location = useLocation();
 
-  const active = location.pathname === props.to;
+  const active =
+    location.pathname === props.to ||
+    (props.to === '/auth/login' && location.pathname.includes('/auth/'));
   const activeStateStyles = active ? 'border-primary' : 'border-transparent hover:border-white';
 
   return (
