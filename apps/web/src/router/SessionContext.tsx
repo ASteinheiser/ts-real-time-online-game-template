@@ -21,6 +21,7 @@ interface SessionContextType {
   login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  forgotPassword: (email: string, redirectTo: string) => Promise<void>;
 }
 
 const SessionContext = createContext<SessionContextType>({
@@ -29,6 +30,7 @@ const SessionContext = createContext<SessionContextType>({
   login: async () => {},
   signup: async () => {},
   logout: async () => {},
+  forgotPassword: async () => {},
 });
 
 export const useSession = () => {
@@ -89,8 +91,12 @@ export const SessionProvider = ({ children }: SessionProviderProps) => {
     await supabase.auth.signOut();
   };
 
+  const forgotPassword = async (email: string) => {
+    await supabase.auth.resetPasswordForEmail(email);
+  };
+
   return (
-    <SessionContext.Provider value={{ session, profile, login, signup, logout }}>
+    <SessionContext.Provider value={{ session, profile, login, signup, logout, forgotPassword }}>
       {isLoading ? <Loading /> : children}
     </SessionContext.Provider>
   );
