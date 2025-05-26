@@ -1,3 +1,62 @@
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { isEmail } from 'validator';
+import { Button, Input, Label, LoadingSpinner, toast } from '@repo/ui';
+import { useSession } from '../../router/SessionContext';
+
 export const ForgotPassword = () => {
-  return <div>ForgotPassword</div>;
+  const navigate = useNavigate();
+
+  const { forgotPassword } = useSession();
+
+  const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!email) {
+      toast.error('Please enter your email address');
+      return;
+    }
+    if (!isEmail(email)) {
+      toast.error('Please enter a valid email address');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await forgotPassword(email);
+      toast.success('Password reset email sent! Check your inbox');
+      navigate('/auth/new-password');
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to send reset email, please try again');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="flex flex-col gap-4 max-w-xs mx-auto">
+      <h1 className="text-2xl font-bold font-title text-center">Reset Password</h1>
+
+      <form onSubmit={handleSubmit}>
+        <div className="flex flex-col gap-2">
+          <Label className="text-md">Email</Label>
+          <Input name="email" value={email} onChange={({ target }) => setEmail(target.value)} />
+        </div>
+
+        <div className="flex flex-col gap-4 mt-6">
+          <Button type="submit" disabled={loading}>
+            {loading ? <LoadingSpinner /> : 'Send Reset Link'}
+          </Button>
+
+          <Button asChild variant="ghost" className="flex-1">
+            <Link to="/auth/login">Back to Login</Link>
+          </Button>
+        </div>
+      </form>
+    </div>
+  );
 };

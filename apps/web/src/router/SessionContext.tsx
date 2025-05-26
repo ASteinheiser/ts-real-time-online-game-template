@@ -21,7 +21,7 @@ interface SessionContextType {
   login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
-  forgotPassword: (email: string, redirectTo: string) => Promise<void>;
+  forgotPassword: (email: string) => Promise<void>;
 }
 
 const SessionContext = createContext<SessionContextType>({
