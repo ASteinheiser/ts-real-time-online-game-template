@@ -2,7 +2,7 @@ import { Link, LinkProps, useLocation } from 'react-router-dom';
 import { useSession } from '../../router/SessionContext';
 
 export const TopNav = () => {
-  const { session } = useSession();
+  const { profile } = useSession();
 
   return (
     <div className="fixed z-100 w-full bg-background/50 backdrop-blur-sm">
@@ -11,14 +11,18 @@ export const TopNav = () => {
           <img src="/logo.svg" alt="logo" className="w-12 h-12 hover:animate-pulse" />
         </Link>
 
-        {session ? (
-          <div className="flex gap-12">
-            <NavLink to="/download">Download</NavLink>
-            <NavLink to="/profile">Profile</NavLink>
-          </div>
-        ) : (
-          <NavLink to="/auth/login">Login</NavLink>
-        )}
+        <div className="flex gap-12">
+          <NavLink to="/dev-log">DevLog</NavLink>
+
+          {profile ? (
+            <>
+              <NavLink to="/download">Download</NavLink>
+              <NavLink to="/profile">Profile</NavLink>
+            </>
+          ) : (
+            <NavLink to="/auth/login">Login</NavLink>
+          )}
+        </div>
       </div>
     </div>
   );
