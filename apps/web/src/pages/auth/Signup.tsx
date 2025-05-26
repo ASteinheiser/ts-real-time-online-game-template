@@ -36,36 +36,40 @@ export const Signup = () => {
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <h1 className="text-2xl font-bold font-title">Signup</h1>
+    <div className="flex flex-col gap-4 max-w-xs mx-auto">
+      <h1 className="text-2xl font-bold font-title text-center">Sign Up</h1>
 
       <form onSubmit={handleSubmit}>
-        <Label>Email</Label>
-        <Input name="email" value={email} onChange={({ target }) => setEmail(target.value)} />
+        <div className="flex flex-col gap-2">
+          <Label className="text-md">Email</Label>
+          <Input name="email" value={email} onChange={({ target }) => setEmail(target.value)} />
 
-        <Label>Password</Label>
-        <Input
-          name="password"
-          type="password"
-          value={password}
-          onChange={({ target }) => setPassword(target.value)}
-        />
+          <Label className="text-md">Password</Label>
+          <Input
+            name="password"
+            type="password"
+            value={password}
+            onChange={({ target }) => setPassword(target.value)}
+          />
 
-        <Label>Confirm Password</Label>
-        <Input
-          name="confirmPassword"
-          type="password"
-          value={confirmPassword}
-          onChange={({ target }) => setConfirmPassword(target.value)}
-        />
+          <Label className="text-md">Confirm Password</Label>
+          <Input
+            name="confirmPassword"
+            type="password"
+            value={confirmPassword}
+            onChange={({ target }) => setConfirmPassword(target.value)}
+          />
+        </div>
 
-        <Button type="submit" disabled={loading}>
-          {loading ? <LoadingSpinner /> : 'Signup'}
-        </Button>
+        <div className="flex flex-col gap-4 mt-6">
+          <Button type="submit" disabled={loading}>
+            {loading ? <LoadingSpinner /> : 'Sign Up'}
+          </Button>
 
-        <Button type="button">
-          <Link to="/auth/login">Login</Link>
-        </Button>
+          <Button asChild variant="secondary" className="flex-1">
+            <Link to="/auth/login">Log In</Link>
+          </Button>
+        </div>
       </form>
     </div>
   );
