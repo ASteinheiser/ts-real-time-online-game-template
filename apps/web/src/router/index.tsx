@@ -3,9 +3,12 @@ import { AuthRoute } from './AuthRoute';
 import { Layout } from './Layout';
 import { NotFound } from '../pages/NotFound';
 import { Home } from '../pages/Home';
+import { DevLog } from '../pages/DevLog';
 import { Profile } from '../pages/Profile';
 import { Login } from '../pages/auth/Login';
 import { Signup } from '../pages/auth/Signup';
+import { ForgotPassword } from '../pages/auth/ForgotPassword';
+import { NewPassword } from '../pages/auth/NewPassword';
 import { ProfileCreate } from '../pages/auth/ProfileCreate';
 
 export const router = createBrowserRouter([
@@ -18,6 +21,10 @@ export const router = createBrowserRouter([
         element: <Home />,
       },
       {
+        path: '/dev-log',
+        element: <DevLog />,
+      },
+      {
         path: '/auth/login',
         element: <Login />,
       },
@@ -26,16 +33,24 @@ export const router = createBrowserRouter([
         element: <Signup />,
       },
       {
+        path: '/auth/forgot-password',
+        element: <ForgotPassword />,
+      },
+      {
+        path: '/auth/new-password',
+        element: <NewPassword />,
+      },
+      {
         path: '/',
         element: <AuthRoute />,
         children: [
           {
-            path: '/profile',
-            element: <Profile />,
-          },
-          {
             path: '/auth/profile',
             element: <ProfileCreate />,
+          },
+          {
+            path: '/profile',
+            element: <Profile />,
           },
         ],
       },
