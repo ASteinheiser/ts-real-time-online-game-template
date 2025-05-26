@@ -10,7 +10,7 @@ export const Layout = () => {
 
   useEffect(() => {
     if (session && !profile) {
-      navigate('/create-profile');
+      navigate('/auth/profile');
     }
   }, [session, profile]);
 
