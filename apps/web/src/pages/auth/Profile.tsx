@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { gql, useMutation } from '@apollo/client';
 import { Button, Input, Label, LoadingSpinner, toast } from '@repo/ui';
-import { useSession } from '../router/SessionContext';
-import { useUserNameExists } from '../hooks/useUserNameExists';
-import { Web_UpdateUserNameMutation, Web_UpdateUserNameMutationVariables } from '../graphql';
+import { useSession } from '../../router/SessionContext';
+import { useUserNameExists } from '../../hooks/useUserNameExists';
+import { Web_UpdateUserNameMutation, Web_UpdateUserNameMutationVariables } from '../../graphql';
 
 const UPDATE_USER_NAME = gql`
   mutation Web_UpdateUserName($userName: String!) {

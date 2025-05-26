@@ -4,12 +4,12 @@ import { Layout } from './Layout';
 import { NotFound } from '../pages/NotFound';
 import { Home } from '../pages/Home';
 import { DevLog } from '../pages/DevLog';
-import { Profile } from '../pages/Profile';
 import { Login } from '../pages/auth/Login';
 import { Signup } from '../pages/auth/Signup';
 import { ForgotPassword } from '../pages/auth/ForgotPassword';
 import { NewPassword } from '../pages/auth/NewPassword';
 import { ProfileCreate } from '../pages/auth/ProfileCreate';
+import { Profile } from '../pages/auth/Profile';
 
 export const router = createBrowserRouter([
   {
