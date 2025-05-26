@@ -1,12 +1,10 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { isEmail } from 'validator';
 import { Button, Input, Label, LoadingSpinner, toast } from '@repo/ui';
 import { useSession } from '../../router/SessionContext';
 
 export const ForgotPassword = () => {
-  const navigate = useNavigate();
-
   const { forgotPassword } = useSession();
 
   const [email, setEmail] = useState('');
@@ -28,7 +26,6 @@ export const ForgotPassword = () => {
     try {
       await forgotPassword(email);
       toast.success('Password reset email sent! Check your inbox');
-      navigate('/auth/new-password');
     } catch (error) {
       console.error(error);
       toast.error('Failed to send reset email, please try again');
@@ -49,7 +46,7 @@ export const ForgotPassword = () => {
 
         <div className="flex flex-col gap-4 mt-6">
           <Button type="submit" disabled={loading}>
-            {loading ? <LoadingSpinner /> : 'Send Reset Link'}
+            {loading ? <LoadingSpinner /> : 'Send Reset Code'}
           </Button>
 
           <Button asChild variant="ghost" className="flex-1">
