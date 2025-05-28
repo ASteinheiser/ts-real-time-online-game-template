@@ -10,10 +10,14 @@ export const Layout = () => {
   const { session, profile, isPasswordRecovery } = useSession();
 
   useEffect(() => {
+    const navigateTo = (path: string) => {
+      if (location.pathname !== path) navigate(path);
+    };
+
     if (session && isPasswordRecovery) {
-      if (location.pathname !== '/auth/new-password') navigate('/auth/new-password');
+      navigateTo('/auth/new-password');
     } else if (session && !profile) {
-      if (location.pathname !== '/create-profile') navigate('/create-profile');
+      navigateTo('/create-profile');
     }
   }, [session, profile, isPasswordRecovery, location.pathname]);
 
