@@ -49,7 +49,7 @@ export const ForgotPassword = () => {
             {loading ? <LoadingSpinner /> : 'Send Reset Code'}
           </Button>
 
-          <Button asChild variant="ghost" className="flex-1">
+          <Button asChild variant="secondary" className="flex-1">
             <Link to="/auth/login">Back to Login</Link>
           </Button>
         </div>
