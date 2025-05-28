@@ -1,18 +1,21 @@
 import { useEffect } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { TopNav } from '../components/TopNav';
 import { useSession } from './SessionContext';
 
 export const Layout = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const { session, profile } = useSession();
+  const { session, profile, isPasswordRecovery } = useSession();
 
   useEffect(() => {
-    if (session && !profile) {
-      navigate('/auth/profile');
+    if (session && isPasswordRecovery) {
+      if (location.pathname !== '/auth/new-password') navigate('/auth/new-password');
+    } else if (session && !profile) {
+      if (location.pathname !== '/create-profile') navigate('/create-profile');
     }
-  }, [session, profile]);
+  }, [session, profile, isPasswordRecovery, location.pathname]);
 
   return (
     <>
