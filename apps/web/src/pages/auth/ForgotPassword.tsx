@@ -46,11 +46,11 @@ export const ForgotPassword = () => {
 
         <div className="flex flex-col gap-4 mt-6">
           <Button type="submit" disabled={loading}>
-            {loading ? <LoadingSpinner /> : 'Send Reset Code'}
+            {loading ? <LoadingSpinner /> : 'Send Reset Link'}
           </Button>
 
           <Button asChild variant="secondary" className="flex-1">
-            <Link to="/auth/login">Back to Login</Link>
+            <Link to="/auth/login">Log In</Link>
           </Button>
         </div>
       </form>

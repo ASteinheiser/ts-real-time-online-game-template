@@ -54,7 +54,7 @@ export const Login = () => {
 
           <div className="flex flex-row gap-4">
             <Button asChild variant="ghost" className="flex-1">
-              <Link to="/auth/forgot-password">Forgot password</Link>
+              <Link to="/auth/forgot-password">Forgot Password</Link>
             </Button>
             <Button asChild variant="secondary" className="flex-1">
               <Link to="/auth/signup">Sign Up</Link>
