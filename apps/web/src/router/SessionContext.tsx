@@ -18,6 +18,7 @@ export type Profile = NonNullable<Web_GetProfileQuery['profile']>;
 interface SessionContextType {
   session: Session | null;
   profile: Profile | null;
+  isPasswordRecovery: boolean;
   login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
@@ -28,6 +29,7 @@ interface SessionContextType {
 const SessionContext = createContext<SessionContextType>({
   session: null,
   profile: null,
+  isPasswordRecovery: false,
   login: async () => {},
   signup: async () => {},
   logout: async () => {},
@@ -52,11 +54,13 @@ export const SessionProvider = ({ children }: SessionProviderProps) => {
 
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [isPasswordRecovery, setIsPasswordRecovery] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const authStateListener = supabase.auth.onAuthStateChange(async (_, session) => {
+    const authStateListener = supabase.auth.onAuthStateChange(async (event, session) => {
       setSession(session);
+      setIsPasswordRecovery(event === 'PASSWORD_RECOVERY');
       await getProfile(session);
       setIsLoading(false);
     });
@@ -105,7 +109,16 @@ export const SessionProvider = ({ children }: SessionProviderProps) => {
 
   return (
     <SessionContext.Provider
-      value={{ session, profile, login, signup, logout, forgotPassword, newPassword }}
+      value={{
+        session,
+        profile,
+        isPasswordRecovery,
+        login,
+        signup,
+        logout,
+        forgotPassword,
+        newPassword,
+      }}
     >
       {isLoading ? <Loading /> : children}
     </SessionContext.Provider>
