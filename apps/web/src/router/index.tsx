@@ -37,15 +37,15 @@ export const router = createBrowserRouter([
         element: <ForgotPassword />,
       },
       {
-        path: '/auth/new-password',
-        element: <NewPassword />,
-      },
-      {
         path: '/',
         element: <AuthRoute />,
         children: [
           {
-            path: '/auth/profile',
+            path: '/auth/new-password',
+            element: <NewPassword />,
+          },
+          {
+            path: '/create-profile',
             element: <ProfileCreate />,
           },
           {
