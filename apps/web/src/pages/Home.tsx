@@ -19,10 +19,17 @@ export const Home = () => {
   console.log({ session });
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <span className="text-2xl font-bold font-title">
-        Yo what is up this is a demo marketing site for a game!
-      </span>
+    <div className="flex flex-col items-center">
+      <div className="flex flex-row items-center gap-8 h-screen mt-[-80px]">
+        <img src="/logo.svg" alt="logo" className="w-45 h-45" />
+
+        <div className="w-[2px] h-35 bg-secondary" />
+
+        <div className="flex flex-col gap-4">
+          <span className="text-2xl font-bold font-title">TypeScript Game Template</span>
+          <span className="text-2xl font-bold font-title">Marketing Website</span>
+        </div>
+      </div>
     </div>
   );
 };
