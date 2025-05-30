@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { TopNav } from '../components/TopNav';
+import { Footer } from '../components/Footer';
 import { useSession } from './SessionContext';
 
 export const Layout = () => {
@@ -28,6 +29,8 @@ export const Layout = () => {
       <div className="max-w-screen-lg mx-auto pt-20">
         <Outlet />
       </div>
+
+      <Footer />
     </>
   );
 };
