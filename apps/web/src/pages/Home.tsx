@@ -30,9 +30,15 @@ export const Home = () => {
           <span className="text-2xl font-bold font-title">TypeScript Game Template</span>
           <span className="text-2xl font-bold font-title">Marketing Website</span>
         </div>
+
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 animate-bounce">
+          <svg className="w-12 h-12 text-gray-300" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeWidth={2} d="M21 9l-9 5l-9-5" />
+          </svg>
+        </div>
       </div>
 
-      <div className="flex flex-col items-center gap-20 px-4">
+      <div className="flex flex-col items-center gap-20 px-4 py-8">
         <HomeSection
           isFlipped
           image="/logo.svg"
