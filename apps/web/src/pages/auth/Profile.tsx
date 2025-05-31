@@ -51,24 +51,29 @@ export const Profile = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <span className="text-2xl font-bold font-title">Profile</span>
+    <div className="h-screen mt-nav-footer flex flex-col items-center justify-center">
+      <div className="flex flex-col gap-4 w-full max-w-xs mx-auto">
+        <span className="text-2xl font-bold font-title">Your Profile</span>
 
-      <form onSubmit={handleSubmit}>
-        <Label>Username</Label>
-        <Input
-          name="userName"
-          value={userName}
-          onChange={({ target }) => setUserName(target.value)}
-        />
-        {isUserNameChanged && !isUserNameAvailable && (
-          <span className="text-red-500">Username is already taken</span>
-        )}
+        <form onSubmit={handleSubmit}>
+          <div className="flex flex-col gap-2">
+            <Label className="text-md">Username</Label>
+            <Input
+              name="userName"
+              value={userName}
+              onChange={({ target }) => setUserName(target.value)}
+            />
 
-        <Button type="submit" disabled={loading || !isUserNameChanged}>
-          {loading ? <LoadingSpinner /> : 'Save'}
-        </Button>
-      </form>
+            {isUserNameChanged && !isUserNameAvailable && !loading && (
+              <span className="text-red-500 text-sm">Username is already taken</span>
+            )}
+
+            <Button type="submit" disabled={loading || !isUserNameChanged} className="mt-4">
+              {loading ? <LoadingSpinner /> : 'Save'}
+            </Button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

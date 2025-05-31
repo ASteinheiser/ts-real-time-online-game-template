@@ -46,22 +46,29 @@ export const ProfileCreate = () => {
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <h1 className="text-2xl font-bold font-title">ProfileCreate</h1>
+    <div className="h-screen mt-nav-footer flex flex-col items-center justify-center">
+      <div className="flex flex-col gap-4 w-full max-w-xs mx-auto">
+        <h1 className="text-2xl font-bold font-title">Create Your Profile</h1>
 
-      <form onSubmit={handleSubmit}>
-        <Label>Username</Label>
-        <Input
-          name="userName"
-          value={userName}
-          onChange={({ target }) => setUserName(target.value)}
-        />
-        {!isUserNameAvailable && <span className="text-red-500">Username is already taken</span>}
+        <form onSubmit={handleSubmit}>
+          <div className="flex flex-col gap-2">
+            <Label className="text-md">Username</Label>
+            <Input
+              name="userName"
+              value={userName}
+              onChange={({ target }) => setUserName(target.value)}
+            />
 
-        <Button type="submit" disabled={loading}>
-          {loading ? <LoadingSpinner /> : 'Create Profile'}
-        </Button>
-      </form>
+            {!isUserNameAvailable && !loading && (
+              <span className="text-red-500 text-sm">Username is already taken</span>
+            )}
+
+            <Button type="submit" disabled={loading} className="mt-4">
+              {loading ? <LoadingSpinner /> : 'Create Profile'}
+            </Button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

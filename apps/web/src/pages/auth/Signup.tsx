@@ -36,41 +36,43 @@ export const Signup = () => {
   };
 
   return (
-    <div className="flex flex-col gap-4 max-w-xs mx-auto">
-      <h1 className="text-2xl font-bold font-title text-center">Sign Up</h1>
+    <div className="h-screen mt-nav-footer flex flex-col items-center justify-center">
+      <div className="flex flex-col gap-4 w-full max-w-xs mx-auto">
+        <h1 className="text-2xl font-bold font-title text-center">Sign Up</h1>
 
-      <form onSubmit={handleSubmit}>
-        <div className="flex flex-col gap-2">
-          <Label className="text-md">Email</Label>
-          <Input name="email" value={email} onChange={({ target }) => setEmail(target.value)} />
+        <form onSubmit={handleSubmit}>
+          <div className="flex flex-col gap-2">
+            <Label className="text-md">Email</Label>
+            <Input name="email" value={email} onChange={({ target }) => setEmail(target.value)} />
 
-          <Label className="text-md">Password</Label>
-          <Input
-            name="password"
-            type="password"
-            value={password}
-            onChange={({ target }) => setPassword(target.value)}
-          />
+            <Label className="text-md">Password</Label>
+            <Input
+              name="password"
+              type="password"
+              value={password}
+              onChange={({ target }) => setPassword(target.value)}
+            />
 
-          <Label className="text-md">Confirm Password</Label>
-          <Input
-            name="confirmPassword"
-            type="password"
-            value={confirmPassword}
-            onChange={({ target }) => setConfirmPassword(target.value)}
-          />
-        </div>
+            <Label className="text-md">Confirm Password</Label>
+            <Input
+              name="confirmPassword"
+              type="password"
+              value={confirmPassword}
+              onChange={({ target }) => setConfirmPassword(target.value)}
+            />
+          </div>
 
-        <div className="flex flex-col gap-4 mt-6">
-          <Button type="submit" disabled={loading}>
-            {loading ? <LoadingSpinner /> : 'Sign Up'}
-          </Button>
+          <div className="flex flex-col gap-4 mt-6">
+            <Button type="submit" disabled={loading}>
+              {loading ? <LoadingSpinner /> : 'Sign Up'}
+            </Button>
 
-          <Button asChild variant="secondary" className="flex-1">
-            <Link to="/auth/login">Log In</Link>
-          </Button>
-        </div>
-      </form>
+            <Button asChild variant="secondary" className="flex-1">
+              <Link to="/auth/login">Log In</Link>
+            </Button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

@@ -34,32 +34,34 @@ export const NewPassword = () => {
   };
 
   return (
-    <div className="flex flex-col gap-4 max-w-xs mx-auto">
-      <h1 className="text-2xl font-bold font-title text-center">New Password</h1>
+    <div className="h-screen mt-nav-footer flex flex-col items-center justify-center">
+      <div className="flex flex-col gap-4 w-full max-w-xs mx-auto">
+        <h1 className="text-2xl font-bold font-title text-center">New Password</h1>
 
-      <form onSubmit={handleSubmit}>
-        <div className="flex flex-col gap-2">
-          <Label className="text-md">Password</Label>
-          <Input
-            name="password"
-            type="password"
-            value={password}
-            onChange={({ target }) => setPassword(target.value)}
-          />
+        <form onSubmit={handleSubmit}>
+          <div className="flex flex-col gap-2">
+            <Label className="text-md">Password</Label>
+            <Input
+              name="password"
+              type="password"
+              value={password}
+              onChange={({ target }) => setPassword(target.value)}
+            />
 
-          <Label className="text-md">Confirm Password</Label>
-          <Input
-            name="confirmPassword"
-            type="password"
-            value={confirmPassword}
-            onChange={({ target }) => setConfirmPassword(target.value)}
-          />
-        </div>
+            <Label className="text-md">Confirm Password</Label>
+            <Input
+              name="confirmPassword"
+              type="password"
+              value={confirmPassword}
+              onChange={({ target }) => setConfirmPassword(target.value)}
+            />
+          </div>
 
-        <Button type="submit" disabled={loading} className="w-full mt-6">
-          {loading ? <LoadingSpinner /> : 'Update Password'}
-        </Button>
-      </form>
+          <Button type="submit" disabled={loading} className="w-full mt-6">
+            {loading ? <LoadingSpinner /> : 'Update Password'}
+          </Button>
+        </form>
+      </div>
     </div>
   );
 };
