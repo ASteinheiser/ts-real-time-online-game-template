@@ -21,7 +21,7 @@ export const Home = () => {
 
   return (
     <div className="flex flex-col items-center">
-      <div className="flex flex-row items-center gap-8 h-screen mt-[-80px]">
+      <div className="flex flex-row items-center gap-8 h-screen mt-nav">
         <img src="/logo.svg" alt="logo" className="w-45 h-45 hover:animate-ping" />
 
         <div className="w-[2px] h-35 bg-secondary" />

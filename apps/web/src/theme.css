@@ -1,2 +1,14 @@
 @import "@repo/ui/theme.css";
 @import "tailwindcss";
+
+.mt-nav {
+  margin-top: -80px;
+}
+
+.mt-footer {
+  margin-top: -104px;
+}
+
+.mt-nav-footer {
+  margin-top: -184px;
+}
