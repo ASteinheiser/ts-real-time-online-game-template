@@ -1,5 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Montserrat&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Iceberg&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Nabla&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -41,6 +43,8 @@
 @theme inline static {
   --font-body: "Roboto", sans-serif;
   --font-title: "Montserrat", sans-serif;
+  --font-pixel: "Iceberg", sans-serif;
+  --font-isometric: "Nabla", sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -92,8 +96,13 @@
   .font-body {
     @apply font-body;
   }
-
   .font-title {
     @apply font-title;
+  }
+  .font-pixel {
+    @apply font-pixel;
+  }
+  .font-isometric {
+    @apply font-isometric;
   }
 }
