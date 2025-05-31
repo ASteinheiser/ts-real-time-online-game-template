@@ -4,10 +4,12 @@ import { DevLogEntry3 } from './entries/devlog-3';
 
 export const DevLog = () => {
   return (
-    <div className="flex flex-col gap-4 max-w-screen-md mx-auto py-6 px-4">
-      <DevLogEntry1 />
-      <DevLogEntry2 />
+    <div className="flex flex-col gap-10 max-w-screen-md mx-auto py-6 px-4">
+      <h1 className="text-5xl font-isometric text-center">Developer Logs</h1>
+
       <DevLogEntry3 />
+      <DevLogEntry2 />
+      <DevLogEntry1 />
     </div>
   );
 };
