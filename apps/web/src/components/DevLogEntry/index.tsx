@@ -30,6 +30,8 @@ export const DevLogEntry = ({ id, title, date, author, content }: DevLogEntryPro
           </div>
         </div>
 
+        <div className="w-full h-[2px] bg-secondary" />
+
         {content}
       </div>
     </article>
