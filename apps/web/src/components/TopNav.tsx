@@ -1,18 +1,19 @@
 import { Link, LinkProps, useLocation } from 'react-router-dom';
 import { cn } from '@repo/ui';
 import { useSession } from '../router/SessionContext';
+import { Menu } from './icons/Menu';
 
 export const TopNav = () => {
   const { profile } = useSession();
 
   return (
     <div className="fixed z-100 w-full bg-background/50 backdrop-blur-sm">
-      <div className="max-w-screen-lg mx-auto flex justify-between items-center py-4 px-10">
+      <div className="max-w-screen-lg mx-auto flex flex-row-reverse sm:flex-row justify-between items-center py-4 px-10">
         <Link to="/">
           <img src="/logo.svg" alt="logo" className="w-12 h-12 hover:animate-pulse" />
         </Link>
 
-        <div className="flex gap-12">
+        <div className="hidden sm:flex gap-12">
           <NavLink to="/dev-log">DevLog</NavLink>
 
           {profile ? (
@@ -24,6 +25,10 @@ export const TopNav = () => {
             <NavLink to="/auth/login">Login</NavLink>
           )}
         </div>
+
+        <button className="sm:hidden cursor-pointer">
+          <Menu size={36} className="text-muted-light" />
+        </button>
       </div>
     </div>
   );
