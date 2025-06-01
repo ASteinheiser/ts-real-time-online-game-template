@@ -6,6 +6,7 @@
   "private": false,
   "type": "module",
   "scripts": {
+    "postinstall": "npm run generate:db-types",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "generate:gql-types": "graphql-codegen",
