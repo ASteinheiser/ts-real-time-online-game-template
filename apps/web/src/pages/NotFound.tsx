@@ -12,8 +12,8 @@ export const NotFound = () => {
   }, []);
 
   return (
-    <div className="h-screen mt-nav-footer flex items-center justify-center">
-      <span className="text-2xl font-bold font-title">
+    <div className="h-screen mt-nav-footer flex items-center justify-center px-4">
+      <span className="text-2xl font-bold font-title text-center">
         Oops! Page not found. Redirecting home...
       </span>
     </div>
