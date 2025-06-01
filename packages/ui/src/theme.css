@@ -105,4 +105,15 @@
   .font-isometric {
     @apply font-isometric;
   }
+
+  @keyframes hue-rotate-animation {
+    0% { filter: hue-rotate(0deg); }
+    25% { filter: hue-rotate(90deg); }
+    50% { filter: hue-rotate(180deg); }
+    75% { filter: hue-rotate(270deg); }
+    100% { filter: hue-rotate(360deg); }
+  }
+  .animate-hue-rotate {
+    animation: hue-rotate-animation 20s linear infinite;
+  }
 }
