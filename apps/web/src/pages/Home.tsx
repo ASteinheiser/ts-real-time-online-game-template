@@ -2,6 +2,7 @@ import { useQuery, gql } from '@apollo/client';
 import { cn } from '@repo/ui';
 import { GetBooksQuery, GetBooksQueryVariables } from '../graphql';
 import { useSession } from '../router/SessionContext';
+import { ChevronDown } from '../components/icons/ChevronDown';
 
 const GET_BOOKS = gql`
   query GetBooks {
@@ -32,9 +33,7 @@ export const Home = () => {
         </div>
 
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 animate-bounce">
-          <svg className="w-12 h-12 text-gray-300" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeWidth={2} d="M21 9l-9 5l-9-5" />
-          </svg>
+          <ChevronDown size={48} className="text-gray-300" />
         </div>
       </div>
 
