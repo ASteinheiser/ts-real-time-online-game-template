@@ -28,8 +28,8 @@ export const Home = () => {
         <div className="w-[2px] h-35 bg-secondary" />
 
         <div className="flex flex-col gap-4">
-          <h1 className="text-3xl font-pixel">TypeScript Game Template</h1>
-          <h2 className="text-2xl font-bold font-title text-muted-light">Marketing Website Demo</h2>
+          <h1 className="text-5xl font-pixel text-muted">TypeScript</h1>
+          <h1 className="text-5xl font-isometric isometric-primary">Game Template</h1>
         </div>
 
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 animate-bounce">
