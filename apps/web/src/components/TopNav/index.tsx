@@ -1,4 +1,5 @@
 import { Link, LinkProps, useLocation } from 'react-router-dom';
+import { cn } from '@repo/ui';
 import { useSession } from '../../router/SessionContext';
 
 export const TopNav = () => {
@@ -38,15 +39,16 @@ const NavLink = ({ children, ...props }: NavLinkProps) => {
   const active =
     location.pathname === props.to ||
     (props.to === '/auth/login' && location.pathname.includes('/auth/'));
-  const activeStateStyles = active ? 'border-primary' : 'border-transparent hover:border-white';
 
   return (
-    <Link {...props}>
-      <div
-        className={`font-title text-lg border-b-2 ${activeStateStyles} transition-all duration-300 ease-in-out`}
-      >
-        {children}
-      </div>
+    <Link
+      {...props}
+      className={cn(
+        'font-title text-lg border-b-2 transition-all duration-300 ease-in-out',
+        active ? 'border-primary' : 'border-transparent hover:border-white'
+      )}
+    >
+      {children}
     </Link>
   );
 };

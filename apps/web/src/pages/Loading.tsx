@@ -2,7 +2,7 @@ import { LoadingSpinner } from '@repo/ui';
 
 export const Loading = () => {
   return (
-    <div className="flex justify-center items-center h-screen">
+    <div className="flex justify-center items-center h-screen mt-nav-footer">
       <LoadingSpinner />
     </div>
   );
