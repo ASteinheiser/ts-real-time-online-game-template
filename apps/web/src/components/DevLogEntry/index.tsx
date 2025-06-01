@@ -14,20 +14,18 @@ export const DevLogEntry = ({ id, title, date, author, content }: DevLogEntryPro
     <article className="rounded-xl border-4 border-gray-300">
       <div className="flex flex-col gap-4 p-4">
         <div className="flex flex-row items-center gap-4">
-          <h2 className="text-8xl font-isometric hue-rotate-220 brightness-50 saturate-150">
-            #{id}
-          </h2>
+          <h2 className="text-8xl font-isometric isometric-primary">#{id}</h2>
 
           <div className="flex flex-col">
             <h1 className="text-3xl font-title pb-1">{title}</h1>
 
             <div className="flex flex-row items-center gap-2">
-              <Calendar size={20} className="text-gray-500" />
-              <p className="text-md text-gray-500 font-pixel pt-1">{date}</p>
+              <Calendar size={20} className="text-muted" />
+              <p className="text-md text-muted font-pixel pt-1">{date}</p>
             </div>
             <div className="flex flex-row items-center gap-2">
-              <Person size={20} className="text-gray-500" />
-              <p className="text-md text-gray-500 font-pixel pt-1">{author}</p>
+              <Person size={20} className="text-muted" />
+              <p className="text-md text-muted font-pixel pt-1">{author}</p>
             </div>
           </div>
         </div>

@@ -29,11 +29,11 @@ export const Home = () => {
 
         <div className="flex flex-col gap-4">
           <h1 className="text-3xl font-pixel">TypeScript Game Template</h1>
-          <h2 className="text-2xl font-bold font-title">Marketing Website Demo</h2>
+          <h2 className="text-2xl font-bold font-title text-muted-light">Marketing Website Demo</h2>
         </div>
 
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 animate-bounce">
-          <ChevronDown size={48} className="text-gray-300" />
+          <ChevronDown size={48} className="text-muted-light" />
         </div>
       </div>
 
@@ -91,7 +91,7 @@ const HomeSection = ({ image, title, description, isFlipped }: HomeSectionProps)
 
       <div className="flex flex-col gap-6">
         <h2 className="text-4xl font-title">{title}</h2>
-        <p className="text-lg  text-gray-300">{description}</p>
+        <p className="text-lg text-muted">{description}</p>
       </div>
     </div>
   );
