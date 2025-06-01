@@ -105,4 +105,14 @@
   .font-isometric {
     @apply font-isometric;
   }
+  /* This handles changing the color of the isometric text to your primary color */
+  .isometric-primary {
+    @apply hue-rotate-215 brightness-50 saturate-150;
+  }
+  .text-muted {
+    @apply text-gray-400;
+  }
+  .text-muted-light {
+    @apply text-gray-300;
+  }
 }
