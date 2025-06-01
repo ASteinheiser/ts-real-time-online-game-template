@@ -115,4 +115,7 @@
   .text-muted-light {
     @apply text-gray-300;
   }
+  .border-secondary {
+    @apply border-secondary;
+  }
 }
