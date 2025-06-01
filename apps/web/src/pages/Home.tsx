@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { useQuery, gql } from '@apollo/client';
 import { cn } from '@repo/ui';
 import { GetBooksQuery, GetBooksQueryVariables } from '../graphql';
@@ -17,6 +18,12 @@ export const Home = () => {
   const { session } = useSession();
   const { data } = useQuery<GetBooksQuery, GetBooksQueryVariables>(GET_BOOKS);
 
+  const homeContentRef = useRef<HTMLDivElement>(null);
+
+  const handleScollToContent = () => {
+    homeContentRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   console.log({ gqlData: data });
   console.log({ session });
 
@@ -32,12 +39,15 @@ export const Home = () => {
           <h1 className="text-5xl font-isometric isometric-primary">Game Template</h1>
         </div>
 
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 animate-bounce">
+        <button
+          className="absolute bottom-4 left-1/2 -translate-x-1/2 animate-bounce cursor-pointer"
+          onClick={handleScollToContent}
+        >
           <ChevronDown size={48} className="text-muted-light" />
-        </div>
+        </button>
       </div>
 
-      <div className="flex flex-col items-center gap-20 px-4 py-8">
+      <div className="flex flex-col items-center gap-20 px-4 py-8" ref={homeContentRef}>
         <HomeSection
           isFlipped
           image="/logo.svg"
