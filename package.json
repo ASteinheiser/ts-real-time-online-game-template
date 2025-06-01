@@ -1,6 +1,6 @@
 {
   "name": "ts-real-time-online-game-template",
-  "packageManager": "pnpm@10.10.0",
+  "packageManager": "pnpm@10.11.0",
   "version": "0.0.1",
   "author": "Andrew Steinheiser <me@iamandrew.io>",
   "license": "MIT",
@@ -33,7 +33,7 @@
   "devDependencies": {
     "eslint": "catalog:",
     "prettier": "catalog:",
-    "turbo": "^2.5.2"
+    "turbo": "^2.5.4"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
