@@ -85,9 +85,9 @@ These commands are available from the root directory whether you decide to insta
 | `pnpm preview` | Builds each app and runs a local server using the output |
 | `pnpm build:[win\|mac\|linux]` | Builds the desktop app via Electron |
 
-<b>NOTE</b>: In case you need to clear all local deps, caches, builds, etc:
+<b>NOTE</b>: If, for example, your Electron app is throwing an error when building, but was previously working, try:
 ```
-./scripts/clean-install.sh
+pnpm install:clean
 ```
 
 ## Working with the PostgreSQL DB
@@ -114,6 +114,7 @@ This will update your local DB, generate a SQL migration and update your types.
 | Command | Description |
 |---------|-------------|
 | `pnpm install` | Installs dependencies for each repo |
+| `pnpm install:clean` | Runs a script to clear builds, caches, deps, etc., then runs install |
 | `pnpm test` | Runs the typecheck, linter and tests for each repo |
 | `pnpm test:watch` | Runs the test suite in each repo and watches for changes |
 | `pnpm test:load` | Builds and runs the `game-server` then starts the load test |
