@@ -47,7 +47,7 @@ export const Home = () => {
         </button>
       </div>
 
-      <div className="flex flex-col items-center gap-20 px-4 py-8" ref={homeContentRef}>
+      <div className="flex flex-col items-center gap-20 px-6 py-8" ref={homeContentRef}>
         <HomeSection
           isFlipped
           image="/logo.svg"
@@ -75,8 +75,8 @@ export const Home = () => {
           title="Publish It Yourself"
           description={
             <>
-              Publish your game yourself! Allow users to download straight from your marketing site.
-              You can also easily distribute via Steam, itch.io, etc.
+              Publish your game yourself! Allow users to download straight from your website. You
+              can also easily distribute via Steam, itch.io, etc.
             </>
           }
         />
@@ -100,11 +100,29 @@ const HomeSection = ({ image, title, description, isFlipped }: HomeSectionProps)
         isFlipped && 'md:flex-row-reverse'
       )}
     >
-      <img src={image} alt={title} className="w-50 h-50 md:w-100 md:h-100 hover:animate-spin" />
+      <img
+        src={image}
+        alt={title}
+        className="w-50 h-50 md:w-75 md:h-75 lg:w-100 lg:h-100 hover:animate-spin"
+      />
 
       <div className="flex flex-col gap-6">
-        <h2 className="text-3xl sm:text-4xl font-title">{title}</h2>
-        <p className="text-lg text-muted">{description}</p>
+        <h2
+          className={cn(
+            'text-3xl lg:text-4xl font-title text-center md:text-left',
+            isFlipped && 'md:text-right'
+          )}
+        >
+          {title}
+        </h2>
+        <p
+          className={cn(
+            'max-w-sm lg:max-w-md text-lg text-muted text-center md:text-left',
+            isFlipped && 'md:text-right'
+          )}
+        >
+          {description}
+        </p>
       </div>
     </div>
   );
