@@ -17,7 +17,7 @@ export const DevLogEntry = ({ id, title, date, author, content }: DevLogEntryPro
           <h2 className="text-8xl font-isometric isometric-primary">#{id}</h2>
 
           <div className="flex flex-col">
-            <h1 className="text-3xl font-title pb-1">{title}</h1>
+            <h1 className="text-2xl sm:text-3xl font-title pb-1">{title}</h1>
 
             <div className="flex flex-row items-center gap-2">
               <Calendar size={20} className="text-muted" />

@@ -29,12 +29,12 @@ export const Home = () => {
 
   return (
     <div className="flex flex-col items-center">
-      <div className="flex flex-row items-center gap-8 h-screen mt-nav">
-        <img src="/logo.svg" alt="logo" className="w-50 h-50 hover:animate-ping" />
+      <div className="flex flex-col md:flex-row justify-center items-center gap-8 h-screen mt-nav">
+        <img src="/logo.svg" alt="logo" className="w-40 h-40 md:w-50 md:h-50 hover:animate-ping" />
 
-        <div className="w-[2px] h-40 bg-secondary" />
+        <div className="w-[2px] h-40 bg-secondary hidden md:block" />
 
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 text-center md:text-left">
           <h1 className="text-5xl font-label text-muted">TypeScript</h1>
           <h1 className="text-5xl font-isometric isometric-primary">Game Template</h1>
         </div>
@@ -95,12 +95,15 @@ interface HomeSectionProps {
 const HomeSection = ({ image, title, description, isFlipped }: HomeSectionProps) => {
   return (
     <div
-      className={cn('flex flex-row items-center gap-20 max-w-4xl', isFlipped && 'flex-row-reverse')}
+      className={cn(
+        'flex flex-col md:flex-row items-center gap-20 max-w-4xl',
+        isFlipped && 'md:flex-row-reverse'
+      )}
     >
-      <img src={image} alt={title} className="w-100 h-100 hover:animate-spin" />
+      <img src={image} alt={title} className="w-50 h-50 md:w-100 md:h-100 hover:animate-spin" />
 
       <div className="flex flex-col gap-6">
-        <h2 className="text-4xl font-title">{title}</h2>
+        <h2 className="text-3xl sm:text-4xl font-title">{title}</h2>
         <p className="text-lg text-muted">{description}</p>
       </div>
     </div>
