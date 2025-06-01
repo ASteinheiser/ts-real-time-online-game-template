@@ -48,7 +48,7 @@ export const ProfileCreate = () => {
   return (
     <div className="h-screen mt-nav-footer flex flex-col items-center justify-center">
       <div className="flex flex-col gap-4 w-full max-w-xs mx-auto">
-        <h1 className="text-3xl font-bold font-pixel text-center">Create Your Profile</h1>
+        <h1 className="text-3xl font-bold font-label text-center">Create Your Profile</h1>
 
         <form onSubmit={handleSubmit}>
           <div className="flex flex-col gap-2">

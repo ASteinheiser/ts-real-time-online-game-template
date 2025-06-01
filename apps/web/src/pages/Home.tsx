@@ -28,7 +28,7 @@ export const Home = () => {
         <div className="w-[2px] h-40 bg-secondary" />
 
         <div className="flex flex-col gap-4">
-          <h1 className="text-5xl font-pixel text-muted">TypeScript</h1>
+          <h1 className="text-5xl font-label text-muted">TypeScript</h1>
           <h1 className="text-5xl font-isometric isometric-primary">Game Template</h1>
         </div>
 

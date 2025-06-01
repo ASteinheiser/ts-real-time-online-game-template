@@ -21,11 +21,11 @@ export const DevLogEntry = ({ id, title, date, author, content }: DevLogEntryPro
 
             <div className="flex flex-row items-center gap-2">
               <Calendar size={20} className="text-muted" />
-              <p className="text-md text-muted font-pixel pt-1">{date}</p>
+              <p className="text-md text-muted font-label pt-1">{date}</p>
             </div>
             <div className="flex flex-row items-center gap-2">
               <Person size={20} className="text-muted" />
-              <p className="text-md text-muted font-pixel pt-1">{author}</p>
+              <p className="text-md text-muted font-label pt-1">{author}</p>
             </div>
           </div>
         </div>
