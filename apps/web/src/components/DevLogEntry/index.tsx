@@ -12,7 +12,7 @@ interface DevLogEntryProps {
 export const DevLogEntry = ({ id, title, date, author, content }: DevLogEntryProps) => {
   return (
     <article className="rounded-xl border-4 border-gray-300">
-      <div className="flex flex-col gap-6 p-4">
+      <div className="flex flex-col gap-4 p-4">
         <div className="flex flex-row items-center gap-4">
           <h1 className="text-8xl font-isometric">#{id}</h1>
 
