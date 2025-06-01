@@ -1,6 +1,6 @@
 import { Link, LinkProps, useLocation } from 'react-router-dom';
 import { cn } from '@repo/ui';
-import { useSession } from '../../router/SessionContext';
+import { useSession } from '../router/SessionContext';
 
 export const TopNav = () => {
   const { profile } = useSession();
