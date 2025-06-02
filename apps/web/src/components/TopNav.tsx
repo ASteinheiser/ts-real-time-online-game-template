@@ -1,10 +1,15 @@
+import { useState } from 'react';
 import { Link, LinkProps, useLocation } from 'react-router-dom';
 import { cn, Sheet, SheetContent, SheetTrigger } from '@repo/ui';
 import { useSession } from '../router/SessionContext';
 import { Menu } from './icons/Menu';
 
+const MENU_CLOSE_DELAY = 100;
+
 export const TopNav = () => {
   const { profile } = useSession();
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const renderNavLinks = () => {
     const navLinks = [{ label: 'DevLog', href: '/dev-log' }];
@@ -16,7 +21,11 @@ export const TopNav = () => {
     }
 
     return navLinks.map(({ href, label }) => (
-      <NavLink key={href} to={href}>
+      <NavLink
+        key={href}
+        to={href}
+        onClick={() => setTimeout(() => setIsMenuOpen(false), MENU_CLOSE_DELAY)}
+      >
         {label}
       </NavLink>
     ));
@@ -31,7 +40,7 @@ export const TopNav = () => {
 
         <div className="hidden sm:flex gap-12">{renderNavLinks()}</div>
 
-        <Sheet>
+        <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
           <SheetTrigger asChild>
             <button className="sm:hidden cursor-pointer">
               <Menu size={36} className="text-muted-light" />
