@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Montserrat&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Iceberg&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Nabla&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Tiny5&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -44,7 +44,7 @@
   --font-body: "Roboto", sans-serif;
   --font-title: "Montserrat", sans-serif;
   --font-label: "Iceberg", sans-serif;
-  --font-isometric: "Nabla", sans-serif;
+  --font-pixel: "Tiny5", sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -105,12 +105,8 @@
   .font-label {
     @apply font-label;
   }
-  .font-isometric {
-    @apply font-isometric;
-  }
-  /* This handles changing the color of the isometric text to your primary color */
-  .isometric-primary {
-    @apply hue-rotate-215 brightness-50 saturate-150;
+  .font-pixel {
+    @apply font-pixel;
   }
   .text-muted {
     @apply text-gray-400;

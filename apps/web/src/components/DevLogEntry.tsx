@@ -13,8 +13,8 @@ export const DevLogEntry = ({ id, title, date, author, content }: DevLogEntryPro
   return (
     <article className="rounded-3xl border-4 border-secondary">
       <div className="flex flex-col gap-4 p-4">
-        <div className="flex flex-row items-center gap-4">
-          <h2 className="text-8xl font-isometric isometric-primary">#{id}</h2>
+        <div className="flex flex-row items-center gap-2">
+          <h2 className="text-8xl font-pixel text-primary">#{id}</h2>
 
           <div className="flex flex-col">
             <h1 className="text-2xl sm:text-3xl font-title pb-1">{title}</h1>
