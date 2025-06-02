@@ -1,6 +1,14 @@
 @import "@repo/ui/theme.css";
 @import "tailwindcss";
 
+/* load custom 3D isometric font */
+@font-face {
+  font-family: "3DIsometric";
+  src: url("/fonts/3DIsometric-Bold.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+
 /* If you update the nav or footer height (ie: adjusting font size, padding, etc.),
  * make sure you update the margin utilities below. These ensure that fullscreen
  * pages are the correct size.
@@ -9,12 +17,18 @@
   --nav-height: 80px;
   --footer-height: 108px;
 }
-.mt-nav {
-  margin-top: calc(0px - var(--nav-height));
-}
-.mt-footer {
-  margin-top: calc(0px - var(--footer-height));
-}
-.mt-nav-footer {
-  margin-top: calc(0px - var(--nav-height) - var(--footer-height));
+
+@layer utilities {
+  .mt-nav {
+    margin-top: calc(0px - var(--nav-height));
+  }
+  .mt-footer {
+    margin-top: calc(0px - var(--footer-height));
+  }
+  .mt-nav-footer {
+    margin-top: calc(0px - var(--nav-height) - var(--footer-height));
+  }
+  .font-isometric {
+    font-family: "3DIsometric", sans-serif;
+  }
 }
