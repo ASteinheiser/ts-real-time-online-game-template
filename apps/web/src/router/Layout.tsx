@@ -10,11 +10,14 @@ export const Layout = () => {
 
   const { session, profile, isPasswordRecovery } = useSession();
 
+  // ensure the user starts at the top of the page when navigating
+  useEffect(() => window.scrollTo(0, 0), [location.pathname]);
+
   useEffect(() => {
     const navigateTo = (path: string) => {
       if (location.pathname !== path) navigate(path);
     };
-
+    // handle app forced navigation flows (auth, profile creation, etc)
     if (session && isPasswordRecovery) {
       navigateTo('/auth/new-password');
     } else if (session && !profile) {
