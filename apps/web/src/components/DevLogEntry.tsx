@@ -6,10 +6,10 @@ interface DevLogEntryProps {
   title: string;
   date: string;
   author: string;
-  content: React.ReactNode;
+  children: React.ReactNode;
 }
 
-export const DevLogEntry = ({ id, title, date, author, content }: DevLogEntryProps) => {
+export const DevLogEntry = ({ id, title, date, author, children }: DevLogEntryProps) => {
   return (
     <article className="rounded-3xl border-4 border-secondary">
       <div className="flex flex-col gap-4 p-4">
@@ -32,7 +32,7 @@ export const DevLogEntry = ({ id, title, date, author, content }: DevLogEntryPro
 
         <div className="w-full h-[2px] bg-secondary" />
 
-        {content}
+        {children}
       </div>
     </article>
   );
