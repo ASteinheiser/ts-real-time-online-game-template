@@ -7,20 +7,19 @@ export const TopNav = () => {
   const { profile } = useSession();
 
   const renderNavLinks = () => {
-    return (
-      <>
-        <NavLink to="/dev-log">DevLog</NavLink>
+    const navLinks = [{ label: 'DevLog', href: '/dev-log' }];
+    if (profile) {
+      navLinks.push({ href: '/download', label: 'Download' });
+      navLinks.push({ href: '/profile', label: 'Profile' });
+    } else {
+      navLinks.push({ href: '/auth/login', label: 'Login' });
+    }
 
-        {profile ? (
-          <>
-            <NavLink to="/download">Download</NavLink>
-            <NavLink to="/profile">Profile</NavLink>
-          </>
-        ) : (
-          <NavLink to="/auth/login">Login</NavLink>
-        )}
-      </>
-    );
+    return navLinks.map(({ href, label }) => (
+      <NavLink key={href} to={href}>
+        {label}
+      </NavLink>
+    ));
   };
 
   return (
