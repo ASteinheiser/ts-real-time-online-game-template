@@ -38,7 +38,9 @@ export const TopNav = () => {
               <Menu size={36} className="text-muted-light" />
             </button>
           </SheetTrigger>
-          <SheetContent side="left">{renderNavLinks()}</SheetContent>
+          <SheetContent side="left" className="w-1/2">
+            <div className="flex flex-col gap-4 pl-6 pt-6">{renderNavLinks()}</div>
+          </SheetContent>
         </Sheet>
       </div>
     </div>
@@ -60,7 +62,7 @@ const NavLink = ({ children, ...props }: NavLinkProps) => {
     <Link
       {...props}
       className={cn(
-        'font-title text-lg border-b-2 transition-all duration-300 ease-in-out',
+        'w-fit font-title text-lg border-b-2 transition-all duration-300 ease-in-out',
         active ? 'border-primary' : 'border-transparent hover:border-white'
       )}
     >
