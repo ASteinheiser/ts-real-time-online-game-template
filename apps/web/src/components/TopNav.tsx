@@ -33,7 +33,7 @@ export const TopNav = () => {
 
   return (
     <div className="fixed z-10 w-full bg-background/50 backdrop-blur-sm">
-      <div className="max-w-screen-lg mx-auto flex flex-row-reverse sm:flex-row justify-between items-center py-4 px-10">
+      <div className="max-w-screen-lg mx-auto flex flex-row-reverse sm:flex-row justify-between items-center py-4 px-4 sm:px-6">
         <Link to="/">
           <img src="/logo.svg" alt="logo" className="w-12 h-12 hover:animate-pulse" />
         </Link>
