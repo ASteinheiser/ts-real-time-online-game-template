@@ -1,6 +1,12 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { Session } from '@supabase/supabase-js';
 import { gql, useApolloClient } from '@apollo/client';
+import {
+  Session,
+  AuthError,
+  AuthResponse,
+  AuthTokenResponsePassword,
+  UserResponse,
+} from '@supabase/supabase-js';
 import { supabase } from '../supabase-client';
 import { Loading } from '../pages/Loading';
 import { Web_GetProfileQuery } from '../graphql';
@@ -19,22 +25,26 @@ interface SessionContextType {
   session: Session | null;
   profile: Profile | null;
   isPasswordRecovery: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  signup: (email: string, password: string) => Promise<void>;
-  logout: () => Promise<void>;
-  forgotPassword: (email: string) => Promise<void>;
-  newPassword: (password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<AuthTokenResponsePassword>;
+  signup: (email: string, password: string) => Promise<AuthResponse>;
+  logout: () => Promise<{ error: AuthError | null }>;
+  forgotPassword: (email: string) => Promise<{ error: AuthError | null }>;
+  newPassword: (password: string) => Promise<UserResponse>;
 }
+
+const dummyAsyncFunc = async () => {
+  throw new Error('not loaded');
+};
 
 const SessionContext = createContext<SessionContextType>({
   session: null,
   profile: null,
   isPasswordRecovery: false,
-  login: async () => {},
-  signup: async () => {},
-  logout: async () => {},
-  forgotPassword: async () => {},
-  newPassword: async () => {},
+  login: dummyAsyncFunc,
+  signup: dummyAsyncFunc,
+  logout: dummyAsyncFunc,
+  forgotPassword: dummyAsyncFunc,
+  newPassword: dummyAsyncFunc,
 });
 
 export const useSession = () => {
@@ -86,25 +96,25 @@ export const SessionProvider = ({ children }: SessionProviderProps) => {
   }, [supabase]);
 
   const login = async (email: string, password: string) => {
-    await supabase.auth.signInWithPassword({ email, password });
+    return await supabase.auth.signInWithPassword({ email, password });
   };
 
   const signup = async (email: string, password: string) => {
-    await supabase.auth.signUp({ email, password });
+    return await supabase.auth.signUp({ email, password });
   };
 
   const logout = async () => {
-    await supabase.auth.signOut();
+    return await supabase.auth.signOut();
   };
 
   const forgotPassword = async (email: string) => {
     const redirectTo = `${window.location.origin}/auth/new-password`;
 
-    await supabase.auth.resetPasswordForEmail(email, { redirectTo });
+    return await supabase.auth.resetPasswordForEmail(email, { redirectTo });
   };
 
   const newPassword = async (password: string) => {
-    await supabase.auth.updateUser({ password });
+    return await supabase.auth.updateUser({ password });
   };
 
   return (
