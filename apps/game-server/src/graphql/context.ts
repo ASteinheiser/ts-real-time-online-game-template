@@ -6,6 +6,12 @@ import type { PrismaClient } from '../prisma-client';
 
 interface User {
   id: string;
+  email: string;
+}
+
+interface DecodedToken {
+  sub: string;
+  email: string;
 }
 
 interface CreateContextArgs {
@@ -28,7 +34,11 @@ export const createContext: ContextFunction<[CreateContextArgs], Context> = asyn
   let user: User | null = null;
   if (authHeader) {
     try {
-      user = jwt.verify(authHeader, process.env.JWT_SECRET) as User;
+      const decoded = jwt.verify(authHeader, process.env.JWT_SECRET) as DecodedToken;
+      if (!decoded.sub || !decoded.email) {
+        throw new Error('Invalid token');
+      }
+      user = mapDecodedTokenToUser(decoded);
     } catch (error) {
       console.error(error);
     }
@@ -40,5 +50,12 @@ export const createContext: ContextFunction<[CreateContextArgs], Context> = asyn
       booksDb: new BooksRepository(),
       profilesDb: new ProfilesRepository(prisma),
     },
+  };
+};
+
+const mapDecodedTokenToUser = (token: DecodedToken) => {
+  return {
+    id: token.sub,
+    email: token.email,
   };
 };
