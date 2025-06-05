@@ -22,6 +22,10 @@ export const Layout = () => {
       navigateTo('/auth/new-password');
     } else if (session && !profile) {
       navigateTo('/create-profile');
+    } else if (session && profile && location.pathname === '/create-profile') {
+      navigateTo('/profile');
+    } else if (session && location.pathname.includes('/auth')) {
+      navigateTo('/profile');
     }
   }, [session, profile, isPasswordRecovery, location.pathname]);
 
