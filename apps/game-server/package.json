@@ -37,6 +37,7 @@
     "@repo/typescript-config": "workspace:*",
     "@types/cors": "^2.8.18",
     "@types/express": "catalog:",
+    "@types/jsonwebtoken": "catalog:",
     "@types/mocha": "catalog:",
     "@types/node": "catalog:",
     "c8": "catalog:",
@@ -62,6 +63,7 @@
     "cors": "^2.8.5",
     "express": "catalog:",
     "graphql": "catalog:",
+    "jsonwebtoken": "catalog:",
     "nanoid": "catalog:"
   }
 }
