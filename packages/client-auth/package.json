@@ -1,0 +1,11 @@
+{
+  "name": "@repo/client-auth",
+  "version": "0.0.1",
+  "author": "Andrew Steinheiser <me@iamandrew.io>",
+  "license": "MIT",
+  "private": false,
+  "type": "module",
+  "scripts": {
+    "dev": "echo 'dev'"
+  }
+}
