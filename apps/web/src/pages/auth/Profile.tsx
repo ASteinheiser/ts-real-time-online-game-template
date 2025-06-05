@@ -14,7 +14,7 @@ const UPDATE_USER_NAME = gql`
 `;
 
 export const Profile = () => {
-  const { profile, logout } = useSession();
+  const { session, profile, logout } = useSession();
 
   const [userName, setUserName] = useState(profile?.userName ?? '');
 
@@ -43,7 +43,10 @@ export const Profile = () => {
     }
 
     try {
-      await updateUserName({ variables: { userName } });
+      await updateUserName({
+        variables: { userName },
+        context: { headers: { Auth: session?.access_token } },
+      });
       toast.success('Username updated successfully');
     } catch (error) {
       console.error(error);

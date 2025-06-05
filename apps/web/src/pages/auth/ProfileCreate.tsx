@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Input, Label, LoadingSpinner, toast } from '@repo/ui';
 import { Web_CreateProfileMutation, Web_CreateProfileMutationVariables } from '../../graphql';
 import { useUserNameExists } from '../../hooks/useUserNameExists';
+import { useSession } from '../../router/SessionContext';
 
 const CREATE_PROFILE = gql`
   mutation Web_CreateProfile($userName: String!) {
@@ -15,6 +16,7 @@ const CREATE_PROFILE = gql`
 
 export const ProfileCreate = () => {
   const navigate = useNavigate();
+  const { session } = useSession();
 
   const [userName, setUserName] = useState('');
 
@@ -41,7 +43,10 @@ export const ProfileCreate = () => {
     }
 
     try {
-      await createProfile({ variables: { userName } });
+      await createProfile({
+        variables: { userName },
+        context: { headers: { Auth: session?.access_token } },
+      });
       toast.success('Profile created successfully');
       navigate('/profile');
     } catch (error) {
