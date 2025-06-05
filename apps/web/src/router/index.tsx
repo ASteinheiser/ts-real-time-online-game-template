@@ -10,6 +10,7 @@ import { ForgotPassword } from '../pages/auth/ForgotPassword';
 import { NewPassword } from '../pages/auth/NewPassword';
 import { ProfileCreate } from '../pages/auth/ProfileCreate';
 import { Profile } from '../pages/auth/Profile';
+import { Download } from '../pages/Download';
 
 export const router = createBrowserRouter([
   {
@@ -51,6 +52,10 @@ export const router = createBrowserRouter([
           {
             path: '/profile',
             element: <Profile />,
+          },
+          {
+            path: '/download',
+            element: <Download />,
           },
         ],
       },
