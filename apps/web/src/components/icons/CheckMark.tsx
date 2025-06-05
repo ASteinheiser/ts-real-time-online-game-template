@@ -1,9 +1,9 @@
-interface ChevronDownProps {
+interface CheckMarkProps {
   size?: number;
   className?: string;
 }
 
-export const ChevronDown = ({ size = 24, className }: ChevronDownProps) => {
+export const CheckMark = ({ size = 24, className }: CheckMarkProps) => {
   return (
     <svg
       width={size}
@@ -13,7 +13,7 @@ export const ChevronDown = ({ size = 24, className }: ChevronDownProps) => {
       stroke="currentColor"
       className={className}
     >
-      <path d="M21 9l-9 5l-9-5" />
+      <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
     </svg>
   );
 };
