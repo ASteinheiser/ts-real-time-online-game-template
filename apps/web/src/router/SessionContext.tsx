@@ -85,6 +85,7 @@ export const SessionProvider = ({ children }: SessionProviderProps) => {
 
       const { data, error } = await client.query<Web_GetProfileQuery>({
         query: GET_PROFILE,
+        context: { headers: { authorization: session.access_token } },
       });
       if (error) {
         console.error(error);
