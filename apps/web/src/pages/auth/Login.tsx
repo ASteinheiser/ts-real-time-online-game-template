@@ -48,7 +48,12 @@ export const Login = () => {
         <form onSubmit={handleSubmit}>
           <div className="flex flex-col gap-2">
             <Label className="text-md">Email</Label>
-            <Input name="email" value={email} onChange={({ target }) => setEmail(target.value)} />
+            <Input
+              name="email"
+              type="email"
+              value={email}
+              onChange={({ target }) => setEmail(target.value)}
+            />
 
             <Label className="text-md">Password</Label>
             <Input
