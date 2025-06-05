@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { gql, useMutation } from '@apollo/client';
+import { useNavigate } from 'react-router-dom';
 import { Button, Input, Label, LoadingSpinner, toast } from '@repo/ui';
 import { useSession } from '../../router/SessionContext';
 import { useUserNameExists } from '../../hooks/useUserNameExists';
@@ -14,6 +15,7 @@ const UPDATE_USER_NAME = gql`
 `;
 
 export const Profile = () => {
+  const navigate = useNavigate();
   const { session, profile, logout } = useSession();
 
   const [userName, setUserName] = useState(profile?.userName ?? '');
@@ -54,6 +56,11 @@ export const Profile = () => {
     }
   };
 
+  const handleLogout = async () => {
+    await logout();
+    navigate('/');
+  };
+
   return (
     <div className="h-screen mt-nav-footer flex flex-col items-center justify-center pt-40">
       <div className="flex flex-col gap-4 w-full max-w-xs mx-auto">
@@ -78,7 +85,7 @@ export const Profile = () => {
           </div>
         </form>
 
-        <Button onClick={logout} className="mt-4" variant="secondary">
+        <Button onClick={handleLogout} className="mt-4" variant="secondary">
           Logout
         </Button>
       </div>
