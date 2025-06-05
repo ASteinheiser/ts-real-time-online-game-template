@@ -46,6 +46,7 @@ describe('GQLServer', () => {
           },
           user: {
             id: 'abc',
+            email: 'test@test.com',
           },
         },
       }
