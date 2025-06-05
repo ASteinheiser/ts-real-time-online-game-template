@@ -428,6 +428,8 @@ importers:
 
   infra: {}
 
+  packages/client-auth: {}
+
   packages/core-game:
     devDependencies:
       '@repo/eslint-config':
