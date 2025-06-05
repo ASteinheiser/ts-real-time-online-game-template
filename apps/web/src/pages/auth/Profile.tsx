@@ -14,7 +14,7 @@ const UPDATE_USER_NAME = gql`
 `;
 
 export const Profile = () => {
-  const { profile } = useSession();
+  const { profile, logout } = useSession();
 
   const [userName, setUserName] = useState(profile?.userName ?? '');
 
@@ -73,6 +73,10 @@ export const Profile = () => {
             </Button>
           </div>
         </form>
+
+        <Button onClick={logout} className="mt-4" variant="secondary">
+          Logout
+        </Button>
       </div>
     </div>
   );
