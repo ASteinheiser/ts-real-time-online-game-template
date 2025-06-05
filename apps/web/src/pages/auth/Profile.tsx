@@ -5,6 +5,7 @@ import { Button, Input, Label, LoadingSpinner, toast } from '@repo/ui';
 import { useSession } from '../../router/SessionContext';
 import { useUserNameExists } from '../../hooks/useUserNameExists';
 import { Web_UpdateUserNameMutation, Web_UpdateUserNameMutationVariables } from '../../graphql';
+import { CheckMark } from '../../components/icons/CheckMark';
 
 const UPDATE_USER_NAME = gql`
   mutation Web_UpdateUserName($userName: String!) {
@@ -19,6 +20,7 @@ export const Profile = () => {
   const { session, profile, logout } = useSession();
 
   const [userName, setUserName] = useState(profile?.userName ?? '');
+  const [email, setEmail] = useState(session?.user.email ?? '');
 
   const { userNameExists, loading: userExistsLoading } = useUserNameExists(userName);
 
@@ -30,6 +32,7 @@ export const Profile = () => {
   const loading = userExistsLoading || updateUserNameLoading;
   const isUserNameAvailable = userNameExists !== undefined && !userNameExists;
   const isUserNameChanged = !!userName && userName !== profile?.userName;
+  const isEmailConfirmed = Boolean(session?.user.email_confirmed_at);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -68,6 +71,20 @@ export const Profile = () => {
 
         <form onSubmit={handleSubmit}>
           <div className="flex flex-col gap-2">
+            <Label className="text-md">Email</Label>
+            <div className="flex flex-row items-center gap-4">
+              <Input
+                name="email"
+                type="email"
+                value={email}
+                onChange={({ target }) => setEmail(target.value)}
+              />
+              <CheckMark
+                size={24}
+                className={isEmailConfirmed ? 'text-green-500' : 'text-gray-500'}
+              />
+            </div>
+
             <Label className="text-md">Username</Label>
             <Input
               name="userName"
