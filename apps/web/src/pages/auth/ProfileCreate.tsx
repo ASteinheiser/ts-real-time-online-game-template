@@ -45,7 +45,7 @@ export const ProfileCreate = () => {
     try {
       await createProfile({
         variables: { userName },
-        context: { headers: { Auth: session?.access_token } },
+        context: { headers: { authorization: session?.access_token } },
       });
       toast.success('Profile created successfully');
       navigate('/profile');

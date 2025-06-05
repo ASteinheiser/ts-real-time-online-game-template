@@ -47,7 +47,7 @@ export const Profile = () => {
     try {
       await updateUserName({
         variables: { userName },
-        context: { headers: { Auth: session?.access_token } },
+        context: { headers: { authorization: session?.access_token } },
       });
       toast.success('Username updated successfully');
     } catch (error) {
