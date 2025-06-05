@@ -44,6 +44,7 @@ export const Profile = () => {
 
     try {
       await updateUserName({ variables: { userName } });
+      toast.success('Username updated successfully');
     } catch (error) {
       console.error(error);
       toast.error('Failed to update username, please try again');

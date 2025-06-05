@@ -30,6 +30,7 @@ export const NewPassword = () => {
         toast.error(error.message);
         return;
       }
+      toast.success('Password updated successfully');
       navigate('/profile');
     } catch (error) {
       console.error(error);

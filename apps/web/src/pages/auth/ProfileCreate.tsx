@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { gql, useMutation } from '@apollo/client';
+import { useNavigate } from 'react-router-dom';
 import { Button, Input, Label, LoadingSpinner, toast } from '@repo/ui';
 import { Web_CreateProfileMutation, Web_CreateProfileMutationVariables } from '../../graphql';
 import { useUserNameExists } from '../../hooks/useUserNameExists';
@@ -13,6 +14,8 @@ const CREATE_PROFILE = gql`
 `;
 
 export const ProfileCreate = () => {
+  const navigate = useNavigate();
+
   const [userName, setUserName] = useState('');
 
   const { userNameExists, loading: userExistsLoading } = useUserNameExists(userName);
@@ -39,6 +42,8 @@ export const ProfileCreate = () => {
 
     try {
       await createProfile({ variables: { userName } });
+      toast.success('Profile created successfully');
+      navigate('/profile');
     } catch (error) {
       console.error(error);
       toast.error('Failed to create profile, please try again');
