@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button, Input, Label, LoadingSpinner, toast } from '@repo/ui';
 import { useSession } from '../../router/SessionContext';
 
 export const NewPassword = () => {
   const { newPassword } = useSession();
+  const navigate = useNavigate();
 
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -23,8 +25,12 @@ export const NewPassword = () => {
 
     setLoading(true);
     try {
-      await newPassword(password);
-      toast.success('Password updated successfully');
+      const { error } = await newPassword(password);
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
+      navigate('/profile');
     } catch (error) {
       console.error(error);
       toast.error('Failed to update password, please try again');

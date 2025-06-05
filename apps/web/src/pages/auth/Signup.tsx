@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { isEmail } from 'validator';
 import { Button, Input, Label, LoadingSpinner, toast } from '@repo/ui';
 import { useSession } from '../../router/SessionContext';
 
@@ -18,7 +19,10 @@ export const Signup = () => {
       toast.error('Please fill in all fields');
       return;
     }
-
+    if (!isEmail(email)) {
+      toast.error('Please enter a valid email address');
+      return;
+    }
     if (password !== confirmPassword) {
       toast.error('Passwords do not match');
       return;
@@ -26,7 +30,12 @@ export const Signup = () => {
 
     setLoading(true);
     try {
-      await signup(email, password);
+      const { error } = await signup(email, password);
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
+      toast.success('Signup successful, please check your email for a verification link');
     } catch (error) {
       console.error(error);
       toast.error('Failed to signup, please try again');

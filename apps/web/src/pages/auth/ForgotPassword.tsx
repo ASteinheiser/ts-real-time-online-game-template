@@ -24,8 +24,12 @@ export const ForgotPassword = () => {
 
     setLoading(true);
     try {
-      await forgotPassword(email);
-      toast.success('Password reset email sent! Check your inbox');
+      const { error } = await forgotPassword(email);
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
+      toast.success('Password reset email sent! Please check your inbox');
     } catch (error) {
       console.error(error);
       toast.error('Failed to send reset email, please try again');

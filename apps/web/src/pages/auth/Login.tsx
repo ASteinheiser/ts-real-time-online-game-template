@@ -1,10 +1,12 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { isEmail } from 'validator';
 import { Button, Input, Label, LoadingSpinner, toast } from '@repo/ui';
 import { useSession } from '../../router/SessionContext';
 
 export const Login = () => {
   const { login } = useSession();
+  const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -17,10 +19,19 @@ export const Login = () => {
       toast.error('Please fill in all fields');
       return;
     }
+    if (!isEmail(email)) {
+      toast.error('Please enter a valid email address');
+      return;
+    }
 
     setLoading(true);
     try {
-      await login(email, password);
+      const { error } = await login(email, password);
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
+      navigate('/profile');
     } catch (error) {
       console.error(error);
       toast.error('Failed to login, please try again');
