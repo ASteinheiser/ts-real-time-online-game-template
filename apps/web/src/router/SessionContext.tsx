@@ -30,6 +30,7 @@ interface SessionContextType {
   logout: () => Promise<{ error: AuthError | null }>;
   forgotPassword: (email: string) => Promise<{ error: AuthError | null }>;
   newPassword: (password: string) => Promise<UserResponse>;
+  changeEmail: (email: string) => Promise<UserResponse>;
 }
 
 const dummyAsyncFunc = async () => {
@@ -45,6 +46,7 @@ const SessionContext = createContext<SessionContextType>({
   logout: dummyAsyncFunc,
   forgotPassword: dummyAsyncFunc,
   newPassword: dummyAsyncFunc,
+  changeEmail: dummyAsyncFunc,
 });
 
 export const useSession = () => {
@@ -117,6 +119,10 @@ export const SessionProvider = ({ children }: SessionProviderProps) => {
     return await supabase.auth.updateUser({ password });
   };
 
+  const changeEmail = async (email: string) => {
+    return await supabase.auth.updateUser({ email });
+  };
+
   return (
     <SessionContext.Provider
       value={{
@@ -128,6 +134,7 @@ export const SessionProvider = ({ children }: SessionProviderProps) => {
         logout,
         forgotPassword,
         newPassword,
+        changeEmail,
       }}
     >
       {isLoading ? <Loading /> : children}
