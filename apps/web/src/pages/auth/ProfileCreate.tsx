@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { gql, useMutation } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
 import { Button, Input, Label, LoadingSpinner, toast } from '@repo/ui';
+import { CheckMark } from '@repo/ui/icons';
 import { Web_CreateProfileMutation, Web_CreateProfileMutationVariables } from '../../graphql';
 import { useUserNameExists } from '../../hooks/useUserNameExists';
 import { useSession } from '../../router/SessionContext';
@@ -65,17 +66,21 @@ export const ProfileCreate = () => {
         <form onSubmit={handleSubmit}>
           <div className="flex flex-col gap-2">
             <Label className="text-md">Username</Label>
-            <Input
-              name="userName"
-              value={userName}
-              onChange={({ target }) => setUserName(target.value)}
-            />
+            <div className="flex flex-row items-center gap-4">
+              <Input
+                name="userName"
+                value={userName}
+                onChange={({ target }) => setUserName(target.value)}
+              />
+              <CheckMark
+                size={24}
+                className={
+                  !loading && userName && isUserNameAvailable ? 'text-green-500' : 'text-gray-500'
+                }
+              />
+            </div>
 
-            {userName && !isUserNameAvailable && !loading && (
-              <span className="text-red-500 text-sm">Username is already taken</span>
-            )}
-
-            <Button type="submit" disabled={loading} className="mt-4">
+            <Button type="submit" disabled={loading} className="mt-6">
               {loading ? <LoadingSpinner /> : 'Create Profile'}
             </Button>
           </div>

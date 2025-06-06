@@ -86,17 +86,23 @@ export const Profile = () => {
             </div>
 
             <Label className="text-md">Username</Label>
-            <Input
-              name="userName"
-              value={userName}
-              onChange={({ target }) => setUserName(target.value)}
-            />
+            <div className="flex flex-row items-center gap-4">
+              <Input
+                name="userName"
+                value={userName}
+                onChange={({ target }) => setUserName(target.value)}
+              />
+              <CheckMark
+                size={24}
+                className={
+                  !loading && (isUserNameAvailable || !isUserNameChanged)
+                    ? 'text-green-500'
+                    : 'text-gray-500'
+                }
+              />
+            </div>
 
-            {isUserNameChanged && !isUserNameAvailable && !loading && (
-              <span className="text-red-500 text-sm">Username is already taken</span>
-            )}
-
-            <Button type="submit" disabled={loading || !isUserNameChanged} className="mt-4">
+            <Button type="submit" disabled={loading || !isUserNameChanged} className="mt-6">
               {loading ? <LoadingSpinner /> : 'Save'}
             </Button>
           </div>
