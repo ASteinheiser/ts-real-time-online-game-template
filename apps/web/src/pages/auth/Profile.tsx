@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { gql, useMutation } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
 import { Button, Input, Label, LoadingSpinner, toast } from '@repo/ui';
+import { CheckMark } from '@repo/ui/icons';
 import { useSession } from '../../router/SessionContext';
 import { useUserNameExists } from '../../hooks/useUserNameExists';
 import { Web_UpdateUserNameMutation, Web_UpdateUserNameMutationVariables } from '../../graphql';
-import { CheckMark } from '../../components/icons/CheckMark';
 
 const UPDATE_USER_NAME = gql`
   mutation Web_UpdateUserName($userName: String!) {

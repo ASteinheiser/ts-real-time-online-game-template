@@ -1,5 +1,4 @@
-import { Calendar } from './icons/Calendar';
-import { Person } from './icons/Person';
+import { Calendar, Person } from '@repo/ui/icons';
 
 interface DevLogEntryProps {
   id: number;

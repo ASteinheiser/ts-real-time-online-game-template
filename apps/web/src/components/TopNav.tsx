@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Link, LinkProps, useLocation } from 'react-router-dom';
 import { cn, Sheet, SheetContent, SheetTrigger } from '@repo/ui';
+import { Menu } from '@repo/ui/icons';
 import { useSession } from '../router/SessionContext';
-import { Menu } from './icons/Menu';
 
 const MENU_CLOSE_DELAY = 100;
 
