@@ -27,9 +27,15 @@ export const resolvers: Resolvers<Context> = {
         userName,
       });
     },
-    deleteProfile: async (_, __, { dataSources, user }) => {
-      await dataSources.profilesDb.deleteProfile(user.id);
-      return true;
+    deleteProfile: async (_, __, { authClient, dataSources, user }) => {
+      try {
+        await dataSources.profilesDb.deleteProfile(user.id);
+        await authClient.deleteUser(user.id);
+        return true;
+      } catch (error) {
+        console.error(error);
+        return false;
+      }
     },
   },
 };
