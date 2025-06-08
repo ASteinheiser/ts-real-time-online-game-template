@@ -21,15 +21,14 @@ export const ProfileCreate = () => {
 
   const [userName, setUserName] = useState('');
 
-  const { userNameExists, loading: userExistsLoading } = useUserNameExists(userName);
+  const { userNameExists, isTyping, loading: userExistsLoading } = useUserNameExists(userName);
+
+  const isUserNameAvailable = userNameExists === false;
 
   const [createProfile, { loading: createProfileLoading }] = useMutation<
     Web_CreateProfileMutation,
     Web_CreateProfileMutationVariables
   >(CREATE_PROFILE);
-
-  const isUserNameAvailable = userNameExists !== undefined && !userNameExists;
-  const loading = userExistsLoading || createProfileLoading;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -75,12 +74,14 @@ export const ProfileCreate = () => {
               <CheckMark
                 size={24}
                 className={
-                  !loading && userName && isUserNameAvailable ? 'text-green-500' : 'text-gray-500'
+                  !isTyping && !userExistsLoading && userName && isUserNameAvailable
+                    ? 'text-green-500'
+                    : 'text-gray-500'
                 }
               />
             </div>
 
-            <Button type="submit" loading={loading} className="mt-2">
+            <Button type="submit" loading={createProfileLoading} className="mt-2">
               Create Profile
             </Button>
           </div>

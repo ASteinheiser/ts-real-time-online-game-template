@@ -11,6 +11,7 @@ const GET_USER_NAME_EXISTS = gql`
 
 interface UseUserNameExistsResult {
   userNameExists?: boolean;
+  isTyping: boolean;
   loading: boolean;
   error?: ApolloError;
 }
@@ -23,6 +24,8 @@ export const useUserNameExists = (userName: string): UseUserNameExistsResult => 
   const [error, setError] = useState<ApolloError>();
 
   const debouncedUserName = useDebounce(userName, 500);
+
+  const isTyping = userName !== debouncedUserName;
 
   useEffect(() => {
     if (debouncedUserName !== '') {
@@ -52,5 +55,5 @@ export const useUserNameExists = (userName: string): UseUserNameExistsResult => 
     }
   };
 
-  return { userNameExists, loading, error };
+  return { userNameExists, isTyping, loading, error };
 };
