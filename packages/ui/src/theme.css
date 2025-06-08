@@ -111,7 +111,10 @@
   .text-muted {
     @apply text-muted;
   }
-  .text-muted-light {
+  .text-muted-foreground {
     @apply text-muted-foreground;
+  }
+  .border-primary {
+    @apply border-primary;
   }
 }
