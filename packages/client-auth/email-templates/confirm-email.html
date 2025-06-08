@@ -1,4 +1,92 @@
-<h2>Confirm your signup</h2>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* Reset styles */
+    body, table, td, tr, p, a, h1, h2, h3, h4, h5, h6 {
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+    body {
+      padding: 40px 20px;
+      background-color: #09090b;
+      color: #d1d5dc;
+      font-family: Arial, sans-serif;
+    }
+    h1 {
+      font-size: 28px;
+      font-weight: 600;
+      color: #d1d5dc;
+    }
+    p {
+      font-size: 14px;
+      color: #99a1af;
+    }
+    a {
+      color: #6118ad;
+      text-decoration: underline;
+    }
+    .email-container {
+      width: 100%;
+      background-color: #09090b;
+    }
+    .centered {
+      margin: 0 auto;
+    }
+    .card {
+      border-radius: 16px;
+      border: 2px solid #6118ad;
+      min-width: 600px;
+      padding: 40px 30px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .button {
+      background-color: #6118ad;
+      padding: 24px 32px;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+    .button a {
+      color: #f5f5f5;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <table role="presentation" class="email-container">
+    <tr>
+      <td>
+        <table role="presentation" class="card">
+          <tr>
+            <td>
+              <h1 style="margin-bottom: 24px;">
+                Welcome to "Demo Game"!
+              </h1>
 
-<p>Follow this link to confirm your user:</p>
-<p><a href="{{ .ConfirmationURL }}">Confirm your mail</a></p>
+              <p style="margin-bottom: 32px;">
+                To confirm your email, please click the button below:
+              </p>
+
+              <table role="presentation" class="centered">
+                <tr>
+                  <td class="button">
+                    <a href="{{ .ConfirmationURL }}">Confirm Your Email</a>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="margin-top: 32px;">
+                If the button doesn't work, you can also click this link:<br>
+                <a href="{{ .ConfirmationURL }}">{{ .ConfirmationURL }}</a>
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
