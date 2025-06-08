@@ -96,12 +96,6 @@
 }
 
 @layer utilities {
-  .font-body {
-    @apply font-body;
-  }
-  .font-title {
-    @apply font-title;
-  }
   .font-label {
     @apply font-label;
   }
@@ -110,9 +104,6 @@
   }
   .text-muted {
     @apply text-muted;
-  }
-  .text-muted-foreground {
-    @apply text-muted-foreground;
   }
   .border-primary {
     @apply border-primary;
