@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { gql, useMutation } from '@apollo/client';
-import { useNavigate } from 'react-router-dom';
+import { gql, useApolloClient } from '@apollo/client';
 import { Button, Input, Label, toast } from '@repo/ui';
 import { CheckMark } from '@repo/ui/icons';
 import { Web_CreateProfileMutation, Web_CreateProfileMutationVariables } from '../../graphql';
@@ -16,19 +15,14 @@ const CREATE_PROFILE = gql`
 `;
 
 export const ProfileCreate = () => {
-  const navigate = useNavigate();
-  const { session } = useSession();
+  const client = useApolloClient();
+  const { session, refetchProfile } = useSession();
 
   const [userName, setUserName] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const { userNameExists, isTyping, loading: userExistsLoading } = useUserNameExists(userName);
-
   const isUserNameAvailable = userNameExists === false;
-
-  const [createProfile, { loading: createProfileLoading }] = useMutation<
-    Web_CreateProfileMutation,
-    Web_CreateProfileMutationVariables
-  >(CREATE_PROFILE);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -42,16 +36,20 @@ export const ProfileCreate = () => {
       return;
     }
 
+    setLoading(true);
     try {
-      await createProfile({
+      await client.mutate<Web_CreateProfileMutation, Web_CreateProfileMutationVariables>({
+        mutation: CREATE_PROFILE,
         variables: { userName },
         context: { headers: { authorization: session?.access_token } },
       });
+      await refetchProfile();
       toast.success('Profile created successfully');
-      navigate('/profile');
     } catch (error) {
       console.error(error);
       toast.error('Failed to create profile, please try again');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -81,7 +79,7 @@ export const ProfileCreate = () => {
               />
             </div>
 
-            <Button type="submit" loading={createProfileLoading} className="mt-2">
+            <Button type="submit" loading={loading} className="mt-2">
               Create Profile
             </Button>
           </div>

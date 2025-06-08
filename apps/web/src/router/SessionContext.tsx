@@ -31,6 +31,7 @@ interface SessionContextType {
   forgotPassword: (email: string) => Promise<{ error: AuthError | null }>;
   newPassword: (password: string) => Promise<UserResponse>;
   changeEmail: (email: string) => Promise<UserResponse>;
+  refetchProfile: () => Promise<void>;
 }
 
 const dummyAsyncFunc = async () => {
@@ -47,6 +48,7 @@ const SessionContext = createContext<SessionContextType>({
   forgotPassword: dummyAsyncFunc,
   newPassword: dummyAsyncFunc,
   changeEmail: dummyAsyncFunc,
+  refetchProfile: dummyAsyncFunc,
 });
 
 export const useSession = () => {
@@ -67,36 +69,37 @@ export const SessionProvider = ({ children }: SessionProviderProps) => {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isPasswordRecovery, setIsPasswordRecovery] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const authStateListener = supabase.auth.onAuthStateChange(async (event, session) => {
       setSession(session);
       setIsPasswordRecovery(event === 'PASSWORD_RECOVERY');
       await getProfile(session);
-      setIsLoading(false);
+      setLoading(false);
     });
-
-    const getProfile = async (session: Session | null) => {
-      if (!session) {
-        setProfile(null);
-        return;
-      }
-
-      const { data, error } = await client.query<Web_GetProfileQuery>({
-        query: GET_PROFILE,
-        context: { headers: { authorization: session.access_token } },
-      });
-      if (error) {
-        console.error(error);
-      }
-      setProfile(data?.profile ?? null);
-    };
 
     return () => {
       authStateListener.data.subscription.unsubscribe();
     };
   }, [supabase]);
+
+  const getProfile = async (_session: Session | null) => {
+    if (!_session) {
+      setProfile(null);
+      return;
+    }
+
+    const { data, error } = await client.query<Web_GetProfileQuery>({
+      query: GET_PROFILE,
+      context: { headers: { authorization: _session.access_token } },
+      fetchPolicy: 'network-only',
+    });
+    if (error) {
+      console.error(error);
+    }
+    setProfile(data?.profile ?? null);
+  };
 
   const login = async (email: string, password: string) => {
     return await supabase.auth.signInWithPassword({ email, password });
@@ -124,6 +127,10 @@ export const SessionProvider = ({ children }: SessionProviderProps) => {
     return await supabase.auth.updateUser({ email });
   };
 
+  const refetchProfile = async () => {
+    await getProfile(session);
+  };
+
   return (
     <SessionContext.Provider
       value={{
@@ -136,9 +143,10 @@ export const SessionProvider = ({ children }: SessionProviderProps) => {
         forgotPassword,
         newPassword,
         changeEmail,
+        refetchProfile,
       }}
     >
-      {isLoading ? <Loading /> : children}
+      {loading ? <Loading /> : children}
     </SessionContext.Provider>
   );
 };
