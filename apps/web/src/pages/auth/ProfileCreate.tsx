@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { gql, useMutation } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
-import { Button, Input, Label, LoadingSpinner, toast } from '@repo/ui';
+import { Button, Input, Label, toast } from '@repo/ui';
 import { CheckMark } from '@repo/ui/icons';
 import { Web_CreateProfileMutation, Web_CreateProfileMutationVariables } from '../../graphql';
 import { useUserNameExists } from '../../hooks/useUserNameExists';
@@ -80,8 +80,8 @@ export const ProfileCreate = () => {
               />
             </div>
 
-            <Button type="submit" disabled={loading} className="mt-2">
-              {loading ? <LoadingSpinner /> : 'Create Profile'}
+            <Button type="submit" loading={loading} className="mt-2">
+              Create Profile
             </Button>
           </div>
         </form>

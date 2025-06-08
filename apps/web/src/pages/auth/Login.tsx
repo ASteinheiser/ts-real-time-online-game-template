@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { isEmail } from 'validator';
-import { Button, Input, Label, LoadingSpinner, toast } from '@repo/ui';
+import { Button, Input, Label, toast } from '@repo/ui';
 import { useSession } from '../../router/SessionContext';
 
 export const Login = () => {
@@ -65,8 +65,8 @@ export const Login = () => {
           </div>
 
           <div className="flex flex-col gap-4 mt-6">
-            <Button type="submit" disabled={loading}>
-              {loading ? <LoadingSpinner /> : 'Log In'}
+            <Button type="submit" loading={loading}>
+              Log In
             </Button>
 
             <div className="flex flex-row gap-4">

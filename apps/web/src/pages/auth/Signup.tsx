@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { isEmail } from 'validator';
-import { Button, Input, Label, LoadingSpinner, toast } from '@repo/ui';
+import { Button, Input, Label, toast } from '@repo/ui';
 import { useSession } from '../../router/SessionContext';
 
 export const Signup = () => {
@@ -77,8 +77,8 @@ export const Signup = () => {
           </div>
 
           <div className="flex flex-col gap-4 mt-6">
-            <Button type="submit" disabled={loading}>
-              {loading ? <LoadingSpinner /> : 'Sign Up'}
+            <Button type="submit" loading={loading}>
+              Sign Up
             </Button>
 
             <Button asChild variant="secondary" className="flex-1">

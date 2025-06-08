@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Input, Label, LoadingSpinner, toast } from '@repo/ui';
+import { Button, Input, Label, toast } from '@repo/ui';
 import { useSession } from '../../router/SessionContext';
 
 export const NewPassword = () => {
@@ -66,8 +66,8 @@ export const NewPassword = () => {
             />
           </div>
 
-          <Button type="submit" disabled={loading} className="w-full mt-6">
-            {loading ? <LoadingSpinner /> : 'Update Password'}
+          <Button type="submit" loading={loading} className="w-full mt-6">
+            Update Password
           </Button>
         </form>
       </div>
