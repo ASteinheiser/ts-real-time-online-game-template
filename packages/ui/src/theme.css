@@ -95,6 +95,9 @@
   }
 }
 
+/* These utilities need to be redeclared here to export globally
+ * if they are not used in ui/src/components/
+ */
 @layer utilities {
   .font-label {
     @apply font-label;
