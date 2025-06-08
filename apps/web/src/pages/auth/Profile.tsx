@@ -2,11 +2,16 @@ import { useState } from 'react';
 import { gql, useMutation } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
 import { isEmail } from 'validator';
-import { Button, Input, Label, LoadingSpinner, toast } from '@repo/ui';
+import { Button, Input, Label, toast } from '@repo/ui';
 import { CheckMark } from '@repo/ui/icons';
 import { useSession } from '../../router/SessionContext';
 import { useUserNameExists } from '../../hooks/useUserNameExists';
-import { Web_UpdateUserNameMutation, Web_UpdateUserNameMutationVariables } from '../../graphql';
+import {
+  Web_UpdateUserNameMutation,
+  Web_UpdateUserNameMutationVariables,
+  Web_DeleteAccountMutation,
+  Web_DeleteAccountMutationVariables,
+} from '../../graphql';
 
 const UPDATE_USER_NAME = gql`
   mutation Web_UpdateUserName($userName: String!) {
@@ -16,30 +21,36 @@ const UPDATE_USER_NAME = gql`
   }
 `;
 
+const DELETE_ACCOUNT = gql`
+  mutation Web_DeleteAccount {
+    deleteProfile
+  }
+`;
+
 export const Profile = () => {
   const navigate = useNavigate();
-  const { session, profile, logout, changeEmail, newPassword } = useSession();
+  const { session, profile, logout, changeEmail } = useSession();
 
-  const [userName, setUserName] = useState(profile?.userName ?? '');
   const [email, setEmail] = useState(session?.user.email ?? '');
   const [emailLoading, setEmailLoading] = useState(false);
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [passwordLoading, setPasswordLoading] = useState(false);
 
-  const { userNameExists, loading: userExistsLoading } = useUserNameExists(userName);
+  const [userName, setUserName] = useState(profile?.userName ?? '');
+  const { userNameExists, loading: userNameExistsLoading } = useUserNameExists(userName);
 
   const [updateUserName, { loading: updateUserNameLoading }] = useMutation<
     Web_UpdateUserNameMutation,
     Web_UpdateUserNameMutationVariables
   >(UPDATE_USER_NAME);
 
-  const userNameLoading = userExistsLoading || updateUserNameLoading;
-  const isUserNameAvailable = userNameExists !== undefined && !userNameExists;
-  const isUserNameChanged = !!userName && userName !== profile?.userName;
-  const isEmailConfirmed = Boolean(session?.user.email_confirmed_at);
-  const isEmailChanged = !!email && email !== session?.user.email;
-  const isPasswordChanged = !!password && password === confirmPassword;
+  const [deleteAccount, { loading: deleteAccountLoading }] = useMutation<
+    Web_DeleteAccountMutation,
+    Web_DeleteAccountMutationVariables
+  >(DELETE_ACCOUNT);
+
+  const isUserNameAvailable = userNameExists === false;
+  const isUserNameChanged = userName !== profile?.userName;
+  const isEmailChanged = email !== session?.user.email;
+  const isEmailConfirmed = Boolean(session?.user.email_confirmed_at) && !isEmailChanged;
 
   const handleUpdateUserName = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -91,32 +102,16 @@ export const Profile = () => {
     }
   };
 
-  const handleUpdatePassword = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!isPasswordChanged) return;
-
-    if (!password || !confirmPassword) {
-      toast.error('Please enter a password');
-      return;
-    }
-    if (password !== confirmPassword) {
-      toast.error('Passwords do not match');
-      return;
-    }
-
-    setPasswordLoading(true);
+  const handleDeleteAccount = async () => {
     try {
-      const { error } = await newPassword(password);
-      if (error) {
-        toast.error(error.message);
-        return;
-      }
-      toast.success('Password updated successfully');
+      await deleteAccount({
+        context: { headers: { authorization: session?.access_token } },
+      });
+      toast.success('Account deleted successfully');
+      await handleLogout();
     } catch (error) {
       console.error(error);
-      toast.error('Failed to update password, please try again');
-    } finally {
-      setPasswordLoading(false);
+      toast.error('Failed to delete account, please try again');
     }
   };
 
@@ -128,7 +123,9 @@ export const Profile = () => {
   return (
     <div className="h-screen mt-nav-footer flex flex-col items-center justify-center pt-40">
       <div className="flex flex-col gap-4 w-full max-w-xs mx-auto">
-        <h1 className="text-4xl font-bold font-pixel text-center text-muted-light">Your Profile</h1>
+        <h1 className="text-4xl font-bold font-pixel text-center text-muted-foreground">
+          Your Profile
+        </h1>
 
         <form onSubmit={handleUpdateUserName}>
           <div className="flex flex-col gap-2">
@@ -142,15 +139,20 @@ export const Profile = () => {
               <CheckMark
                 size={24}
                 className={
-                  !userNameLoading && (isUserNameAvailable || !isUserNameChanged)
+                  !userNameExistsLoading && (isUserNameAvailable || !isUserNameChanged)
                     ? 'text-green-500'
                     : 'text-gray-500'
                 }
               />
             </div>
 
-            <Button type="submit" disabled={userNameLoading || !isUserNameChanged} className="mt-6">
-              {userNameLoading ? <LoadingSpinner /> : 'Update Username'}
+            <Button
+              type="submit"
+              className="mt-2"
+              loading={updateUserNameLoading}
+              disabled={!isUserNameChanged || deleteAccountLoading}
+            >
+              Update Username
             </Button>
           </div>
         </form>
@@ -171,38 +173,25 @@ export const Profile = () => {
               />
             </div>
 
-            <Button type="submit" disabled={emailLoading || !isEmailChanged} className="mt-6">
-              {emailLoading ? <LoadingSpinner /> : 'Update Email'}
+            <Button
+              type="submit"
+              className="mt-2"
+              loading={emailLoading}
+              disabled={!isEmailChanged || deleteAccountLoading}
+            >
+              Update Email
             </Button>
           </div>
         </form>
 
-        <form onSubmit={handleUpdatePassword}>
-          <div className="flex flex-col gap-2">
-            <Label className="text-md">New Password</Label>
-            <Input
-              name="password"
-              type="password"
-              value={password}
-              onChange={({ target }) => setPassword(target.value)}
-            />
+        <div className="w-20 h-[2px] bg-secondary mx-auto" />
 
-            <Label className="text-md">Confirm Password</Label>
-            <Input
-              name="confirm password"
-              type="password"
-              value={confirmPassword}
-              onChange={({ target }) => setConfirmPassword(target.value)}
-            />
+        <Button onClick={handleLogout} disabled={deleteAccountLoading} variant="secondary">
+          Log Out
+        </Button>
 
-            <Button type="submit" disabled={passwordLoading || !isPasswordChanged} className="mt-6">
-              {passwordLoading ? <LoadingSpinner /> : 'Update Password'}
-            </Button>
-          </div>
-        </form>
-
-        <Button onClick={handleLogout} className="mt-6" variant="secondary">
-          Logout
+        <Button onClick={handleDeleteAccount} loading={deleteAccountLoading} variant="destructive">
+          Delete Account
         </Button>
       </div>
     </div>
