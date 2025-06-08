@@ -4,16 +4,18 @@ import { playground } from '@colyseus/playground';
 import { expressMiddleware } from '@as-integrations/express5';
 import express from 'express';
 import cors from 'cors';
+import type { GoTrueAdminApi } from '@supabase/supabase-js';
 import { server as GQLServer } from './graphql';
 import { MyRoom, RESULTS } from './rooms/MyRoom';
 import { createContext } from './graphql/context';
 import type { PrismaClient } from './prisma-client';
 
 interface SetupAppArgs {
+  authClient: GoTrueAdminApi;
   prisma: PrismaClient;
 }
 
-export const setupApp = ({ prisma }: SetupAppArgs) => {
+export const setupApp = ({ authClient, prisma }: SetupAppArgs) => {
   return config({
     initializeGameServer: (gameServer) => {
       /**
@@ -30,7 +32,7 @@ export const setupApp = ({ prisma }: SetupAppArgs) => {
         expressMiddleware(GQLServer, {
           context: ({ req }) => {
             const authHeader = req.headers.authorization;
-            return createContext({ prisma, authHeader });
+            return createContext({ authHeader, authClient, prisma });
           },
         })
       );
