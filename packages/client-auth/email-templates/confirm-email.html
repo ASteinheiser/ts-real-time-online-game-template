@@ -31,13 +31,12 @@
       width: 100%;
       background-color: #09090b;
     }
-    .centered {
+    .button-container {
       margin: 0 auto;
+      cursor: pointer;
     }
-    .card {
-      border-radius: 16px;
-      border: 2px solid #6118ad;
-      min-width: 600px;
+    .content {
+      width: 600px;
       padding: 40px 30px;
       margin: 0 auto;
       text-align: center;
@@ -46,7 +45,6 @@
       background-color: #6118ad;
       padding: 24px 32px;
       border-radius: 12px;
-      cursor: pointer;
     }
     .button a {
       color: #f5f5f5;
@@ -60,7 +58,7 @@
   <table role="presentation" class="email-container">
     <tr>
       <td>
-        <table role="presentation" class="card">
+        <table role="presentation" class="content">
           <tr>
             <td>
               <h1 style="margin-bottom: 24px;">
@@ -71,7 +69,7 @@
                 To confirm your email, please click the button below:
               </p>
 
-              <table role="presentation" class="centered">
+              <table role="presentation" class="button-container">
                 <tr>
                   <td class="button">
                     <a href="{{ .ConfirmationURL }}">Confirm Your Email</a>
@@ -80,9 +78,9 @@
               </table>
 
               <p style="margin-top: 32px;">
-                If the button doesn't work, you can also click this link:<br>
-                <a href="{{ .ConfirmationURL }}">{{ .ConfirmationURL }}</a>
+                If the button doesn't work, you can also click this link:
               </p>
+              <a href="{{ .ConfirmationURL }}">{{ .ConfirmationURL }}</a>
             </td>
           </tr>
         </table>
