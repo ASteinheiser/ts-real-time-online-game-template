@@ -1,7 +1,7 @@
 import { cn } from '../utils';
 
 type LoadingSpinnerSize = 'sm' | 'md' | 'lg';
-type LoadingSpinnerColor = 'primary' | 'secondary';
+type LoadingSpinnerColor = 'primary' | 'secondary' | 'foreground';
 
 interface LoadingSpinnerProps {
   size?: LoadingSpinnerSize;
@@ -16,14 +16,14 @@ export const LoadingSpinner = ({ size = 'md', color = 'primary' }: LoadingSpinne
     <div className="relative">
       <div
         className={cn(
-          'w-10 h-10 border-4 border-t-transparent border-b-transparent border-primary rounded-full animate-[spin_1.25s_linear_infinite]',
+          'border-y-transparent rounded-full animate-[spin_1.25s_linear_infinite]',
           outerSize,
           colorClass
         )}
       />
       <div
         className={cn(
-          'absolute top-2 left-2 w-6 h-6 border-4 border-t-transparent border-b-transparent border-primary rounded-full animate-[spin_1.25s_linear_infinite_reverse]',
+          'absolute border-y-transparent rounded-full animate-[spin_1.25s_linear_infinite_reverse]',
           innerSize,
           colorClass
         )}
@@ -35,21 +35,23 @@ export const LoadingSpinner = ({ size = 'md', color = 'primary' }: LoadingSpinne
 const getSizeClass = (size: LoadingSpinnerSize): { innerSize: string; outerSize: string } => {
   switch (size) {
     case 'sm':
-      return { innerSize: '', outerSize: '' };
+      return { innerSize: 'border-2 size-4 top-1 left-1', outerSize: 'border-2 size-6' };
     case 'lg':
-      return { innerSize: '', outerSize: '' };
+      return { innerSize: 'border-6 size-10 top-3 left-3', outerSize: 'border-6 size-16' };
     case 'md':
     default:
-      return { innerSize: '', outerSize: '' };
+      return { innerSize: 'border-4 size-6 top-2 left-2', outerSize: 'border-4 size-10' };
   }
 };
 
 const getColorClass = (color: LoadingSpinnerColor): string => {
   switch (color) {
+    case 'foreground':
+      return 'border-x-muted-foreground';
     case 'secondary':
-      return '';
+      return 'border-x-secondary';
     case 'primary':
     default:
-      return '';
+      return 'border-x-primary';
   }
 };
