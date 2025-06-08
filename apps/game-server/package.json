@@ -59,6 +59,7 @@
     "@colyseus/tools": "^0.16.8",
     "@prisma/client": "catalog:",
     "@repo/core-game": "workspace:*",
+    "@supabase/supabase-js": "catalog:",
     "colyseus": "catalog:",
     "cors": "^2.8.5",
     "express": "catalog:",
