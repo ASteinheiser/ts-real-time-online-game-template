@@ -43,7 +43,7 @@ export const Home = () => {
           className="absolute bottom-4 left-1/2 -translate-x-1/2 animate-bounce cursor-pointer"
           onClick={handleScollToContent}
         >
-          <ChevronDown size={48} className="text-muted-light" />
+          <ChevronDown size={48} className="text-muted-foreground" />
         </button>
       </div>
 

@@ -43,7 +43,7 @@ export const TopNav = () => {
         <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
           <SheetTrigger asChild>
             <button className="sm:hidden cursor-pointer">
-              <Menu size={36} className="text-muted-light" />
+              <Menu size={36} className="text-muted-foreground" />
             </button>
           </SheetTrigger>
           <SheetContent side="left" className="w-2/3">

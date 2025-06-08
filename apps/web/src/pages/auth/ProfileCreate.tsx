@@ -59,7 +59,7 @@ export const ProfileCreate = () => {
   return (
     <div className="h-screen mt-nav-footer flex flex-col items-center justify-center pt-40">
       <div className="flex flex-col gap-4 w-full max-w-xs mx-auto">
-        <h1 className="text-4xl font-bold font-pixel text-center text-muted-light">
+        <h1 className="text-4xl font-bold font-pixel text-center text-muted-foreground">
           Create Your Profile
         </h1>
 
@@ -80,7 +80,7 @@ export const ProfileCreate = () => {
               />
             </div>
 
-            <Button type="submit" disabled={loading} className="mt-6">
+            <Button type="submit" disabled={loading} className="mt-2">
               {loading ? <LoadingSpinner /> : 'Create Profile'}
             </Button>
           </div>

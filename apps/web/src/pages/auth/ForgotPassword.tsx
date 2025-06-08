@@ -41,7 +41,7 @@ export const ForgotPassword = () => {
   return (
     <div className="h-screen mt-nav-footer flex flex-col items-center justify-center pt-40">
       <div className="flex flex-col gap-4 w-full max-w-xs mx-auto">
-        <h1 className="text-4xl font-bold font-pixel text-center text-muted-light">
+        <h1 className="text-4xl font-bold font-pixel text-center text-muted-foreground">
           Reset Password
         </h1>
 
