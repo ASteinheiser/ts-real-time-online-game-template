@@ -35,7 +35,9 @@ export const Signup = () => {
         toast.error(error.message);
         return;
       }
-      toast.success('Signup successful, please check your email for a verification link');
+      toast.success('Signup successful, please check your email for a verification link', {
+        duration: 10000,
+      });
     } catch (error) {
       console.error(error);
       toast.error('Failed to signup, please try again');
