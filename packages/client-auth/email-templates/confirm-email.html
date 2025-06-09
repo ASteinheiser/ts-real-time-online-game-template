@@ -10,7 +10,6 @@
     }
     body {
       padding: 40px 20px;
-      background-color: #09090b;
       color: #d1d5dc;
       font-family: Arial, sans-serif;
     }
@@ -24,33 +23,33 @@
       color: #99a1af;
     }
     a {
-      color: #6118ad;
+      color: #6118ad !important;
       text-decoration: underline;
     }
     .email-container {
       width: 100%;
-      background-color: #09090b;
-    }
-    .button-container {
-      margin: 0 auto;
-      cursor: pointer;
     }
     .content {
       width: 600px;
       padding: 40px 30px;
+      border-radius: 16px;
+      background-color: #09090b;
       margin: 0 auto;
       text-align: center;
+    }
+    .button-container {
+      margin: 0 auto;
+      height: 68px;
     }
     .button {
       background-color: #6118ad;
       padding: 24px 32px;
       border-radius: 12px;
-    }
-    .button a {
-      color: #f5f5f5;
+      color: #d1d5dc !important;
       text-decoration: none;
       font-weight: 600;
       font-size: 16px;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -61,25 +60,19 @@
         <table role="presentation" class="content">
           <tr>
             <td>
-              <h1 style="margin-bottom: 24px;">
-                Welcome to "Demo Game"!
-              </h1>
+              <h1 style="margin-bottom: 24px;">Confirm Your Email</h1>
 
-              <p style="margin-bottom: 32px;">
-                To confirm your email, please click the button below:
-              </p>
+              <p style="margin-bottom: 32px;">To confirm your email, please click the button below:</p>
 
               <table role="presentation" class="button-container">
                 <tr>
-                  <td class="button">
-                    <a href="{{ .ConfirmationURL }}">Confirm Your Email</a>
+                  <td>
+                    <a href="{{ .ConfirmationURL }}" class="button">Confirm Your Email</a>
                   </td>
                 </tr>
               </table>
 
-              <p style="margin-top: 32px;">
-                If the button doesn't work, you can also click this link:
-              </p>
+              <p style="margin-top: 32px;">If the button doesn't work, you can also click this link:</p>
               <a href="{{ .ConfirmationURL }}">{{ .ConfirmationURL }}</a>
             </td>
           </tr>
