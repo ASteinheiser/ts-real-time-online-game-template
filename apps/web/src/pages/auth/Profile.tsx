@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { gql, useMutation } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
 import { isEmail } from 'validator';
@@ -30,8 +30,9 @@ const DELETE_ACCOUNT = gql`
 export const Profile = () => {
   const navigate = useNavigate();
   const { session, profile, logout, changeEmail, refetchProfile } = useSession();
+  const sessionEmail = session?.user.email;
 
-  const [email, setEmail] = useState(session?.user.email ?? '');
+  const [email, setEmail] = useState(sessionEmail ?? '');
   const [emailLoading, setEmailLoading] = useState(false);
 
   const [userName, setUserName] = useState(profile?.userName ?? '');
@@ -51,6 +52,10 @@ export const Profile = () => {
   const isUserNameChanged = userName !== profile?.userName;
   const isEmailChanged = email !== session?.user.email;
   const isEmailConfirmed = Boolean(session?.user.email_confirmed_at) && !isEmailChanged;
+
+  useEffect(() => {
+    if (sessionEmail) setEmail(sessionEmail);
+  }, [sessionEmail]);
 
   const handleUpdateUserName = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -94,7 +99,7 @@ export const Profile = () => {
         toast.error(error.message);
         return;
       }
-      toast.success('Email updated successfully');
+      toast.success('Please check your email for a confirmation link');
     } catch (error) {
       console.error(error);
       toast.error('Failed to update email, please try again');
