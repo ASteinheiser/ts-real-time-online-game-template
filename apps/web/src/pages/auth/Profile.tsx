@@ -29,7 +29,7 @@ const DELETE_ACCOUNT = gql`
 
 export const Profile = () => {
   const navigate = useNavigate();
-  const { session, profile, logout, changeEmail } = useSession();
+  const { session, profile, logout, changeEmail, refetchProfile } = useSession();
 
   const [email, setEmail] = useState(session?.user.email ?? '');
   const [emailLoading, setEmailLoading] = useState(false);
@@ -70,6 +70,7 @@ export const Profile = () => {
         variables: { userName },
         context: { headers: { authorization: session?.access_token } },
       });
+      await refetchProfile();
       toast.success('Username updated successfully');
     } catch (error) {
       console.error(error);
