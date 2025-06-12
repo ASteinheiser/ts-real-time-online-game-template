@@ -74,7 +74,11 @@ export const SessionProvider = ({ children }: SessionProviderProps) => {
   useEffect(() => {
     const authStateListener = supabase.auth.onAuthStateChange(async (event, session) => {
       setSession(session);
-      setIsPasswordRecovery(event === 'PASSWORD_RECOVERY');
+      setIsPasswordRecovery((isRecovery) => {
+        if (event === 'PASSWORD_RECOVERY') return true;
+        if (isRecovery && event === 'USER_UPDATED') return false;
+        return isRecovery;
+      });
       await getProfile(session);
       setLoading(false);
     });

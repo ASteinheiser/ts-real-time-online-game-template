@@ -20,6 +20,8 @@ export const Layout = () => {
     // handle app forced navigation flows (auth, profile creation, etc)
     if (session && isPasswordRecovery) {
       navigateTo('/auth/new-password');
+    } else if (session && !isPasswordRecovery && location.pathname === '/auth/new-password') {
+      navigateTo('/profile');
     } else if (session && !profile) {
       navigateTo('/create-profile');
     } else if (session && profile && location.pathname === '/create-profile') {
