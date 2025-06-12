@@ -128,7 +128,9 @@ export const SessionProvider = ({ children }: SessionProviderProps) => {
   };
 
   const changeEmail = async (email: string) => {
-    return await supabase.auth.updateUser({ email });
+    const emailRedirectTo = `${window.location.origin}/profile`;
+
+    return await supabase.auth.updateUser({ email }, { emailRedirectTo });
   };
 
   const refetchProfile = async () => {
