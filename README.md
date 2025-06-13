@@ -8,9 +8,10 @@ A _highly opinionated_ template for creating real-time, online games using [Type
 - `game-server`: Backend server that handles the game state and data via WebSockets and GraphQL. Written in TypeScript with Colyseus, Express and [Apollo GraphQL](https://www.apollographql.com/docs).
 - `web`: Static webpage that can serve as a marketing site, homepage, wiki, roadmap, devlog, etc. Written in Typescript with React and GraphQL. Could also be used to serve the Phaser/Colyseus game.
 
-#### And 4 packages:
+#### And 5 packages:
 
 - `core-game`: Main logic for the game. Shareable for server use as well as client-side prediction ([CSP](https://en.wikipedia.org/wiki/Client-side_prediction))
+- `client-auth`: Shared auth forms, hooks, etc. built with the local `ui` package. Used by both the static webpage and Electron app.
 - `ui`: Shared Tailwindcss theme and Shadcn/ui components
 - `typescript-config`: Shared TypeScript configs
 - `eslint-config`: Shared ESlint configs
