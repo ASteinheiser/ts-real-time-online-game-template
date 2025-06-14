@@ -22,10 +22,8 @@
   .mt-nav {
     margin-top: calc(0px - var(--nav-height));
   }
-  .mt-footer {
-    margin-top: calc(0px - var(--footer-height));
-  }
-  .mt-nav-footer {
+  .fullscreen-center {
+    @apply h-screen flex flex-col items-center justify-center pt-40;
     margin-top: calc(0px - var(--nav-height) - var(--footer-height));
   }
   .font-isometric {
