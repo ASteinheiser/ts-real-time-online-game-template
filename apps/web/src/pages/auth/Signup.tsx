@@ -2,8 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { isEmail } from 'validator';
 import { Button, Input, Label, toast } from '@repo/ui';
-import { SUPABASE_AUTH } from '@repo/client-auth/constants';
-import { useSession } from '../../router/SessionContext';
+import { useSession, SUPABASE_AUTH } from '@repo/client-auth/provider';
 
 export const Signup = () => {
   const navigate = useNavigate();

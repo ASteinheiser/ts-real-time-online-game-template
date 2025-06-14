@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button, Input, Label, toast } from '@repo/ui';
-import { useSession } from '../../router/SessionContext';
+import { useSession } from '@repo/client-auth/provider';
 
 export const NewPassword = () => {
   const { newPassword } = useSession();

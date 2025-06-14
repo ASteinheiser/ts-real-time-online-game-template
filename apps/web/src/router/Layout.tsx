@@ -1,10 +1,9 @@
 import { useEffect, useRef } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { toast } from '@repo/ui';
-import { SUPABASE_AUTH } from '@repo/client-auth/constants';
+import { useSession, SUPABASE_AUTH } from '@repo/client-auth/provider';
 import { TopNav } from '../components/TopNav';
 import { Footer } from '../components/Footer';
-import { useSession } from './SessionContext';
 
 export const Layout = () => {
   const navigate = useNavigate();

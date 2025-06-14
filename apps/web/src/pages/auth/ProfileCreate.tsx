@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { gql, useApolloClient } from '@apollo/client';
+import { useSession } from '@repo/client-auth/provider';
 import { Button, Input, Label, toast } from '@repo/ui';
 import { CheckMark } from '@repo/ui/icons';
 import { Web_CreateProfileMutation, Web_CreateProfileMutationVariables } from '../../graphql';
 import { useUserNameExists } from '../../hooks/useUserNameExists';
-import { useSession } from '../../router/SessionContext';
 
 const CREATE_PROFILE = gql`
   mutation Web_CreateProfile($userName: String!) {

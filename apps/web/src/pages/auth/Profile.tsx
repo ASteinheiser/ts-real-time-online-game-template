@@ -4,8 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { isEmail } from 'validator';
 import { Button, Input, Label, toast } from '@repo/ui';
 import { CheckMark } from '@repo/ui/icons';
-import { SUPABASE_AUTH } from '@repo/client-auth/constants';
-import { useSession } from '../../router/SessionContext';
+import { useSession, SUPABASE_AUTH } from '@repo/client-auth/provider';
 import { useUserNameExists } from '../../hooks/useUserNameExists';
 import {
   Web_UpdateUserNameMutation,
