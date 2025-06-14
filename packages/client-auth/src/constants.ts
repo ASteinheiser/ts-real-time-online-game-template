@@ -9,3 +9,11 @@ export const SUPABASE_AUTH = {
     EMAIL_ALREADY_SENT: 'For security purposes, you can only request this after',
   },
 };
+export const AUTH_ROUTES = {
+  LOGIN: '/auth/login',
+  SIGNUP: '/auth/signup',
+  FORGOT_PASSWORD: '/auth/forgot-password',
+  NEW_PASSWORD: '/auth/new-password',
+  CREATE_PROFILE: '/create-profile',
+  PROFILE: '/profile',
+};
