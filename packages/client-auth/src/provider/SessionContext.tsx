@@ -7,19 +7,19 @@ import {
   AuthTokenResponsePassword,
   UserResponse,
 } from '@supabase/supabase-js';
-import { LoadingSpinner } from '@repo/ui';
+import { LoadingSpinner, toast } from '@repo/ui';
 import { supabase } from './supabase-client';
-import { Web_GetProfileQuery } from '../graphql';
+import { Auth_GetProfileQuery } from '../graphql';
 
 const GET_PROFILE = gql`
-  query Web_GetProfile {
+  query Auth_GetProfile {
     profile {
       userName
     }
   }
 `;
 
-export type Profile = NonNullable<Web_GetProfileQuery['profile']>;
+export type Profile = NonNullable<Auth_GetProfileQuery['profile']>;
 
 interface SessionContextType {
   session: Session | null;
@@ -93,14 +93,13 @@ export const SessionProvider = ({ children }: SessionProviderProps) => {
       setProfile(null);
       return;
     }
-
-    const { data, error } = await client.query<Web_GetProfileQuery>({
+    const { data, error } = await client.query<Auth_GetProfileQuery>({
       query: GET_PROFILE,
       context: { headers: { authorization: _session.access_token } },
       fetchPolicy: 'network-only',
     });
     if (error) {
-      console.error(error);
+      toast.error('Oops! Something went wrong fetching your profile...');
     }
     setProfile(data?.profile ?? null);
   };

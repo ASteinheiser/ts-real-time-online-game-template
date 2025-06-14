@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { ApolloError, gql, useApolloClient } from '@apollo/client';
 import { useDebounce } from '@repo/ui/hooks';
-import { Web_GetUserExistsQuery, Web_GetUserExistsQueryVariables } from '../graphql';
+import { Auth_GetUserExistsQuery, Auth_GetUserExistsQueryVariables } from '../graphql';
 
 const GET_USER_NAME_EXISTS = gql`
-  query Web_GetUserExists($userName: String!) {
+  query Auth_GetUserExists($userName: String!) {
     userExists(userName: $userName)
   }
 `;
@@ -37,8 +37,8 @@ export const useUserNameExists = (userName: string): UseUserNameExistsResult => 
     setLoading(true);
     try {
       const { data, error } = await client.query<
-        Web_GetUserExistsQuery,
-        Web_GetUserExistsQueryVariables
+        Auth_GetUserExistsQuery,
+        Auth_GetUserExistsQueryVariables
       >({
         query: GET_USER_NAME_EXISTS,
         variables: { userName: debouncedUserName },
