@@ -32,6 +32,10 @@ export const Signup = () => {
     setLoading(true);
     try {
       const { data, error } = await signup(email, password);
+      if (error?.message.includes('you can only request this after')) {
+        toast.error('Please check your email for a verification link');
+        return;
+      }
       if (error) {
         toast.error(error.message);
         return;
