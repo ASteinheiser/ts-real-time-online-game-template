@@ -14,9 +14,11 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 type Documents = {
+    "\n  query Web_GetUserExists($userName: String!) {\n    userExists(userName: $userName)\n  }\n": typeof types.Web_GetUserExistsDocument,
     "\n  query Web_GetProfile {\n    profile {\n      userName\n    }\n  }\n": typeof types.Web_GetProfileDocument,
 };
 const documents: Documents = {
+    "\n  query Web_GetUserExists($userName: String!) {\n    userExists(userName: $userName)\n  }\n": types.Web_GetUserExistsDocument,
     "\n  query Web_GetProfile {\n    profile {\n      userName\n    }\n  }\n": types.Web_GetProfileDocument,
 };
 
@@ -34,6 +36,10 @@ const documents: Documents = {
  */
 export function graphql(source: string): unknown;
 
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query Web_GetUserExists($userName: String!) {\n    userExists(userName: $userName)\n  }\n"): (typeof documents)["\n  query Web_GetUserExists($userName: String!) {\n    userExists(userName: $userName)\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

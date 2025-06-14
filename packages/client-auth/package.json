@@ -6,7 +6,8 @@
   "private": false,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts",
+    "./forms": "./src/forms/index.ts",
+    "./providers": "./src/providers/index.ts",
     "./constants": "./src/constants.ts"
   },
   "scripts": {
