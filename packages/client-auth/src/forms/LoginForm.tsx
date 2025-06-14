@@ -5,7 +5,7 @@ import { Button, Input, Label, toast } from '@repo/ui';
 import { useSession } from '../provider/SessionContext';
 import { AUTH_ROUTES } from '../router/constants';
 
-export const Login = () => {
+export const LoginForm = () => {
   const { login } = useSession();
   const navigate = useNavigate();
 
