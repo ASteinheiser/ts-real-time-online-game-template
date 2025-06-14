@@ -1,5 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom';
-import { AuthRoute } from './AuthRoute';
+import { PrivateRoute, AUTH_ROUTES } from '@repo/client-auth/router';
 import { Layout } from './Layout';
 import { NotFound } from '../pages/NotFound';
 import { Home } from '../pages/Home';
@@ -26,31 +26,31 @@ export const router = createBrowserRouter([
         element: <DevLog />,
       },
       {
-        path: '/auth/login',
+        path: AUTH_ROUTES.LOGIN,
         element: <Login />,
       },
       {
-        path: '/auth/signup',
+        path: AUTH_ROUTES.SIGNUP,
         element: <Signup />,
       },
       {
-        path: '/auth/forgot-password',
+        path: AUTH_ROUTES.FORGOT_PASSWORD,
         element: <ForgotPassword />,
       },
       {
         path: '/',
-        element: <AuthRoute />,
+        element: <PrivateRoute userNotAuthenticated={<NotFound />} />,
         children: [
           {
-            path: '/auth/new-password',
+            path: AUTH_ROUTES.NEW_PASSWORD,
             element: <NewPassword />,
           },
           {
-            path: '/create-profile',
+            path: AUTH_ROUTES.CREATE_PROFILE,
             element: <ProfileCreate />,
           },
           {
-            path: '/profile',
+            path: AUTH_ROUTES.PROFILE,
             element: <Profile />,
           },
           {
