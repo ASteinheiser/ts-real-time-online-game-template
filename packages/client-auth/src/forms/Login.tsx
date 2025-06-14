@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { isEmail } from 'validator';
 import { Button, Input, Label, toast } from '@repo/ui';
-import { useSession } from '../provider/SessionContext';
+import { useSession } from '../providers/SessionContext';
 
 export const Login = () => {
   const { login } = useSession();
