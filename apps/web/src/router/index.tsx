@@ -2,14 +2,14 @@ import { createBrowserRouter } from 'react-router-dom';
 import { PrivateRoute, AUTH_ROUTES } from '@repo/client-auth/router';
 import { Layout } from './Layout';
 import { NotFound } from '../pages/NotFound';
-import { Home } from '../pages/Home';
-import { DevLog } from '../pages/DevLog';
 import { Login } from '../pages/auth/Login';
 import { Signup } from '../pages/auth/Signup';
 import { ForgotPassword } from '../pages/auth/ForgotPassword';
 import { NewPassword } from '../pages/auth/NewPassword';
 import { ProfileCreate } from '../pages/auth/ProfileCreate';
 import { Profile } from '../pages/auth/Profile';
+import { Home } from '../pages/Home';
+import { DevLog } from '../pages/DevLog';
 import { Download } from '../pages/Download';
 
 export const router = createBrowserRouter([
