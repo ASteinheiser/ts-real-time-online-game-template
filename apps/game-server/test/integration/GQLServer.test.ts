@@ -1,4 +1,5 @@
 import assert from 'assert';
+import type { GoTrueAdminApi } from '@supabase/supabase-js';
 import { server } from '../../src/graphql';
 import { BooksRepository } from '../../src/repo/Books';
 import { ProfilesRepository } from '../../src/repo/Profiles';
@@ -19,6 +20,7 @@ describe('GQLServer', () => {
       }
     `;
 
+    const authClient = {} as GoTrueAdminApi;
     const booksDb = new BooksRepository();
     booksDb.getBooks = async () => [
       {
@@ -44,6 +46,7 @@ describe('GQLServer', () => {
             booksDb,
             profilesDb,
           },
+          authClient,
           user: {
             id: 'abc',
             email: 'test@test.com',
