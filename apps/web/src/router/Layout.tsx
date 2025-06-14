@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { toast } from '@repo/ui';
 import { useSession, SUPABASE_AUTH } from '@repo/client-auth/provider';
+import { AUTH_ROUTES, AUTH_PATH_PREFIX } from '@repo/client-auth/router';
 import { TopNav } from '../components/TopNav';
 import { Footer } from '../components/Footer';
 
@@ -21,15 +22,15 @@ export const Layout = () => {
     };
     // handle app forced navigation flows (auth, profile creation, etc)
     if (session && isPasswordRecovery) {
-      navigateTo('/auth/new-password');
-    } else if (session && !isPasswordRecovery && location.pathname === '/auth/new-password') {
-      navigateTo('/profile');
+      navigateTo(AUTH_ROUTES.NEW_PASSWORD);
+    } else if (session && !isPasswordRecovery && location.pathname === AUTH_ROUTES.NEW_PASSWORD) {
+      navigateTo(AUTH_ROUTES.PROFILE);
     } else if (session && !profile) {
-      navigateTo('/create-profile');
-    } else if (session && profile && location.pathname === '/create-profile') {
-      navigateTo('/profile');
-    } else if (session && location.pathname.includes('/auth')) {
-      navigateTo('/profile');
+      navigateTo(AUTH_ROUTES.CREATE_PROFILE);
+    } else if (session && profile && location.pathname === AUTH_ROUTES.CREATE_PROFILE) {
+      navigateTo(AUTH_ROUTES.PROFILE);
+    } else if (session && location.pathname.includes(AUTH_PATH_PREFIX)) {
+      navigateTo(AUTH_ROUTES.PROFILE);
     }
   }, [session, profile, isPasswordRecovery, location.pathname]);
 

@@ -94,7 +94,7 @@ export const SignupForm = () => {
           </Button>
 
           <Button asChild variant="secondary" className="flex-1">
-            <Link to="/auth/login">Log In</Link>
+            <Link to={AUTH_ROUTES.LOGIN}>Log In</Link>
           </Button>
         </div>
       </form>

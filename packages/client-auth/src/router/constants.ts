@@ -1,8 +1,10 @@
+export const AUTH_PATH_PREFIX = '/auth/';
+
 export const AUTH_ROUTES = {
-  LOGIN: '/auth/login',
-  SIGNUP: '/auth/signup',
-  FORGOT_PASSWORD: '/auth/forgot-password',
-  NEW_PASSWORD: '/auth/new-password',
+  LOGIN: `${AUTH_PATH_PREFIX}login`,
+  SIGNUP: `${AUTH_PATH_PREFIX}signup`,
+  FORGOT_PASSWORD: `${AUTH_PATH_PREFIX}forgot-password`,
+  NEW_PASSWORD: `${AUTH_PATH_PREFIX}new-password`,
   CREATE_PROFILE: '/create-profile',
   PROFILE: '/profile',
 };

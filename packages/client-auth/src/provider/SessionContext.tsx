@@ -10,6 +10,7 @@ import {
 import { LoadingSpinner, toast } from '@repo/ui';
 import { supabase } from './supabase-client';
 import { Auth_GetProfileQuery } from '../graphql';
+import { AUTH_ROUTES } from '../router/constants';
 
 const GET_PROFILE = gql`
   query Auth_GetProfile {
@@ -117,7 +118,7 @@ export const SessionProvider = ({ children }: SessionProviderProps) => {
   };
 
   const forgotPassword = async (email: string) => {
-    const redirectTo = `${window.location.origin}/auth/new-password`;
+    const redirectTo = `${window.location.origin}${AUTH_ROUTES.NEW_PASSWORD}`;
 
     return await supabase.auth.resetPasswordForEmail(email, { redirectTo });
   };
@@ -127,7 +128,7 @@ export const SessionProvider = ({ children }: SessionProviderProps) => {
   };
 
   const changeEmail = async (email: string) => {
-    const emailRedirectTo = `${window.location.origin}/profile`;
+    const emailRedirectTo = `${window.location.origin}${AUTH_ROUTES.PROFILE}`;
 
     return await supabase.auth.updateUser({ email }, { emailRedirectTo });
   };

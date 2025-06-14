@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { Link, LinkProps, useLocation } from 'react-router-dom';
 import { useSession } from '@repo/client-auth/provider';
+import { AUTH_ROUTES, AUTH_PATH_PREFIX } from '@repo/client-auth/router';
 import { Sheet, SheetContent, SheetTrigger } from '@repo/ui';
 import { Menu } from '@repo/ui/icons';
 import { cn } from '@repo/ui/utils';
+import { APP_ROUTES } from '../router/constants';
 
+// adds a smooth delay when closing the mobile menu
 const MENU_CLOSE_DELAY = 100;
 
 export const TopNav = () => {
@@ -13,12 +16,12 @@ export const TopNav = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const renderNavLinks = () => {
-    const navLinks = [{ label: 'DevLog', href: '/dev-log' }];
+    const navLinks = [{ href: APP_ROUTES.DEV_LOG, label: 'DevLog' }];
     if (profile) {
-      navLinks.push({ href: '/download', label: 'Download' });
-      navLinks.push({ href: '/profile', label: 'Profile' });
+      navLinks.push({ href: APP_ROUTES.DOWNLOAD, label: 'Download' });
+      navLinks.push({ href: AUTH_ROUTES.PROFILE, label: 'Profile' });
     } else {
-      navLinks.push({ href: '/auth/login', label: 'Login' });
+      navLinks.push({ href: AUTH_ROUTES.LOGIN, label: 'Login' });
     }
 
     return navLinks.map(({ href, label }) => (
@@ -35,7 +38,7 @@ export const TopNav = () => {
   return (
     <div className="fixed z-10 w-full bg-background/50 backdrop-blur-sm">
       <div className="max-w-screen-lg mx-auto flex flex-row-reverse sm:flex-row justify-between items-center py-4 px-4 sm:px-6">
-        <Link to="/">
+        <Link to={APP_ROUTES.HOME}>
           <img src="/logo.svg" alt="logo" className="w-12 h-12 hover:animate-pulse" />
         </Link>
 
@@ -65,7 +68,7 @@ const NavLink = ({ children, ...props }: NavLinkProps) => {
 
   const active =
     location.pathname === props.to ||
-    (props.to === '/auth/login' && location.pathname.includes('/auth/'));
+    (props.to === AUTH_ROUTES.LOGIN && location.pathname.includes(AUTH_PATH_PREFIX));
 
   return (
     <Link

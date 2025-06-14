@@ -4,6 +4,7 @@ import { isEmail } from 'validator';
 import { Button, Input, Label, toast } from '@repo/ui';
 import { useSession } from '../provider/SessionContext';
 import { SUPABASE_AUTH } from '../provider/constants';
+import { AUTH_ROUTES } from '../router/constants';
 
 export const ForgotPasswordForm = () => {
   const { forgotPassword } = useSession();
@@ -65,7 +66,7 @@ export const ForgotPasswordForm = () => {
           </Button>
 
           <Button asChild variant="secondary" className="flex-1">
-            <Link to="/auth/login">Log In</Link>
+            <Link to={AUTH_ROUTES.LOGIN}>Log In</Link>
           </Button>
         </div>
       </form>

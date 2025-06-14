@@ -5,7 +5,11 @@ import { Button, Input, Label, toast } from '@repo/ui';
 import { useSession } from '../provider/SessionContext';
 import { AUTH_ROUTES } from '../router/constants';
 
-export const LoginForm = () => {
+interface LoginFormProps {
+  loginRedirectPath: string;
+}
+
+export const LoginForm = ({ loginRedirectPath }: LoginFormProps) => {
   const { login } = useSession();
   const navigate = useNavigate();
 
@@ -32,7 +36,7 @@ export const LoginForm = () => {
         toast.error(error.message);
         return;
       }
-      navigate(AUTH_ROUTES.PROFILE);
+      navigate(loginRedirectPath);
     } catch (error) {
       console.error(error);
       toast.error('Failed to login, please try again');
@@ -71,10 +75,10 @@ export const LoginForm = () => {
 
           <div className="flex flex-row gap-4">
             <Button asChild variant="ghost" className="flex-1">
-              <Link to="/auth/forgot-password">Forgot Password</Link>
+              <Link to={AUTH_ROUTES.FORGOT_PASSWORD}>Forgot Password</Link>
             </Button>
             <Button asChild variant="secondary" className="flex-1">
-              <Link to="/auth/signup">Sign Up</Link>
+              <Link to={AUTH_ROUTES.SIGNUP}>Sign Up</Link>
             </Button>
           </div>
         </div>

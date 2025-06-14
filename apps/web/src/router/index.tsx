@@ -11,6 +11,7 @@ import { Profile } from '../pages/auth/Profile';
 import { Home } from '../pages/Home';
 import { DevLog } from '../pages/DevLog';
 import { Download } from '../pages/Download';
+import { APP_ROUTES } from './constants';
 
 export const router = createBrowserRouter([
   {
@@ -18,11 +19,11 @@ export const router = createBrowserRouter([
     element: <Layout />,
     children: [
       {
-        path: '/',
+        path: APP_ROUTES.HOME,
         element: <Home />,
       },
       {
-        path: '/dev-log',
+        path: APP_ROUTES.DEV_LOG,
         element: <DevLog />,
       },
       {
@@ -54,7 +55,7 @@ export const router = createBrowserRouter([
             element: <Profile />,
           },
           {
-            path: '/download',
+            path: APP_ROUTES.DOWNLOAD,
             element: <Download />,
           },
         ],
