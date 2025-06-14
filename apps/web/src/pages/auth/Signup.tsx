@@ -42,15 +42,13 @@ export const Signup = () => {
       }
       // this is the only way to check if the email is already in use via supabase auth
       if (data?.user?.identities?.length === 0) {
-        toast.error('Email already in use, please log in', {
-          duration: 10000,
-        });
-      } else {
-        toast.success('Signup successful, please check your email for a verification link', {
-          duration: 10000,
-        });
+        toast.error('Email already in use, please log in', { duration: 10000 });
+        navigate('/auth/login');
+        return;
       }
-      navigate('/auth/login');
+      toast.success('Signup successful, please check your email for a verification link', {
+        duration: 10000,
+      });
     } catch (error) {
       console.error(error);
       toast.error('Failed to signup, please try again');
