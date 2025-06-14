@@ -4,8 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { isEmail } from 'validator';
 import { Button, Input, Label, toast } from '@repo/ui';
 import { CheckMark } from '@repo/ui/icons';
+import { SUPABASE_AUTH } from '@repo/client-auth/constants';
 import { useSession } from '../../router/SessionContext';
-import { SUPABASE_EMAIL_ALREADY_SENT_ERROR } from '../../router/constants';
 import { useUserNameExists } from '../../hooks/useUserNameExists';
 import {
   Web_UpdateUserNameMutation,
@@ -97,7 +97,7 @@ export const Profile = () => {
     try {
       const { error } = await changeEmail(email);
       // supabase auth will throw an error if the email was already sent
-      if (error?.message.includes(SUPABASE_EMAIL_ALREADY_SENT_ERROR)) {
+      if (error?.message.includes(SUPABASE_AUTH.ERROR.EMAIL_ALREADY_SENT)) {
         toast.success('Please check both emails for a confirmation link', { duration: 10000 });
       } else if (error) {
         toast.error(error.message);

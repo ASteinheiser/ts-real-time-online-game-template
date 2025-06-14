@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { isEmail } from 'validator';
 import { Button, Input, Label, toast } from '@repo/ui';
+import { SUPABASE_AUTH } from '@repo/client-auth/constants';
 import { useSession } from '../../router/SessionContext';
-import { SUPABASE_EMAIL_ALREADY_SENT_ERROR } from '../../router/constants';
 
 export const Signup = () => {
   const navigate = useNavigate();
@@ -34,7 +34,7 @@ export const Signup = () => {
     try {
       const { data, error } = await signup(email, password);
       // supabase auth will throw an error if the email was already sent
-      if (error?.message.includes(SUPABASE_EMAIL_ALREADY_SENT_ERROR)) {
+      if (error?.message.includes(SUPABASE_AUTH.ERROR.EMAIL_ALREADY_SENT)) {
         toast.success('Please check your email for a verification link', { duration: 10000 });
       } else if (error) {
         toast.error(error.message);

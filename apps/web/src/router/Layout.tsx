@@ -1,10 +1,10 @@
 import { useEffect, useRef } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { toast } from '@repo/ui';
+import { SUPABASE_AUTH } from '@repo/client-auth/constants';
 import { TopNav } from '../components/TopNav';
 import { Footer } from '../components/Footer';
 import { useSession } from './SessionContext';
-import { SUPABASE_EMAIL_CHANGE_HASH, SUPABASE_EMAIL_EXPIRED_HASH } from './constants';
 
 export const Layout = () => {
   const navigate = useNavigate();
@@ -38,7 +38,7 @@ export const Layout = () => {
     // supabase will add this hash to the url when a user clicks
     // the first of two emails while updating their email address
     if (
-      location.hash.includes(SUPABASE_EMAIL_CHANGE_HASH) &&
+      location.hash.includes(SUPABASE_AUTH.HASH.EMAIL_CHANGE) &&
       hashToastRef.current !== location.hash
     ) {
       hashToastRef.current = location.hash;
@@ -48,7 +48,7 @@ export const Layout = () => {
     }
     // supabase will add this hash when a user clicks an expired email link
     if (
-      location.hash.includes(SUPABASE_EMAIL_EXPIRED_HASH) &&
+      location.hash.includes(SUPABASE_AUTH.HASH.LINK_EXPIRED) &&
       hashToastRef.current !== location.hash
     ) {
       hashToastRef.current = location.hash;

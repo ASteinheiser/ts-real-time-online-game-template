@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@apollo/client": "catalog:",
+    "@repo/client-auth": "workspace:*",
     "@repo/ui": "workspace:*",
     "@supabase/supabase-js": "catalog:",
     "graphql": "catalog:",
