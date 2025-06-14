@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { isEmail } from 'validator';
 import { Button, Input, Label, toast } from '@repo/ui';
 import { useSession } from '../../router/SessionContext';
 
 export const Signup = () => {
+  const navigate = useNavigate();
   const { signup } = useSession();
 
   const [email, setEmail] = useState('');
@@ -30,14 +31,22 @@ export const Signup = () => {
 
     setLoading(true);
     try {
-      const { error } = await signup(email, password);
+      const { data, error } = await signup(email, password);
       if (error) {
         toast.error(error.message);
         return;
       }
-      toast.success('Signup successful, please check your email for a verification link', {
-        duration: 10000,
-      });
+      // this is the only way to check if the email is already in use via supabase auth
+      if (data?.user?.identities?.length === 0) {
+        toast.error('Email already in use, please log in', {
+          duration: 10000,
+        });
+      } else {
+        toast.success('Signup successful, please check your email for a verification link', {
+          duration: 10000,
+        });
+      }
+      navigate('/auth/login');
     } catch (error) {
       console.error(error);
       toast.error('Failed to signup, please try again');
