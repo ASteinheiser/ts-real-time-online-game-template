@@ -33,7 +33,7 @@ export const Signup = () => {
     try {
       const { data, error } = await signup(email, password);
       if (error?.message.includes('you can only request this after')) {
-        toast.error('Please check your email for a verification link');
+        toast.success('Please check your email for a verification link');
       } else if (error) {
         toast.error(error.message);
       } // this is the only way to check if the email is already in use via supabase auth
