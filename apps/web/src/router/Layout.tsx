@@ -1,8 +1,10 @@
 import { useEffect } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { toast } from '@repo/ui';
 import { TopNav } from '../components/TopNav';
 import { Footer } from '../components/Footer';
 import { useSession } from './SessionContext';
+import { SUPABASE_EMAIL_CHANGE_HASH, SUPABASE_EMAIL_EXPIRED_HASH } from './constants';
 
 export const Layout = () => {
   const navigate = useNavigate();
@@ -30,6 +32,20 @@ export const Layout = () => {
       navigateTo('/profile');
     }
   }, [session, profile, isPasswordRecovery, location.pathname]);
+
+  useEffect(() => {
+    // supabase will add this hash to the url when a user clicks
+    // the first of two emails while updating their email address
+    if (location.hash.includes(SUPABASE_EMAIL_CHANGE_HASH)) {
+      toast.success('Please click the confirmation link sent to the other email', {
+        duration: 10000,
+      });
+    }
+    // supabase will add this hash when a user clicks an expired email link
+    if (location.hash.includes(SUPABASE_EMAIL_EXPIRED_HASH)) {
+      toast.error('Email link is invalid or has expired', { duration: 10000 });
+    }
+  }, [location.hash]);
 
   return (
     <>
