@@ -22,12 +22,10 @@
     "@apollo/client": "catalog:",
     "@repo/client-auth": "workspace:*",
     "@repo/ui": "workspace:*",
-    "@supabase/supabase-js": "catalog:",
     "graphql": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "react-router-dom": "catalog:",
-    "validator": "catalog:"
+    "react-router-dom": "catalog:"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "catalog:",
@@ -38,7 +36,6 @@
     "@tailwindcss/vite": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "@types/validator": "catalog:",
     "@vite-pwa/assets-generator": "^1.0.0",
     "@vitejs/plugin-react": "catalog:",
     "@vitest/coverage-v8": "catalog:",
