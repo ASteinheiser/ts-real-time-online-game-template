@@ -98,11 +98,11 @@ export const Profile = () => {
       const { error } = await changeEmail(email);
       // supabase auth will throw an error if the email was already sent
       if (error?.message.includes(SUPABASE_EMAIL_ALREADY_SENT_ERROR)) {
-        toast.success('Please check your email for a confirmation link', { duration: 10000 });
+        toast.success('Please check both emails for a confirmation link', { duration: 10000 });
       } else if (error) {
         toast.error(error.message);
       } else {
-        toast.success('Please check your email for a confirmation link', { duration: 10000 });
+        toast.success('Please check both emails for a confirmation link', { duration: 10000 });
       }
     } catch (error) {
       console.error(error);
