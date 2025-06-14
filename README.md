@@ -10,7 +10,7 @@ A _highly opinionated_ template for creating real-time, online games using [Type
 
 #### And 5 packages:
 
-- `core-game`: Main logic for the game. Shareable for server use as well as client-side prediction ([CSP](https://en.wikipedia.org/wiki/Client-side_prediction))
+- `core-game`: Main logic for the game. Shareable for use on the server as well as the client. Client-side prediction ([CSP](https://en.wikipedia.org/wiki/Client-side_prediction)) demo included.
 - `client-auth`: Shared auth forms, hooks, etc. built with the local `ui` package. Used by both the static webpage and Electron app.
 - `ui`: Shared Tailwindcss theme and Shadcn/ui components
 - `typescript-config`: Shared TypeScript configs
