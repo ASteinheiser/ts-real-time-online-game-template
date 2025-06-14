@@ -34,21 +34,17 @@ export const Signup = () => {
       const { data, error } = await signup(email, password);
       if (error?.message.includes('you can only request this after')) {
         toast.error('Please check your email for a verification link');
-        return;
-      }
-      if (error) {
+      } else if (error) {
         toast.error(error.message);
-        return;
-      }
-      // this is the only way to check if the email is already in use via supabase auth
-      if (data?.user?.identities?.length === 0) {
+      } // this is the only way to check if the email is already in use via supabase auth
+      else if (data?.user?.identities?.length === 0) {
         toast.error('Email already in use, please log in', { duration: 10000 });
         navigate('/auth/login');
-        return;
+      } else {
+        toast.success('Signup successful, please check your email for a verification link', {
+          duration: 10000,
+        });
       }
-      toast.success('Signup successful, please check your email for a verification link', {
-        duration: 10000,
-      });
     } catch (error) {
       console.error(error);
       toast.error('Failed to signup, please try again');
