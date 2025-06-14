@@ -56,6 +56,25 @@ export type QueryUserExistsArgs = {
   userName: Scalars['String']['input'];
 };
 
+export type Auth_CreateProfileMutationVariables = Exact<{
+  userName: Scalars['String']['input'];
+}>;
+
+
+export type Auth_CreateProfileMutation = { __typename?: 'Mutation', createProfile?: { __typename?: 'Profile', userName: string } | null };
+
+export type Auth_UpdateUserNameMutationVariables = Exact<{
+  userName: Scalars['String']['input'];
+}>;
+
+
+export type Auth_UpdateUserNameMutation = { __typename?: 'Mutation', updateProfile?: { __typename?: 'Profile', userName: string } | null };
+
+export type Auth_DeleteAccountMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type Auth_DeleteAccountMutation = { __typename?: 'Mutation', deleteProfile?: boolean | null };
+
 export type Auth_GetUserExistsQueryVariables = Exact<{
   userName: Scalars['String']['input'];
 }>;
@@ -69,5 +88,8 @@ export type Auth_GetProfileQueryVariables = Exact<{ [key: string]: never; }>;
 export type Auth_GetProfileQuery = { __typename?: 'Query', profile?: { __typename?: 'Profile', userName: string } | null };
 
 
+export const Auth_CreateProfileDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Auth_CreateProfile"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userName"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createProfile"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"userName"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userName"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userName"}}]}}]}}]} as unknown as DocumentNode<Auth_CreateProfileMutation, Auth_CreateProfileMutationVariables>;
+export const Auth_UpdateUserNameDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Auth_UpdateUserName"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userName"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateProfile"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"userName"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userName"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userName"}}]}}]}}]} as unknown as DocumentNode<Auth_UpdateUserNameMutation, Auth_UpdateUserNameMutationVariables>;
+export const Auth_DeleteAccountDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Auth_DeleteAccount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteProfile"}}]}}]} as unknown as DocumentNode<Auth_DeleteAccountMutation, Auth_DeleteAccountMutationVariables>;
 export const Auth_GetUserExistsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Auth_GetUserExists"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userName"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userExists"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"userName"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userName"}}}]}]}}]} as unknown as DocumentNode<Auth_GetUserExistsQuery, Auth_GetUserExistsQueryVariables>;
 export const Auth_GetProfileDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Auth_GetProfile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userName"}}]}}]}}]} as unknown as DocumentNode<Auth_GetProfileQuery, Auth_GetProfileQueryVariables>;

@@ -14,10 +14,16 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 type Documents = {
+    "\n  mutation Auth_CreateProfile($userName: String!) {\n    createProfile(userName: $userName) {\n      userName\n    }\n  }\n": typeof types.Auth_CreateProfileDocument,
+    "\n  mutation Auth_UpdateUserName($userName: String!) {\n    updateProfile(userName: $userName) {\n      userName\n    }\n  }\n": typeof types.Auth_UpdateUserNameDocument,
+    "\n  mutation Auth_DeleteAccount {\n    deleteProfile\n  }\n": typeof types.Auth_DeleteAccountDocument,
     "\n  query Auth_GetUserExists($userName: String!) {\n    userExists(userName: $userName)\n  }\n": typeof types.Auth_GetUserExistsDocument,
     "\n  query Auth_GetProfile {\n    profile {\n      userName\n    }\n  }\n": typeof types.Auth_GetProfileDocument,
 };
 const documents: Documents = {
+    "\n  mutation Auth_CreateProfile($userName: String!) {\n    createProfile(userName: $userName) {\n      userName\n    }\n  }\n": types.Auth_CreateProfileDocument,
+    "\n  mutation Auth_UpdateUserName($userName: String!) {\n    updateProfile(userName: $userName) {\n      userName\n    }\n  }\n": types.Auth_UpdateUserNameDocument,
+    "\n  mutation Auth_DeleteAccount {\n    deleteProfile\n  }\n": types.Auth_DeleteAccountDocument,
     "\n  query Auth_GetUserExists($userName: String!) {\n    userExists(userName: $userName)\n  }\n": types.Auth_GetUserExistsDocument,
     "\n  query Auth_GetProfile {\n    profile {\n      userName\n    }\n  }\n": types.Auth_GetProfileDocument,
 };
@@ -36,6 +42,18 @@ const documents: Documents = {
  */
 export function graphql(source: string): unknown;
 
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation Auth_CreateProfile($userName: String!) {\n    createProfile(userName: $userName) {\n      userName\n    }\n  }\n"): (typeof documents)["\n  mutation Auth_CreateProfile($userName: String!) {\n    createProfile(userName: $userName) {\n      userName\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation Auth_UpdateUserName($userName: String!) {\n    updateProfile(userName: $userName) {\n      userName\n    }\n  }\n"): (typeof documents)["\n  mutation Auth_UpdateUserName($userName: String!) {\n    updateProfile(userName: $userName) {\n      userName\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation Auth_DeleteAccount {\n    deleteProfile\n  }\n"): (typeof documents)["\n  mutation Auth_DeleteAccount {\n    deleteProfile\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
