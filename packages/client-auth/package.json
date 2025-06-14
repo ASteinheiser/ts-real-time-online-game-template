@@ -7,7 +7,7 @@
   "type": "module",
   "exports": {
     "./forms": "./src/forms/index.ts",
-    "./providers": "./src/providers/index.ts",
+    "./provider": "./src/provider/index.ts",
     "./constants": "./src/constants.ts"
   },
   "scripts": {
