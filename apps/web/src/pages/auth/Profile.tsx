@@ -5,6 +5,7 @@ import { isEmail } from 'validator';
 import { Button, Input, Label, toast } from '@repo/ui';
 import { CheckMark } from '@repo/ui/icons';
 import { useSession } from '../../router/SessionContext';
+import { SUPABASE_EMAIL_ALREADY_SENT_ERROR } from '../../router/constants';
 import { useUserNameExists } from '../../hooks/useUserNameExists';
 import {
   Web_UpdateUserNameMutation,
@@ -95,11 +96,14 @@ export const Profile = () => {
     setEmailLoading(true);
     try {
       const { error } = await changeEmail(email);
-      if (error) {
+      // supabase auth will throw an error if the email was already sent
+      if (error?.message.includes(SUPABASE_EMAIL_ALREADY_SENT_ERROR)) {
+        toast.success('Please check your email for a confirmation link', { duration: 10000 });
+      } else if (error) {
         toast.error(error.message);
-        return;
+      } else {
+        toast.success('Please check your email for a confirmation link', { duration: 10000 });
       }
-      toast.success('Please check your email for a confirmation link');
     } catch (error) {
       console.error(error);
       toast.error('Failed to update email, please try again');
