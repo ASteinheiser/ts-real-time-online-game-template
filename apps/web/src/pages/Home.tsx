@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { useQuery, gql } from '@apollo/client';
-import { cn } from '@repo/ui';
 import { ChevronDown } from '@repo/ui/icons';
+import { cn } from '@repo/ui/utils';
 import { GetBooksQuery, GetBooksQueryVariables } from '../graphql';
 import { useSession } from '../router/SessionContext';
 

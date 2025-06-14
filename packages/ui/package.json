@@ -6,7 +6,8 @@
   "private": false,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts",
+    ".": "./src/components/index.ts",
+    "./utils": "./src/utils.ts",
     "./hooks": "./src/hooks/index.ts",
     "./icons": "./src/components/icons/index.ts",
     "./theme.css": "./dist/theme.css"
