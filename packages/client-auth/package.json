@@ -8,7 +8,7 @@
   "exports": {
     "./forms": "./src/forms/index.ts",
     "./provider": "./src/provider/index.ts",
-    "./constants": "./src/constants.ts"
+    "./router": "./src/router/index.ts"
   },
   "scripts": {
     "lint": "eslint",
