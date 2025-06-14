@@ -25,13 +25,14 @@ export const ForgotPassword = () => {
     setLoading(true);
     try {
       const { error } = await forgotPassword(email);
-      if (error) {
+      // supabase auth will throw an error if the email was already sent
+      if (error?.message.includes('you can only request this after')) {
+        toast.success('Please check your email for a password reset link', { duration: 10000 });
+      } else if (error) {
         toast.error(error.message);
-        return;
+      } else {
+        toast.success('Password reset email sent! Please check your inbox', { duration: 10000 });
       }
-      toast.success('Password reset email sent! Please check your inbox', {
-        duration: 10000,
-      });
     } catch (error) {
       console.error(error);
       toast.error('Failed to send reset email, please try again');
