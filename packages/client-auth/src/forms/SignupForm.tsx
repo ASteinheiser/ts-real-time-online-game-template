@@ -4,6 +4,7 @@ import { isEmail } from 'validator';
 import { Button, Input, Label, toast } from '@repo/ui';
 import { useSession } from '../provider/SessionContext';
 import { SUPABASE_AUTH } from '../provider/constants';
+import { AUTH_ROUTES } from '../router/constants';
 
 export const SignupForm = () => {
   const navigate = useNavigate();
@@ -42,7 +43,7 @@ export const SignupForm = () => {
       // this is the only way to check if the email is already in use via supabase auth
       else if (data?.user?.identities?.length === 0) {
         toast.error('Email already in use, please log in', { duration: 10000 });
-        navigate('/auth/login');
+        navigate(AUTH_ROUTES.LOGIN);
       } else {
         toast.success('Signup successful, please check your email for a verification link', {
           duration: 10000,
