@@ -28,7 +28,11 @@ const DELETE_ACCOUNT = gql`
   }
 `;
 
-export const ProfileForm = () => {
+interface ProfileFormProps {
+  logoutRedirectPath: string;
+}
+
+export const ProfileForm = ({ logoutRedirectPath }: ProfileFormProps) => {
   const navigate = useNavigate();
   const { session, profile, logout, changeEmail, refetchProfile } = useSession();
   const sessionEmail = session?.user.email;
@@ -127,7 +131,7 @@ export const ProfileForm = () => {
 
   const handleLogout = async () => {
     await logout();
-    navigate('/');
+    navigate(logoutRedirectPath);
   };
 
   return (
