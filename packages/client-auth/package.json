@@ -5,7 +5,9 @@
   "license": "MIT",
   "private": false,
   "type": "module",
-  "scripts": {
-    "dev": "echo 'dev'"
-  }
+  "exports": {
+    ".": "./src/index.ts",
+    "./constants": "./src/constants.ts"
+  },
+  "scripts": {}
 }
