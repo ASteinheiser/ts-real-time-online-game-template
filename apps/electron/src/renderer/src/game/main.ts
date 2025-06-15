@@ -11,7 +11,7 @@ const config: Phaser.Types.Core.GameConfig = {
   width: MAP_SIZE.width,
   height: MAP_SIZE.height,
   parent: 'game-container',
-  backgroundColor: '#028af8',
+  backgroundColor: '#09090b',
   scene: [Boot, Preloader, MainMenu, MainGame, GameOver],
   physics: {
     default: 'arcade',
