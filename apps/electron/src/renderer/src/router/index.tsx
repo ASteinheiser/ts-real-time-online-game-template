@@ -1,14 +1,19 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { PrivateRoute, AUTH_ROUTES } from '@repo/client-auth/router';
+import {
+  ForgotPasswordForm,
+  LoginForm,
+  NewPasswordForm,
+  ProfileCreateForm,
+  ProfileForm,
+  SignupForm,
+} from '@repo/client-auth/forms';
 import { Layout } from './Layout';
-import { Login } from '../pages/auth/Login';
-import { Signup } from '../pages/auth/Signup';
-import { ForgotPassword } from '../pages/auth/ForgotPassword';
-import { NewPassword } from '../pages/auth/NewPassword';
-import { ProfileCreate } from '../pages/auth/ProfileCreate';
-import { Profile } from '../pages/auth/Profile';
 import { Game } from '../pages/Game';
 import { APP_ROUTES } from './constants';
+
+const Login = () => <LoginForm loginRedirectPath={APP_ROUTES.GAME} />;
+const Profile = () => <ProfileForm logoutRedirectPath={AUTH_ROUTES.LOGIN} />;
 
 export const router = createBrowserRouter([
   {
@@ -21,11 +26,11 @@ export const router = createBrowserRouter([
       },
       {
         path: AUTH_ROUTES.SIGNUP,
-        element: <Signup />,
+        element: <SignupForm />,
       },
       {
         path: AUTH_ROUTES.FORGOT_PASSWORD,
-        element: <ForgotPassword />,
+        element: <ForgotPasswordForm />,
       },
       {
         path: '/',
@@ -33,11 +38,11 @@ export const router = createBrowserRouter([
         children: [
           {
             path: AUTH_ROUTES.NEW_PASSWORD,
-            element: <NewPassword />,
+            element: <NewPasswordForm />,
           },
           {
             path: AUTH_ROUTES.CREATE_PROFILE,
-            element: <ProfileCreate />,
+            element: <ProfileCreateForm />,
           },
           {
             path: AUTH_ROUTES.PROFILE,
