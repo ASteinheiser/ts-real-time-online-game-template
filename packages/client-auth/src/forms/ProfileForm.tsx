@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { gql, useMutation } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
 import { isEmail } from 'validator';
-import { Button, Input, Label, toast } from '@repo/ui';
+import { Button, ConfirmationModal, Input, Label, toast } from '@repo/ui';
 import { CheckMark } from '@repo/ui/icons';
 import {
   Auth_UpdateUserNameMutation,
@@ -42,6 +42,8 @@ export const ProfileForm = ({ logoutRedirectPath }: ProfileFormProps) => {
 
   const [userName, setUserName] = useState(profile?.userName ?? '');
   const { userNameExists, loading: userNameExistsLoading } = useUserNameExists(userName);
+
+  const [isDeleteModalShowing, setIsDeleteModalShowing] = useState(false);
 
   const [updateUserName, { loading: updateUserNameLoading }] = useMutation<
     Auth_UpdateUserNameMutation,
@@ -135,77 +137,89 @@ export const ProfileForm = ({ logoutRedirectPath }: ProfileFormProps) => {
   };
 
   return (
-    <div className="flex flex-col gap-4 w-full max-w-xs mx-auto">
-      <h1 className="text-4xl font-bold font-pixel text-center text-muted-foreground">
-        Your Profile
-      </h1>
+    <>
+      <div className="flex flex-col gap-4 w-full max-w-xs mx-auto">
+        <h1 className="text-4xl font-bold font-pixel text-center text-muted-foreground">
+          Your Profile
+        </h1>
 
-      <form onSubmit={handleUpdateUserName}>
-        <div className="flex flex-col gap-2">
-          <Label className="text-md">Username</Label>
-          <div className="flex flex-row items-center gap-4">
-            <Input
-              name="userName"
-              value={userName}
-              onChange={({ target }) => setUserName(target.value)}
-            />
-            <CheckMark
-              size={24}
-              className={
-                !userNameExistsLoading && (isUserNameAvailable || !isUserNameChanged)
-                  ? 'text-green-500'
-                  : 'text-gray-500'
-              }
-            />
+        <form onSubmit={handleUpdateUserName}>
+          <div className="flex flex-col gap-2">
+            <Label className="text-md">Username</Label>
+            <div className="flex flex-row items-center gap-4">
+              <Input
+                name="userName"
+                value={userName}
+                onChange={({ target }) => setUserName(target.value)}
+              />
+              <CheckMark
+                size={24}
+                className={
+                  !userNameExistsLoading && (isUserNameAvailable || !isUserNameChanged)
+                    ? 'text-green-500'
+                    : 'text-gray-500'
+                }
+              />
+            </div>
+
+            <Button
+              type="submit"
+              className="mt-2"
+              loading={updateUserNameLoading}
+              disabled={!isUserNameChanged || deleteAccountLoading}
+            >
+              Update Username
+            </Button>
           </div>
+        </form>
 
-          <Button
-            type="submit"
-            className="mt-2"
-            loading={updateUserNameLoading}
-            disabled={!isUserNameChanged || deleteAccountLoading}
-          >
-            Update Username
-          </Button>
-        </div>
-      </form>
+        <form onSubmit={handleUpdateEmail}>
+          <div className="flex flex-col gap-2">
+            <Label className="text-md">Email</Label>
+            <div className="flex flex-row items-center gap-4">
+              <Input
+                name="email"
+                type="email"
+                value={email}
+                onChange={({ target }) => setEmail(target.value)}
+              />
+              <CheckMark
+                size={24}
+                className={!emailLoading && isEmailConfirmed ? 'text-green-500' : 'text-gray-500'}
+              />
+            </div>
 
-      <form onSubmit={handleUpdateEmail}>
-        <div className="flex flex-col gap-2">
-          <Label className="text-md">Email</Label>
-          <div className="flex flex-row items-center gap-4">
-            <Input
-              name="email"
-              type="email"
-              value={email}
-              onChange={({ target }) => setEmail(target.value)}
-            />
-            <CheckMark
-              size={24}
-              className={!emailLoading && isEmailConfirmed ? 'text-green-500' : 'text-gray-500'}
-            />
+            <Button
+              type="submit"
+              className="mt-2"
+              loading={emailLoading}
+              disabled={!isEmailChanged || deleteAccountLoading}
+            >
+              Update Email
+            </Button>
           </div>
+        </form>
 
-          <Button
-            type="submit"
-            className="mt-2"
-            loading={emailLoading}
-            disabled={!isEmailChanged || deleteAccountLoading}
-          >
-            Update Email
-          </Button>
-        </div>
-      </form>
+        <div className="w-20 h-[2px] bg-secondary mx-auto" />
 
-      <div className="w-20 h-[2px] bg-secondary mx-auto" />
+        <Button onClick={handleLogout} disabled={deleteAccountLoading} variant="secondary">
+          Log Out
+        </Button>
 
-      <Button onClick={handleLogout} disabled={deleteAccountLoading} variant="secondary">
-        Log Out
-      </Button>
+        <Button
+          onClick={() => setIsDeleteModalShowing(true)}
+          loading={deleteAccountLoading}
+          variant="destructive"
+        >
+          Delete Account
+        </Button>
+      </div>
 
-      <Button onClick={handleDeleteAccount} loading={deleteAccountLoading} variant="destructive">
-        Delete Account
-      </Button>
-    </div>
+      <ConfirmationModal
+        isOpen={isDeleteModalShowing}
+        onClose={() => setIsDeleteModalShowing(false)}
+        onConfirm={handleDeleteAccount}
+      />
+    </>
   );
 };
