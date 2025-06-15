@@ -22,6 +22,9 @@
   .mt-nav {
     margin-top: calc(0px - var(--nav-height));
   }
+  .pt-nav {
+    padding-top: var(--nav-height);
+  }
   .fullscreen-center {
     @apply h-screen flex flex-col items-center justify-center pt-40;
     margin-top: calc(0px - var(--nav-height) - var(--footer-height));
