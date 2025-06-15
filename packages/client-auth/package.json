@@ -8,16 +8,20 @@
   "exports": {
     "./forms": "./src/forms/index.ts",
     "./provider": "./src/provider/index.ts",
-    "./router": "./src/router/index.ts"
+    "./router": "./src/router/index.ts",
+    "./theme.css": "./dist/theme.css"
   },
   "scripts": {
+    "postinstall": "npm run build",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "test": "vitest",
     "test:watch": "vitest --watch --coverage",
     "check-types": "tsc --noEmit",
     "generate:gql-types": "graphql-codegen",
-    "generate:gql-types:watch": "graphql-codegen --watch"
+    "generate:gql-types:watch": "graphql-codegen --watch",
+    "dev": "npm run build -- --watch",
+    "build": "tailwindcss -i ./src/theme.css -o ./dist/theme.css"
   },
   "dependencies": {
     "@apollo/client": "catalog:",
@@ -35,10 +39,12 @@
     "@parcel/watcher": "catalog:",
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
+    "@tailwindcss/cli": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@types/validator": "catalog:",
     "@vitest/coverage-v8": "catalog:",
+    "tailwindcss": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }

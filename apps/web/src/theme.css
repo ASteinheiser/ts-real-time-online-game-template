@@ -1,4 +1,5 @@
 @import "@repo/ui/theme.css";
+@import "@repo/client-auth/theme.css";
 @import "tailwindcss";
 
 /* load custom 3D isometric font */

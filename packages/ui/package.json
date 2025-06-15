@@ -32,7 +32,7 @@
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
-    "@tailwindcss/cli": "^4.1.4",
+    "@tailwindcss/cli": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "class-variance-authority": "^0.7.1",
