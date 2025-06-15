@@ -3,7 +3,7 @@ import { Client, Room, getStateCallbacks } from 'colyseus.js';
 import { calculateMovement, FIXED_TIME_STEP, PLAYER_SIZE } from '@repo/core-game';
 import { EventBus } from '../EventBus';
 import { Player } from '../objects/Player';
-import { Hitbox } from '../objects/Hitbox';
+import { PunchBox } from '../objects/PunchBox';
 import { Enemy } from '../objects/Enemy';
 import { CustomText } from '../objects/CustomText';
 
@@ -79,7 +79,7 @@ export class Game extends Scene {
             this.remoteRef.y = player.y;
 
             if (player.attackDamageFrameX !== undefined && player.attackDamageFrameY !== undefined) {
-              new Hitbox(this, player.attackDamageFrameX, player.attackDamageFrameY, 0x0000ff);
+              new PunchBox(this, player.attackDamageFrameX, player.attackDamageFrameY, 0x0000ff);
             }
           }
         });
@@ -92,9 +92,11 @@ export class Game extends Scene {
           entity.setData('serverY', player.y);
           entity.setData('serverAttack', player.isAttacking);
 
+          // #START FOR DEBUGGING PURPOSES
           if (player.attackDamageFrameX !== undefined && player.attackDamageFrameY !== undefined) {
-            new Hitbox(this, player.attackDamageFrameX, player.attackDamageFrameY, 0xff0000);
+            new PunchBox(this, player.attackDamageFrameX, player.attackDamageFrameY, 0xff0000);
           }
+          // #END FOR DEBUGGING PURPOSES
         });
       }
     });
