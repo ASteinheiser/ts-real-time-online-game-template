@@ -1,2 +1,2 @@
 export * from './useDebounce';
-export * from './useScrollToTopOnPageChange';
+export * from './useStartAtTopOfPage';
