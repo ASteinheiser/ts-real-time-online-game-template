@@ -1,14 +1,21 @@
 import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
+import ReactDOM from 'react-dom/client';
+import { RouterProvider } from 'react-router-dom';
+import { Toaster } from '@repo/ui';
+import { SessionProvider } from '@repo/client-auth/provider';
 import { ApolloProvider } from '@apollo/client';
 import { client } from './graphql/client';
-import { App } from './App';
+import { router } from './router';
 import './theme.css';
 
-createRoot(document.getElementById('root')!).render(
+ReactDOM.createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ApolloProvider client={client}>
-      <App />
+      <SessionProvider>
+        <RouterProvider router={router} />
+      </SessionProvider>
     </ApolloProvider>
+
+    <Toaster />
   </StrictMode>
 );

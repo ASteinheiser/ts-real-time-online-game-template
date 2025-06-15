@@ -1,2 +1,8 @@
 @import "@repo/client-auth/theme.css";
 @import "tailwindcss";
+
+@layer utilities {
+  .fullscreen-center {
+    @apply h-screen flex flex-col items-center justify-center;
+  }
+}

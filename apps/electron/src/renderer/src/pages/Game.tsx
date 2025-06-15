@@ -2,12 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import { useQuery, gql } from '@apollo/client';
 import { MAP_WIDTH } from '@repo/core-game';
 import { Button } from '@repo/ui';
-import { IRefPhaserGame, PhaserGame } from './game/PhaserGame';
-import { MainMenu } from './game/scenes/MainMenu';
-import { EventBus } from './game/EventBus';
-import { Desktop_GetTotalPlayersQuery, Desktop_GetTotalPlayersQueryVariables } from './graphql';
-import { StartGameForm } from './components/StartGameForm';
-import { Versions } from './components/Versions';
+import { IRefPhaserGame, PhaserGame } from '../game/PhaserGame';
+import { MainMenu } from '../game/scenes/MainMenu';
+import { EventBus } from '../game/EventBus';
+import { Desktop_GetTotalPlayersQuery, Desktop_GetTotalPlayersQueryVariables } from '../graphql';
+import { StartGameForm } from '../components/StartGameForm';
+import { Versions } from '../components/Versions';
 
 const GET_TOTAL_PLAYERS = gql`
   query Desktop_GetTotalPlayers {
@@ -15,7 +15,7 @@ const GET_TOTAL_PLAYERS = gql`
   }
 `;
 
-export const App = () => {
+export const Game = () => {
   const phaserRef = useRef<IRefPhaserGame | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
