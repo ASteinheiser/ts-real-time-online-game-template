@@ -78,10 +78,7 @@ export class Game extends Scene {
             this.remoteRef.x = player.x;
             this.remoteRef.y = player.y;
 
-            if (
-              player.attackDamageFrameX !== undefined &&
-              player.attackDamageFrameY !== undefined
-            ) {
+            if (player.attackDamageFrameX !== undefined && player.attackDamageFrameY !== undefined) {
               new Hitbox(this, player.attackDamageFrameX, player.attackDamageFrameY, 0x0000ff);
             }
           }

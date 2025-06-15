@@ -45,19 +45,12 @@ export const ForgotPasswordForm = () => {
 
   return (
     <div className="flex flex-col gap-4 w-full max-w-xs mx-auto">
-      <h1 className="text-4xl font-bold font-pixel text-center text-muted-foreground">
-        Reset Password
-      </h1>
+      <h1 className="text-4xl font-bold font-pixel text-center text-muted-foreground">Reset Password</h1>
 
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col gap-2">
           <Label className="text-md">Email</Label>
-          <Input
-            name="email"
-            type="email"
-            value={email}
-            onChange={({ target }) => setEmail(target.value)}
-          />
+          <Input name="email" type="email" value={email} onChange={({ target }) => setEmail(target.value)} />
         </div>
 
         <div className="flex flex-col gap-4 mt-6">

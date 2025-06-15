@@ -5,10 +5,7 @@ export class Player {
   entity: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   nameText: Phaser.GameObjects.Text;
 
-  constructor(
-    entity: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody,
-    nameText: Phaser.GameObjects.Text
-  ) {
+  constructor(entity: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody, nameText: Phaser.GameObjects.Text) {
     this.entity = entity;
     this.nameText = nameText;
 

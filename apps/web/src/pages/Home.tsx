@@ -11,9 +11,7 @@ const GET_TOTAL_PLAYERS = gql`
 `;
 
 export const Home = () => {
-  const { data } = useQuery<Web_GetTotalPlayersQuery, Web_GetTotalPlayersQueryVariables>(
-    GET_TOTAL_PLAYERS
-  );
+  const { data } = useQuery<Web_GetTotalPlayersQuery, Web_GetTotalPlayersQueryVariables>(GET_TOTAL_PLAYERS);
   console.log({ totalPlayers: data?.totalPlayers ?? 0 });
 
   const homeContentRef = useRef<HTMLDivElement>(null);
@@ -49,8 +47,8 @@ export const Home = () => {
           title="Build Your Game"
           description={
             <>
-              Create your game inside of <code>apps/electron</code> (Electron/React/Phaser client)
-              and <code>apps/game-server</code> (Colyseus/Apollo server).
+              Create your game inside of <code>apps/electron</code> (Electron/React/Phaser client) and{' '}
+              <code>apps/game-server</code> (Colyseus/Apollo server).
             </>
           }
         />
@@ -59,8 +57,8 @@ export const Home = () => {
           title="Adjust To Your Needs"
           description={
             <>
-              Depending on your target platform (Mobile vs Web vs Desktop), you may want to consider
-              hosting your game as a SPA (with PWA support), or React Native.
+              Depending on your target platform (Mobile vs Web vs Desktop), you may want to consider hosting
+              your game as a SPA (with PWA support), or React Native.
             </>
           }
         />
@@ -70,8 +68,8 @@ export const Home = () => {
           title="Publish It Yourself"
           description={
             <>
-              Publish your game yourself! Allow users to download straight from your website. You
-              can also easily distribute via Steam, itch.io, etc.
+              Publish your game yourself! Allow users to download straight from your website. You can also
+              easily distribute via Steam, itch.io, etc.
             </>
           }
         />

@@ -36,10 +36,7 @@ export const useUserNameExists = (userName: string): UseUserNameExistsResult => 
   const checkUserNameExists = async () => {
     setLoading(true);
     try {
-      const { data, error } = await client.query<
-        Auth_GetUserExistsQuery,
-        Auth_GetUserExistsQueryVariables
-      >({
+      const { data, error } = await client.query<Auth_GetUserExistsQuery, Auth_GetUserExistsQueryVariables>({
         query: GET_USER_NAME_EXISTS,
         variables: { userName: debouncedUserName },
       });

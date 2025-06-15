@@ -25,11 +25,7 @@ export const TopNav = () => {
     }
 
     return navLinks.map(({ href, label }) => (
-      <NavLink
-        key={href}
-        to={href}
-        onClick={() => setTimeout(() => setIsMenuOpen(false), MENU_CLOSE_DELAY)}
-      >
+      <NavLink key={href} to={href} onClick={() => setTimeout(() => setIsMenuOpen(false), MENU_CLOSE_DELAY)}>
         {label}
       </NavLink>
     ));

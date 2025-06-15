@@ -10,20 +10,14 @@ export const useNotifyOnURLHash = () => {
   useEffect(() => {
     // supabase will add this hash to the url when a user clicks
     // the first of two emails while updating their email address
-    if (
-      location.hash.includes(SUPABASE_AUTH.HASH.EMAIL_CHANGE) &&
-      hashToastRef.current !== location.hash
-    ) {
+    if (location.hash.includes(SUPABASE_AUTH.HASH.EMAIL_CHANGE) && hashToastRef.current !== location.hash) {
       hashToastRef.current = location.hash;
       toast.success('Please click the confirmation link sent to the other email', {
         duration: 10000,
       });
     }
     // supabase will add this hash when a user clicks an expired email link
-    if (
-      location.hash.includes(SUPABASE_AUTH.HASH.LINK_EXPIRED) &&
-      hashToastRef.current !== location.hash
-    ) {
+    if (location.hash.includes(SUPABASE_AUTH.HASH.LINK_EXPIRED) && hashToastRef.current !== location.hash) {
       hashToastRef.current = location.hash;
       toast.error('Email link is invalid or has expired', { duration: 10000 });
     }

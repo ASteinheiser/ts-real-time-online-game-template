@@ -139,19 +139,13 @@ export const ProfileForm = ({ logoutRedirectPath }: ProfileFormProps) => {
   return (
     <>
       <div className="flex flex-col gap-4 w-full max-w-xs mx-auto">
-        <h1 className="text-4xl font-bold font-pixel text-center text-muted-foreground">
-          Your Profile
-        </h1>
+        <h1 className="text-4xl font-bold font-pixel text-center text-muted-foreground">Your Profile</h1>
 
         <form onSubmit={handleUpdateUserName}>
           <div className="flex flex-col gap-2">
             <Label className="text-md">Username</Label>
             <div className="flex flex-row items-center gap-4">
-              <Input
-                name="userName"
-                value={userName}
-                onChange={({ target }) => setUserName(target.value)}
-              />
+              <Input name="userName" value={userName} onChange={({ target }) => setUserName(target.value)} />
               <CheckMark
                 size={24}
                 className={
