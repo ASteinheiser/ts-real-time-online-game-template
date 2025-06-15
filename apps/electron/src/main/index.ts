@@ -1,15 +1,17 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron';
 import { join } from 'path';
 import { electronApp, optimizer, is } from '@electron-toolkit/utils';
-import { MAP_WIDTH, MAP_HEIGHT } from '@repo/core-game';
+import { MAP_SIZE } from '@repo/core-game';
 import icon from '../../resources/icon.png?asset';
 
 const WIN_APP_USER_MODEL_ID = 'iamandrew.demo-game';
 
 function createWindow(): void {
   const mainWindow = new BrowserWindow({
-    width: MAP_WIDTH + 50,
-    height: MAP_HEIGHT + 120,
+    width: MAP_SIZE.width,
+    height: MAP_SIZE.height,
+    useContentSize: true,
+    resizable: false,
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
