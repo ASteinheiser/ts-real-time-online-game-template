@@ -1,14 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { useQuery, gql } from '@apollo/client';
-import { MAP_WIDTH } from '@repo/core-game';
-import { Button } from '@repo/ui';
 import { useSession } from '@repo/client-auth/provider';
 import { IRefPhaserGame, PhaserGame } from '../game/PhaserGame';
 import { MainMenu } from '../game/scenes/MainMenu';
 import { EventBus } from '../game/EventBus';
 import { Desktop_GetTotalPlayersQuery, Desktop_GetTotalPlayersQueryVariables } from '../graphql';
 import { StartGameForm } from '../components/StartGameForm';
-import { Versions } from '../components/Versions';
 
 const GET_TOTAL_PLAYERS = gql`
   query Desktop_GetTotalPlayers {
@@ -50,23 +47,16 @@ export const Game = () => {
     console.log(scene);
   };
 
-  const ipcHandle = () => {
-    window.electron.ipcRenderer.send('ping');
-  };
+  // this is how to send IPC messages to the main process
+  // const ipcHandle = () => {
+  //   window.electron.ipcRenderer.send('ping');
+  // };
 
   return (
-    <div
-      className="flex flex-col justify-center items-center h-screen mx-auto"
-      style={{ width: MAP_WIDTH }}
-    >
+    <>
       <PhaserGame ref={phaserRef} currentActiveScene={onCurrentSceneChange} />
 
       <StartGameForm isOpen={isModalOpen} onOpenChange={setIsModalOpen} onSubmit={onSubmit} />
-
-      <div className="flex flex-row w-full justify-between items-center pt-4 pb-2 px-2">
-        <Button onClick={ipcHandle}>Send IPC</Button>
-        <Versions />
-      </div>
-    </div>
+    </>
   );
 };
