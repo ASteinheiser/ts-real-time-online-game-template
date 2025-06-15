@@ -5,10 +5,8 @@ import {
   calculateMovement,
   FIXED_TIME_STEP,
   PLAYER_SIZE,
-  MAP_WIDTH,
-  MAP_HEIGHT,
-  ATTACK_WIDTH,
-  ATTACK_HEIGHT,
+  MAP_SIZE,
+  ATTACK_SIZE,
   ATTACK_OFFSET_X,
   ATTACK_OFFSET_Y,
   ATTACK_COOLDOWN,
@@ -90,10 +88,10 @@ export class MyRoom extends Room<MyRoomState> {
           // check if the attack hit an enemy
           for (const enemy of this.state.enemies) {
             if (
-              enemy.x - ENEMY_SIZE.width / 2 < player.attackDamageFrameX + ATTACK_WIDTH / 2 &&
-              enemy.x + ENEMY_SIZE.width / 2 > player.attackDamageFrameX - ATTACK_WIDTH / 2 &&
-              enemy.y - ENEMY_SIZE.height / 2 < player.attackDamageFrameY + ATTACK_HEIGHT / 2 &&
-              enemy.y + ENEMY_SIZE.height / 2 > player.attackDamageFrameY - ATTACK_HEIGHT / 2
+              enemy.x - ENEMY_SIZE.width / 2 < player.attackDamageFrameX + ATTACK_SIZE.width / 2 &&
+              enemy.x + ENEMY_SIZE.width / 2 > player.attackDamageFrameX - ATTACK_SIZE.width / 2 &&
+              enemy.y - ENEMY_SIZE.height / 2 < player.attackDamageFrameY + ATTACK_SIZE.height / 2 &&
+              enemy.y + ENEMY_SIZE.height / 2 > player.attackDamageFrameY - ATTACK_SIZE.height / 2
             ) {
               this.state.enemies.splice(this.state.enemies.indexOf(enemy), 1);
               player.killCount++;
@@ -126,8 +124,8 @@ export class MyRoom extends Room<MyRoomState> {
 
       const enemy = new Enemy();
       enemy.id = nanoid();
-      enemy.x = Math.random() * MAP_WIDTH;
-      enemy.y = Math.random() * MAP_HEIGHT;
+      enemy.x = Math.random() * MAP_SIZE.width;
+      enemy.y = Math.random() * MAP_SIZE.height;
 
       this.state.enemies.push(enemy);
     }
@@ -152,8 +150,8 @@ export class MyRoom extends Room<MyRoomState> {
     const player = new Player();
 
     player.username = username;
-    player.x = Math.random() * MAP_WIDTH;
-    player.y = Math.random() * MAP_HEIGHT;
+    player.x = Math.random() * MAP_SIZE.width;
+    player.y = Math.random() * MAP_SIZE.height;
 
     // place player in the map of players by its sessionId
     // (client.sessionId is unique per connection!)

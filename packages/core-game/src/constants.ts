@@ -4,8 +4,10 @@ export const FIXED_TIME_STEP = 1000 / 128;
 // #endregion
 
 // #region Map
-export const MAP_WIDTH = 1024;
-export const MAP_HEIGHT = 768;
+export const MAP_SIZE = {
+  width: 1024,
+  height: 768,
+};
 // #endregion
 
 // #region Player
@@ -17,11 +19,13 @@ export const PLAYER_SIZE = {
 // #endregion
 
 // #region Attack
-export const ATTACK_WIDTH = 6;
-export const ATTACK_HEIGHT = 8;
+export const ATTACK_SIZE = {
+  width: 6,
+  height: 8,
+};
 // offset from the center of the player to the center of the fist,
 // which is at the edge of the player's bounding box
-export const ATTACK_OFFSET_X = PLAYER_SIZE.width / 2 - ATTACK_WIDTH / 2;
+export const ATTACK_OFFSET_X = PLAYER_SIZE.width / 2 - ATTACK_SIZE.width / 2;
 // magic number, this is how high the fist is above the center of the player
 export const ATTACK_OFFSET_Y = 12.5;
 // attack animation takes 0.625 seconds total (5 frames at 8fps)

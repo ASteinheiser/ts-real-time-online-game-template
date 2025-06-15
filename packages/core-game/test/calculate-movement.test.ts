@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { calculateMovement } from '../src/calculate-movement';
-import { MAP_WIDTH, MAP_HEIGHT, PLAYER_MOVE_SPEED } from '../src/constants';
+import { MAP_SIZE, PLAYER_MOVE_SPEED } from '../src/constants';
 
 describe('calculateMovement', () => {
   const noEntitySize = {
@@ -18,8 +18,8 @@ describe('calculateMovement', () => {
     describe('and the entity is in bounds', () => {
       it('should return the same position', () => {
         const entityPosition = {
-          x: MAP_WIDTH / 2,
-          y: MAP_HEIGHT / 2,
+          x: MAP_SIZE.width / 2,
+          y: MAP_SIZE.height / 2,
         };
 
         const newPosition = calculateMovement({
@@ -60,8 +60,8 @@ describe('calculateMovement', () => {
     describe('and the entity is out of bounds (y > MAP_HEIGHT and x > MAP_WIDTH)', () => {
       it('should return the entity to [MAP_WIDTH, MAP_HEIGHT]', () => {
         const entityPosition = {
-          x: MAP_WIDTH + 100,
-          y: MAP_HEIGHT + 100,
+          x: MAP_SIZE.width + 100,
+          y: MAP_SIZE.height + 100,
         };
 
         const newPosition = calculateMovement({
@@ -71,8 +71,8 @@ describe('calculateMovement', () => {
         });
 
         const expectedPosition = {
-          x: MAP_WIDTH,
-          y: MAP_HEIGHT,
+          x: MAP_SIZE.width,
+          y: MAP_SIZE.height,
         };
 
         expect(newPosition).toEqual(expectedPosition);
@@ -83,8 +83,8 @@ describe('calculateMovement', () => {
   describe('when the entity is moving left', () => {
     it('should return the entity to the left', () => {
       const entityPosition = {
-        x: MAP_WIDTH / 2,
-        y: MAP_HEIGHT / 2,
+        x: MAP_SIZE.width / 2,
+        y: MAP_SIZE.height / 2,
       };
 
       const newPosition = calculateMovement({
@@ -106,7 +106,7 @@ describe('calculateMovement', () => {
       it('should return the entity to [0, y]', () => {
         const entityPosition = {
           x: 0,
-          y: MAP_HEIGHT / 2,
+          y: MAP_SIZE.height / 2,
         };
 
         const newPosition = calculateMovement({
@@ -127,8 +127,8 @@ describe('calculateMovement', () => {
     describe('and the entity is moving right', () => {
       it('should not move the entity', () => {
         const entityPosition = {
-          x: MAP_WIDTH / 2,
-          y: MAP_HEIGHT / 2,
+          x: MAP_SIZE.width / 2,
+          y: MAP_SIZE.height / 2,
         };
 
         const newPosition = calculateMovement({
@@ -150,8 +150,8 @@ describe('calculateMovement', () => {
     describe('and the entity is moving up', () => {
       it('should move the entity up and left', () => {
         const entityPosition = {
-          x: MAP_WIDTH / 2,
-          y: MAP_HEIGHT / 2,
+          x: MAP_SIZE.width / 2,
+          y: MAP_SIZE.height / 2,
         };
 
         const newPosition = calculateMovement({
@@ -175,8 +175,8 @@ describe('calculateMovement', () => {
   describe('when the entity is moving down', () => {
     it('should move the entity down', () => {
       const entityPosition = {
-        x: MAP_WIDTH / 2,
-        y: MAP_HEIGHT / 2,
+        x: MAP_SIZE.width / 2,
+        y: MAP_SIZE.height / 2,
       };
 
       const newPosition = calculateMovement({
@@ -197,8 +197,8 @@ describe('calculateMovement', () => {
     describe('and the entity is at the edge of the map (y = MAP_HEIGHT)', () => {
       it('should return the entity to [x, MAP_HEIGHT]', () => {
         const entityPosition = {
-          x: MAP_WIDTH / 2,
-          y: MAP_HEIGHT,
+          x: MAP_SIZE.width / 2,
+          y: MAP_SIZE.height,
         };
 
         const newPosition = calculateMovement({
@@ -210,7 +210,7 @@ describe('calculateMovement', () => {
 
         const expectedPosition = {
           x: entityPosition.x,
-          y: MAP_HEIGHT,
+          y: MAP_SIZE.height,
         };
 
         expect(newPosition).toEqual(expectedPosition);
@@ -220,8 +220,8 @@ describe('calculateMovement', () => {
     describe('and the entity is moving up', () => {
       it('should not move the entity', () => {
         const entityPosition = {
-          x: MAP_WIDTH / 2,
-          y: MAP_HEIGHT / 2,
+          x: MAP_SIZE.width / 2,
+          y: MAP_SIZE.height / 2,
         };
 
         const newPosition = calculateMovement({
@@ -243,8 +243,8 @@ describe('calculateMovement', () => {
     describe('and the entity is moving right', () => {
       it('should move the entity down and right', () => {
         const entityPosition = {
-          x: MAP_WIDTH / 2,
-          y: MAP_HEIGHT / 2,
+          x: MAP_SIZE.width / 2,
+          y: MAP_SIZE.height / 2,
         };
 
         const newPosition = calculateMovement({
@@ -268,8 +268,8 @@ describe('calculateMovement', () => {
   describe('when the entity is moving right', () => {
     it('should move the entity right', () => {
       const entityPosition = {
-        x: MAP_WIDTH / 2,
-        y: MAP_HEIGHT / 2,
+        x: MAP_SIZE.width / 2,
+        y: MAP_SIZE.height / 2,
       };
 
       const newPosition = calculateMovement({
@@ -290,8 +290,8 @@ describe('calculateMovement', () => {
     describe('and the entity is at the edge of the map (x = MAP_WIDTH)', () => {
       it('should return the entity to [MAP_WIDTH, y]', () => {
         const entityPosition = {
-          x: MAP_WIDTH,
-          y: MAP_HEIGHT / 2,
+          x: MAP_SIZE.width,
+          y: MAP_SIZE.height / 2,
         };
 
         const newPosition = calculateMovement({
@@ -302,7 +302,7 @@ describe('calculateMovement', () => {
         });
 
         const expectedPosition = {
-          x: MAP_WIDTH,
+          x: MAP_SIZE.width,
           y: entityPosition.y,
         };
 
@@ -314,8 +314,8 @@ describe('calculateMovement', () => {
   describe('when the entity is moving up', () => {
     it('should move the entity up', () => {
       const entityPosition = {
-        x: MAP_WIDTH / 2,
-        y: MAP_HEIGHT / 2,
+        x: MAP_SIZE.width / 2,
+        y: MAP_SIZE.height / 2,
       };
 
       const newPosition = calculateMovement({
@@ -336,7 +336,7 @@ describe('calculateMovement', () => {
     describe('and the entity is at the edge of the map (y = 0)', () => {
       it('should return the entity to [x, 0]', () => {
         const entityPosition = {
-          x: MAP_WIDTH / 2,
+          x: MAP_SIZE.width / 2,
           y: 0,
         };
 
@@ -360,8 +360,8 @@ describe('calculateMovement', () => {
   describe('when the entity is moving in all directions', () => {
     it('should not move the entity', () => {
       const entityPosition = {
-        x: MAP_WIDTH / 2,
-        y: MAP_HEIGHT / 2,
+        x: MAP_SIZE.width / 2,
+        y: MAP_SIZE.height / 2,
       };
 
       const newPosition = calculateMovement({
@@ -391,8 +391,8 @@ describe('calculateMovement', () => {
       describe('and the entity is moving down and right', () => {
         it('should move the entity back to the edge of the map according to the entity size', () => {
           const entityPosition = {
-            x: MAP_WIDTH,
-            y: MAP_HEIGHT,
+            x: MAP_SIZE.width,
+            y: MAP_SIZE.height,
           };
 
           const newPosition = calculateMovement({
@@ -404,8 +404,8 @@ describe('calculateMovement', () => {
           });
 
           const expectedPosition = {
-            x: MAP_WIDTH - entitySize.width / 2,
-            y: MAP_HEIGHT - entitySize.height / 2,
+            x: MAP_SIZE.width - entitySize.width / 2,
+            y: MAP_SIZE.height - entitySize.height / 2,
           };
 
           expect(newPosition).toEqual(expectedPosition);
@@ -444,8 +444,8 @@ describe('calculateMovement', () => {
       describe('and the entity is moving down and right', () => {
         it('should move the entity back to the edge of the map according to the entity size', () => {
           const entityPosition = {
-            x: MAP_WIDTH,
-            y: MAP_HEIGHT,
+            x: MAP_SIZE.width,
+            y: MAP_SIZE.height,
           };
 
           const newPosition = calculateMovement({
@@ -457,8 +457,8 @@ describe('calculateMovement', () => {
           });
 
           const expectedPosition = {
-            x: MAP_WIDTH - entitySize.width / 2,
-            y: MAP_HEIGHT - entitySize.height / 2,
+            x: MAP_SIZE.width - entitySize.width / 2,
+            y: MAP_SIZE.height - entitySize.height / 2,
           };
 
           expect(newPosition).toEqual(expectedPosition);

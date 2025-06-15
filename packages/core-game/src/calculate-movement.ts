@@ -1,4 +1,4 @@
-import { PLAYER_MOVE_SPEED, MAP_WIDTH, MAP_HEIGHT } from './constants';
+import { PLAYER_MOVE_SPEED, MAP_SIZE } from './constants';
 
 export interface EntityPosition {
   x: number;
@@ -44,8 +44,8 @@ export const calculateMovement = ({
 
   const xRadius = width / 2;
   const yRadius = height / 2;
-  const mapBoundX = MAP_WIDTH - xRadius;
-  const mapBoundY = MAP_HEIGHT - yRadius;
+  const mapBoundX = MAP_SIZE.width - xRadius;
+  const mapBoundY = MAP_SIZE.height - yRadius;
 
   if (newX < xRadius) newX = xRadius;
   if (newX > mapBoundX) newX = mapBoundX;
