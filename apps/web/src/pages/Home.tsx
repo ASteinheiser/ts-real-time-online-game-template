@@ -1,31 +1,26 @@
 import { useRef } from 'react';
 import { useQuery, gql } from '@apollo/client';
-import { useSession } from '@repo/client-auth/provider';
 import { ChevronDown } from '@repo/ui/icons';
 import { cn } from '@repo/ui/utils';
-import { GetBooksQuery, GetBooksQueryVariables } from '../graphql';
+import { Web_GetTotalPlayersQuery, Web_GetTotalPlayersQueryVariables } from '../graphql';
 
-const GET_BOOKS = gql`
-  query GetBooks {
-    books {
-      title
-      author
-    }
+const GET_TOTAL_PLAYERS = gql`
+  query Web_GetTotalPlayers {
+    totalPlayers
   }
 `;
 
 export const Home = () => {
-  const { session } = useSession();
-  const { data } = useQuery<GetBooksQuery, GetBooksQueryVariables>(GET_BOOKS);
+  const { data } = useQuery<Web_GetTotalPlayersQuery, Web_GetTotalPlayersQueryVariables>(
+    GET_TOTAL_PLAYERS
+  );
+  console.log({ totalPlayers: data?.totalPlayers ?? 0 });
 
   const homeContentRef = useRef<HTMLDivElement>(null);
 
   const handleScollToContent = () => {
     homeContentRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
-
-  console.log({ gqlData: data });
-  console.log({ session });
 
   return (
     <div className="flex flex-col items-center">

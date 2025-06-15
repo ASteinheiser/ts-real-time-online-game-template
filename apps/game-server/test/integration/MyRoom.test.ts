@@ -3,7 +3,7 @@ import { ColyseusTestServer, boot } from '@colyseus/testing';
 import type { GoTrueAdminApi } from '@supabase/supabase-js';
 import { setupApp } from '../../src/app.config';
 import { MyRoomState } from '../../src/rooms/schema/MyRoomState';
-import { createClient } from './utils';
+import { createWSClient } from './utils';
 import type { PrismaClient } from '../../src/prisma-client';
 
 describe('Colyseus WebSocket Server', () => {
@@ -21,7 +21,7 @@ describe('Colyseus WebSocket Server', () => {
   it('should connect a client to a room', async () => {
     const room = await server.createRoom<MyRoomState>('my_room');
 
-    const client = await createClient({ server, room });
+    const client = await createWSClient({ server, room });
 
     assert.strictEqual(client.sessionId, room.clients[0].sessionId);
   });
@@ -30,7 +30,7 @@ describe('Colyseus WebSocket Server', () => {
     const room = await server.createRoom<MyRoomState>('my_room');
 
     const username = 'custom-username';
-    const client = await createClient({ server, room, username });
+    const client = await createWSClient({ server, room, username });
 
     await room.waitForNextPatch();
     const { players } = client.state.toJSON();
@@ -42,7 +42,7 @@ describe('Colyseus WebSocket Server', () => {
   it('should spawn an enemy in the room', async () => {
     const room = await server.createRoom<MyRoomState>('my_room');
 
-    const client = await createClient({ server, room });
+    const client = await createWSClient({ server, room });
 
     await room.waitForNextPatch();
     const { enemies } = client.state.toJSON();
@@ -60,10 +60,10 @@ describe('Colyseus WebSocket Server', () => {
     const username4 = 'custom-username-4';
 
     const [client1, client2, client3, client4] = await Promise.all([
-      createClient({ server, room, username: username1 }),
-      createClient({ server, room, username: username2 }),
-      createClient({ server, room, username: username3 }),
-      createClient({ server, room, username: username4 }),
+      createWSClient({ server, room, username: username1 }),
+      createWSClient({ server, room, username: username2 }),
+      createWSClient({ server, room, username: username3 }),
+      createWSClient({ server, room, username: username4 }),
     ]);
 
     await room.waitForNextPatch();

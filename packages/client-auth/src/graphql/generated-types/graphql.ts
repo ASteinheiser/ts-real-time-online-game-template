@@ -16,12 +16,6 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
-export type Book = {
-  __typename?: 'Book';
-  author?: Maybe<Scalars['String']['output']>;
-  title?: Maybe<Scalars['String']['output']>;
-};
-
 export type Mutation = {
   __typename?: 'Mutation';
   createProfile?: Maybe<Profile>;
@@ -46,8 +40,8 @@ export type Profile = {
 
 export type Query = {
   __typename?: 'Query';
-  books?: Maybe<Array<Maybe<Book>>>;
   profile?: Maybe<Profile>;
+  totalPlayers?: Maybe<Scalars['Int']['output']>;
   userExists?: Maybe<Scalars['Boolean']['output']>;
 };
 

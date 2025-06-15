@@ -16,12 +16,6 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
-export type Book = {
-  __typename?: 'Book';
-  author?: Maybe<Scalars['String']['output']>;
-  title?: Maybe<Scalars['String']['output']>;
-};
-
 export type Mutation = {
   __typename?: 'Mutation';
   createProfile?: Maybe<Profile>;
@@ -46,8 +40,8 @@ export type Profile = {
 
 export type Query = {
   __typename?: 'Query';
-  books?: Maybe<Array<Maybe<Book>>>;
   profile?: Maybe<Profile>;
+  totalPlayers?: Maybe<Scalars['Int']['output']>;
   userExists?: Maybe<Scalars['Boolean']['output']>;
 };
 
@@ -56,10 +50,10 @@ export type QueryUserExistsArgs = {
   userName: Scalars['String']['input'];
 };
 
-export type GetBooksQueryVariables = Exact<{ [key: string]: never; }>;
+export type Web_GetTotalPlayersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetBooksQuery = { __typename?: 'Query', books?: Array<{ __typename?: 'Book', title?: string | null, author?: string | null } | null> | null };
+export type Web_GetTotalPlayersQuery = { __typename?: 'Query', totalPlayers?: number | null };
 
 
-export const GetBooksDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetBooks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"books"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"author"}}]}}]}}]} as unknown as DocumentNode<GetBooksQuery, GetBooksQueryVariables>;
+export const Web_GetTotalPlayersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Web_GetTotalPlayers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalPlayers"}}]}}]} as unknown as DocumentNode<Web_GetTotalPlayersQuery, Web_GetTotalPlayersQueryVariables>;

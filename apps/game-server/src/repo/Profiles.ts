@@ -19,6 +19,10 @@ export class ProfilesRepository {
     });
   }
 
+  async getTotalPlayers() {
+    return this.prisma.profile.count();
+  }
+
   async createProfile({ userId, userName }: Profile) {
     return this.prisma.profile.create({
       data: {

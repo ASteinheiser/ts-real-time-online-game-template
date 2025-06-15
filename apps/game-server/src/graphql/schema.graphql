@@ -1,16 +1,11 @@
-type Book {
-  title: String
-  author: String
-}
-
 type Profile {
   userName: String!
 }
 
 type Query {
-  books: [Book]
   profile: Profile
   userExists(userName: String!): Boolean
+  totalPlayers: Int
 }
 
 type Mutation {

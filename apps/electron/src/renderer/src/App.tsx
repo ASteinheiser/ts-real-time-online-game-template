@@ -5,16 +5,13 @@ import { Button } from '@repo/ui';
 import { IRefPhaserGame, PhaserGame } from './game/PhaserGame';
 import { MainMenu } from './game/scenes/MainMenu';
 import { EventBus } from './game/EventBus';
-import { GetBooksQuery, GetBooksQueryVariables } from './graphql';
+import { Desktop_GetTotalPlayersQuery, Desktop_GetTotalPlayersQueryVariables } from './graphql';
 import { StartGameForm } from './components/StartGameForm';
 import { Versions } from './components/Versions';
 
-const GET_BOOKS = gql`
-  query GetBooks {
-    books {
-      title
-      author
-    }
+const GET_TOTAL_PLAYERS = gql`
+  query Desktop_GetTotalPlayers {
+    totalPlayers
   }
 `;
 
@@ -22,9 +19,11 @@ export const App = () => {
   const phaserRef = useRef<IRefPhaserGame | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { data } = useQuery<GetBooksQuery, GetBooksQueryVariables>(GET_BOOKS);
+  const { data } = useQuery<Desktop_GetTotalPlayersQuery, Desktop_GetTotalPlayersQueryVariables>(
+    GET_TOTAL_PLAYERS
+  );
 
-  console.log({ gqlData: data });
+  console.log({ totalPlayers: data?.totalPlayers ?? 0 });
 
   useEffect(() => {
     EventBus.on('menu-open__game-start', () => {
