@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useQuery, gql } from '@apollo/client';
 import { useSession } from '@repo/client-auth/provider';
 import { IRefPhaserGame, PhaserGame } from '../game/PhaserGame';
 import { MainMenu } from '../game/scenes/MainMenu';
 import { EventBus } from '../game/EventBus';
 import { Desktop_GetTotalPlayersQuery, Desktop_GetTotalPlayersQueryVariables } from '../graphql';
-import { StartGameForm } from '../components/StartGameForm';
+import { ProfileModal } from '../components/ProfileModal';
+import { OptionsModal } from '../components/OptionsModal';
 
 const GET_TOTAL_PLAYERS = gql`
   query Desktop_GetTotalPlayers {
@@ -14,49 +16,50 @@ const GET_TOTAL_PLAYERS = gql`
 `;
 
 export const Game = () => {
-  const { session, profile } = useSession();
-  console.log({ session, profile });
+  const { profile } = useSession();
 
   const phaserRef = useRef<IRefPhaserGame | null>(null);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isOptionsModalOpen, setIsOptionsModalOpen] = useState(false);
 
   const { data } = useQuery<Desktop_GetTotalPlayersQuery, Desktop_GetTotalPlayersQueryVariables>(
     GET_TOTAL_PLAYERS
   );
   console.log({ totalPlayers: data?.totalPlayers ?? 0 });
 
+  const [searchParams, setSearchParams] = useSearchParams();
+  const isProfileModalOpen = searchParams.get('editProfile') === 'true';
+
+  const setIsProfileModalOpen = (open: boolean) => {
+    setSearchParams({ editProfile: open ? 'true' : 'false' });
+  };
+
   useEffect(() => {
     EventBus.on('menu-open__game-start', () => {
-      setIsModalOpen(true);
+      const scene = phaserRef?.current?.scene as MainMenu;
+      scene?.changeScene(profile?.userName);
     });
+
+    EventBus.on('menu-open__profile', () => setIsProfileModalOpen(true));
+    EventBus.on('menu-open__options', () => setIsOptionsModalOpen(true));
 
     return () => {
       EventBus.off('menu-open__game-start');
+      EventBus.off('menu-open__profile');
+      EventBus.off('menu-open__options');
     };
   }, []);
-
-  const onSubmit = ({ username }: { username: string }) => {
-    const scene = phaserRef?.current?.scene as MainMenu;
-    scene?.changeScene(username);
-
-    setIsModalOpen(false);
-  };
 
   const onCurrentSceneChange = (scene: Phaser.Scene) => {
     console.log(scene);
   };
 
-  // this is how to send IPC messages to the main process
-  // const ipcHandle = () => {
-  //   window.electron.ipcRenderer.send('ping');
-  // };
-
   return (
     <>
       <PhaserGame ref={phaserRef} currentActiveScene={onCurrentSceneChange} />
 
-      <StartGameForm isOpen={isModalOpen} onOpenChange={setIsModalOpen} onSubmit={onSubmit} />
+      <OptionsModal isOpen={isOptionsModalOpen} onOpenChange={setIsOptionsModalOpen} />
+      <ProfileModal isOpen={isProfileModalOpen} onOpenChange={setIsProfileModalOpen} />
     </>
   );
 };
