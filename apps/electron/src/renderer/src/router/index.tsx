@@ -12,8 +12,6 @@ import { NotFound } from '../pages/NotFound';
 import { Game } from '../pages/Game';
 import { APP_ROUTES } from './constants';
 
-const Login = () => <LoginForm loginRedirectPath={APP_ROUTES.GAME} />;
-
 export const router = createBrowserRouter([
   {
     path: '/',
@@ -21,7 +19,7 @@ export const router = createBrowserRouter([
     children: [
       {
         path: AUTH_ROUTES.LOGIN,
-        element: <Login />,
+        element: <LoginForm loginRedirectPath={APP_ROUTES.GAME} />,
       },
       {
         path: AUTH_ROUTES.SIGNUP,
