@@ -1,9 +1,11 @@
 import { Outlet } from 'react-router-dom';
-import { useForcedAuthFlow, useNotifyOnURLHash } from '@repo/client-auth/router';
+import { useForcedAuthFlow, useNotifyOnURLHash, useIsAuthRoute } from '@repo/client-auth/router';
 import { MAP_SIZE } from '@repo/core-game';
 import { APP_ROUTES } from './constants';
 
 export const Layout = () => {
+  const isAuthRoute = useIsAuthRoute();
+
   useForcedAuthFlow({
     alreadyLoggedInRedirectPath: APP_ROUTES.GAME,
   });
@@ -11,6 +13,8 @@ export const Layout = () => {
 
   return (
     <div className="fullscreen-center" style={{ width: MAP_SIZE.width, height: MAP_SIZE.height }}>
+      {isAuthRoute && <img src="/assets/logo.png" className="h-30 w-auto mb-10 mt-[-40px]" />}
+
       <Outlet />
     </div>
   );
