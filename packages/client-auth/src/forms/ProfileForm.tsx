@@ -43,12 +43,12 @@ export const ProfileForm = ({ logoutRedirectPath }: ProfileFormProps) => {
   const [userName, setUserName] = useState(profile?.userName ?? '');
   const { userNameExists, loading: userNameExistsLoading } = useUserNameExists(userName);
 
-  const [isDeleteModalShowing, setIsDeleteModalShowing] = useState(false);
-
   const [isUpdateUserNameLoading, setIsUpdateUserNameLoading] = useState(false);
   const [updateUserName] = useMutation<Auth_UpdateUserNameMutation, Auth_UpdateUserNameMutationVariables>(
     UPDATE_USER_NAME
   );
+
+  const [isDeleteModalShowing, setIsDeleteModalShowing] = useState(false);
 
   const [deleteAccount, { loading: deleteAccountLoading }] = useMutation<
     Auth_DeleteAccountMutation,
