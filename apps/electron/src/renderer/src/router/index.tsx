@@ -5,15 +5,14 @@ import {
   LoginForm,
   NewPasswordForm,
   ProfileCreateForm,
-  ProfileForm,
   SignupForm,
 } from '@repo/client-auth/forms';
 import { Layout } from './Layout';
+import { NotFound } from '../pages/NotFound';
 import { Game } from '../pages/Game';
 import { APP_ROUTES } from './constants';
 
 const Login = () => <LoginForm loginRedirectPath={APP_ROUTES.GAME} />;
-const Profile = () => <ProfileForm logoutRedirectPath={AUTH_ROUTES.LOGIN} />;
 
 export const router = createBrowserRouter([
   {
@@ -34,7 +33,7 @@ export const router = createBrowserRouter([
       },
       {
         path: '/',
-        element: <PrivateRoute userNotAuthenticated={<Login />} />,
+        element: <PrivateRoute userNotAuthenticated={<NotFound />} />,
         children: [
           {
             path: AUTH_ROUTES.NEW_PASSWORD,
@@ -45,10 +44,6 @@ export const router = createBrowserRouter([
             element: <ProfileCreateForm />,
           },
           {
-            path: AUTH_ROUTES.PROFILE,
-            element: <Profile />,
-          },
-          {
             path: APP_ROUTES.GAME,
             element: <Game />,
           },
@@ -56,7 +51,7 @@ export const router = createBrowserRouter([
       },
       {
         path: '*',
-        element: <Login />,
+        element: <NotFound />,
       },
     ],
   },
