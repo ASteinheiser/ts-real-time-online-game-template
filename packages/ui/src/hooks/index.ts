@@ -1,3 +1,3 @@
 export * from './useDebounce';
-export * from './useSearchParamState';
+export * from './useSearchParamFlag';
 export * from './useStartAtTopOfPage';
