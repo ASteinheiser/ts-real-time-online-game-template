@@ -1,13 +1,14 @@
-import { useEffect, useRef, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
 import { useQuery, gql } from '@apollo/client';
 import { useSession } from '@repo/client-auth/provider';
+import { useSearchParamFlag } from '@repo/ui/hooks';
 import { IRefPhaserGame, PhaserGame } from '../game/PhaserGame';
 import { MainMenu } from '../game/scenes/MainMenu';
 import { EventBus } from '../game/EventBus';
 import { Desktop_GetTotalPlayersQuery, Desktop_GetTotalPlayersQueryVariables } from '../graphql';
 import { ProfileModal } from '../components/ProfileModal';
 import { OptionsModal } from '../components/OptionsModal';
+import { SEARCH_PARAMS } from '../router/constants';
 
 const GET_TOTAL_PLAYERS = gql`
   query Desktop_GetTotalPlayers {
@@ -20,18 +21,32 @@ export const Game = () => {
 
   const phaserRef = useRef<IRefPhaserGame | null>(null);
 
-  const [isOptionsModalOpen, setIsOptionsModalOpen] = useState(false);
-
   const { data } = useQuery<Desktop_GetTotalPlayersQuery, Desktop_GetTotalPlayersQueryVariables>(
     GET_TOTAL_PLAYERS
   );
   console.log({ totalPlayers: data?.totalPlayers ?? 0 });
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const isProfileModalOpen = searchParams.get('editProfile') === 'true';
+  const [isProfileModalOpen, setIsProfileModalOpen] = useSearchParamFlag(SEARCH_PARAMS.PROFILE);
+  const [isOptionsModalOpen, setIsOptionsModalOpen] = useSearchParamFlag(SEARCH_PARAMS.OPTIONS);
 
-  const setIsProfileModalOpen = (open: boolean) => {
-    setSearchParams({ editProfile: open ? 'true' : 'false' });
+  const shouldDisablePhaserInput = isProfileModalOpen || isOptionsModalOpen;
+
+  const setPhaserInputEnabled = (enabled: boolean) => {
+    if (phaserRef?.current?.scene?.input) {
+      phaserRef.current.scene.input.enabled = enabled;
+    }
+  };
+
+  useEffect(() => {
+    setPhaserInputEnabled(!shouldDisablePhaserInput);
+  }, [shouldDisablePhaserInput]);
+
+  const onCurrentSceneChange = (scene: Phaser.Scene) => {
+    // ensure that new scenes have the correct "input enabled" setting
+    // for example, handles the case where the scene changes with a modal open
+    setPhaserInputEnabled(!shouldDisablePhaserInput);
+
+    console.log(scene);
   };
 
   useEffect(() => {
@@ -49,10 +64,6 @@ export const Game = () => {
       EventBus.off('menu-open__options');
     };
   }, []);
-
-  const onCurrentSceneChange = (scene: Phaser.Scene) => {
-    console.log(scene);
-  };
 
   return (
     <>
