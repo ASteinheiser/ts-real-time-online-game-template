@@ -39,6 +39,7 @@ export const useUserNameExists = (userName: string): UseUserNameExistsResult => 
       const { data, error } = await client.query<Auth_GetUserExistsQuery, Auth_GetUserExistsQueryVariables>({
         query: GET_USER_NAME_EXISTS,
         variables: { userName: debouncedUserName },
+        fetchPolicy: 'network-only',
       });
 
       setError(error);
