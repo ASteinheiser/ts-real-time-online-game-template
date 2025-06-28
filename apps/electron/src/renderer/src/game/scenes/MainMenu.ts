@@ -29,6 +29,28 @@ export class MainMenu extends Scene {
       })
       .fadeIn(1000);
 
+    new CustomText(this, 512, 560, 'Profile', {
+      fontFamily: 'Arial Black',
+      fontSize: '38px',
+      strokeThickness: 8,
+    })
+      .setOrigin(0.5)
+      .makeButton('#ff00ff', () => {
+        EventBus.emit('menu-open__profile');
+      })
+      .fadeIn(1000);
+
+    new CustomText(this, 512, 660, 'Options', {
+      fontFamily: 'Arial Black',
+      fontSize: '38px',
+      strokeThickness: 8,
+    })
+      .setOrigin(0.5)
+      .makeButton('#ff00ff', () => {
+        EventBus.emit('menu-open__options');
+      })
+      .fadeIn(1000);
+
     EventBus.emit('current-scene-ready', this);
   }
 
