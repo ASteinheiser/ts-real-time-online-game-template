@@ -1,12 +1,11 @@
-import { Outlet, useLocation } from 'react-router-dom';
-import { useForcedAuthFlow, useNotifyOnURLHash, AUTH_ROUTES } from '@repo/client-auth/router';
+import { Outlet } from 'react-router-dom';
+import { useForcedAuthFlow, useNotifyOnURLHash, AUTH_ROUTES, useIsAuthRoute } from '@repo/client-auth/router';
 import { useStartAtTopOfPage } from '@repo/ui/hooks';
 import { TopNav } from '../components/TopNav';
 import { Footer } from '../components/Footer';
 
 export const Layout = () => {
-  const { pathname } = useLocation();
-  const isAuthRoute = Object.values(AUTH_ROUTES).includes(pathname);
+  const isAuthRoute = useIsAuthRoute();
 
   useForcedAuthFlow({
     alreadyLoggedInRedirectPath: AUTH_ROUTES.PROFILE,
