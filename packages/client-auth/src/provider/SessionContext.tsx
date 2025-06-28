@@ -94,15 +94,27 @@ export const SessionProvider = ({ children }: SessionProviderProps) => {
       setProfile(null);
       return;
     }
-    const { data, error } = await client.query<Auth_GetProfileQuery>({
-      query: GET_PROFILE,
-      context: { headers: { authorization: _session.access_token } },
-      fetchPolicy: 'network-only',
-    });
-    if (error) {
-      toast.error('Oops! Something went wrong fetching your profile...');
+    // only set loading state on initial load
+    // prevents showing create profile when logging in
+    if (_session && !profile) {
+      setLoading(true);
     }
-    setProfile(data?.profile ?? null);
+    try {
+      const { data, error } = await client.query<Auth_GetProfileQuery>({
+        query: GET_PROFILE,
+        context: { headers: { authorization: _session.access_token } },
+        fetchPolicy: 'network-only',
+      });
+      if (error) throw error;
+
+      setProfile(data?.profile ?? null);
+    } catch (error) {
+      console.error(error);
+      toast.error('Oops! Something went wrong fetching your profile...');
+      setProfile(null);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const login = async (email: string, password: string) => {

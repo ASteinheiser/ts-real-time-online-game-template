@@ -38,17 +38,17 @@ export const ProfileForm = ({ logoutRedirectPath }: ProfileFormProps) => {
   const sessionEmail = session?.user.email;
 
   const [email, setEmail] = useState(sessionEmail ?? '');
-  const [emailLoading, setEmailLoading] = useState(false);
+  const [isEmailLoading, setIsEmailLoading] = useState(false);
 
   const [userName, setUserName] = useState(profile?.userName ?? '');
   const { userNameExists, loading: userNameExistsLoading } = useUserNameExists(userName);
 
   const [isDeleteModalShowing, setIsDeleteModalShowing] = useState(false);
 
-  const [updateUserName, { loading: updateUserNameLoading }] = useMutation<
-    Auth_UpdateUserNameMutation,
-    Auth_UpdateUserNameMutationVariables
-  >(UPDATE_USER_NAME);
+  const [isUpdateUserNameLoading, setIsUpdateUserNameLoading] = useState(false);
+  const [updateUserName] = useMutation<Auth_UpdateUserNameMutation, Auth_UpdateUserNameMutationVariables>(
+    UPDATE_USER_NAME
+  );
 
   const [deleteAccount, { loading: deleteAccountLoading }] = useMutation<
     Auth_DeleteAccountMutation,
@@ -77,6 +77,7 @@ export const ProfileForm = ({ logoutRedirectPath }: ProfileFormProps) => {
       return;
     }
 
+    setIsUpdateUserNameLoading(true);
     try {
       await updateUserName({
         variables: { userName },
@@ -87,6 +88,8 @@ export const ProfileForm = ({ logoutRedirectPath }: ProfileFormProps) => {
     } catch (error) {
       console.error(error);
       toast.error('Failed to update username, please try again');
+    } finally {
+      setIsUpdateUserNameLoading(false);
     }
   };
 
@@ -99,7 +102,7 @@ export const ProfileForm = ({ logoutRedirectPath }: ProfileFormProps) => {
       return;
     }
 
-    setEmailLoading(true);
+    setIsEmailLoading(true);
     try {
       const { error } = await changeEmail(email);
       // supabase auth will throw an error if the email was already sent
@@ -114,7 +117,7 @@ export const ProfileForm = ({ logoutRedirectPath }: ProfileFormProps) => {
       console.error(error);
       toast.error('Failed to update email, please try again');
     } finally {
-      setEmailLoading(false);
+      setIsEmailLoading(false);
     }
   };
 
@@ -159,7 +162,7 @@ export const ProfileForm = ({ logoutRedirectPath }: ProfileFormProps) => {
             <Button
               type="submit"
               className="mt-2"
-              loading={updateUserNameLoading}
+              loading={isUpdateUserNameLoading}
               disabled={!isUserNameChanged || deleteAccountLoading}
             >
               Update Username
@@ -179,14 +182,14 @@ export const ProfileForm = ({ logoutRedirectPath }: ProfileFormProps) => {
               />
               <CheckMark
                 size={24}
-                className={!emailLoading && isEmailConfirmed ? 'text-green-500' : 'text-gray-500'}
+                className={!isEmailLoading && isEmailConfirmed ? 'text-green-500' : 'text-gray-500'}
               />
             </div>
 
             <Button
               type="submit"
               className="mt-2"
-              loading={emailLoading}
+              loading={isEmailLoading}
               disabled={!isEmailChanged || deleteAccountLoading}
             >
               Update Email
