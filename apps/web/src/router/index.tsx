@@ -1,13 +1,15 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { PrivateRoute, AUTH_ROUTES } from '@repo/client-auth/router';
+import {
+  LoginForm,
+  SignupForm,
+  ForgotPasswordForm,
+  NewPasswordForm,
+  ProfileCreateForm,
+  ProfileForm,
+} from '@repo/client-auth/forms';
 import { Layout } from './Layout';
 import { NotFound } from '../pages/NotFound';
-import { Login } from '../pages/auth/Login';
-import { Signup } from '../pages/auth/Signup';
-import { ForgotPassword } from '../pages/auth/ForgotPassword';
-import { NewPassword } from '../pages/auth/NewPassword';
-import { ProfileCreate } from '../pages/auth/ProfileCreate';
-import { Profile } from '../pages/auth/Profile';
 import { Home } from '../pages/Home';
 import { DevLog } from '../pages/DevLog';
 import { Download } from '../pages/Download';
@@ -28,15 +30,15 @@ export const router = createBrowserRouter([
       },
       {
         path: AUTH_ROUTES.LOGIN,
-        element: <Login />,
+        element: <LoginForm loginRedirectPath={AUTH_ROUTES.PROFILE} />,
       },
       {
         path: AUTH_ROUTES.SIGNUP,
-        element: <Signup />,
+        element: <SignupForm />,
       },
       {
         path: AUTH_ROUTES.FORGOT_PASSWORD,
-        element: <ForgotPassword />,
+        element: <ForgotPasswordForm />,
       },
       {
         path: '/',
@@ -44,15 +46,15 @@ export const router = createBrowserRouter([
         children: [
           {
             path: AUTH_ROUTES.NEW_PASSWORD,
-            element: <NewPassword />,
+            element: <NewPasswordForm />,
           },
           {
             path: AUTH_ROUTES.CREATE_PROFILE,
-            element: <ProfileCreate />,
+            element: <ProfileCreateForm />,
           },
           {
             path: AUTH_ROUTES.PROFILE,
-            element: <Profile />,
+            element: <ProfileForm logoutRedirectPath={APP_ROUTES.HOME} />,
           },
           {
             path: APP_ROUTES.DOWNLOAD,
