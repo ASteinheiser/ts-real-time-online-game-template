@@ -4,9 +4,9 @@ A _highly opinionated_ template for creating real-time, online games using [Type
 
 #### Comes with 3 apps:
 
-- `electron`: Frontend rendering for the game written in TypeScript using Electron, React, Phaser, Colyseus and GraphQL. When built, compiles an executable that runs a version of Chromium to render the game.
-- `game-server`: Backend server that handles the game state and data via WebSockets and GraphQL. Written in TypeScript with Colyseus, Express and [Apollo GraphQL](https://www.apollographql.com/docs).
-- `web`: Static webpage that can serve as a marketing site, homepage, wiki, roadmap, devlog, etc. Written in Typescript with React and GraphQL. Could also be used to serve the Phaser/Colyseus game.
+- `desktop`: Frontend rendering for the game written in TypeScript using Electron, React, Phaser, Colyseus and GraphQL. When built, compiles an executable that runs a version of Chromium to render the game.
+- `game-api`: Backend server that handles the game state and data via WebSockets and GraphQL. Written in TypeScript with Colyseus, Express and [Apollo GraphQL](https://www.apollographql.com/docs).
+- `web`: Static webpage that can serve as a marketing site, devlog, roadmap, wiki etc. Written in Typescript with React and GraphQL. Could also be used to serve the Phaser/Colyseus game (with support for PWA).
 
 #### And 5 packages:
 
@@ -74,7 +74,7 @@ turbo ls
 turbo run
 ```
 
-## Useful Commands
+## Most Used Commands
 
 These commands are available from the root directory whether you decide to install the `turbo` cli locally or not...
 
@@ -110,7 +110,7 @@ However, if you change the DB schema via `apps/game-server/prisma/schema.prisma`
 pnpm db:sync
 ```
 
-This will update your local DB, generate a SQL migration and update your types.
+This will generate a SQL migration, migrate your local DB, and update your types.
 
 <b>NOTE</b>: This project uses Turborepo's Terminal UI ([tui](https://turborepo.com/blog/turbo-2-0#new-terminal-ui)) and some tasks are interactive, such as `test:watch` and `db:sync`. When you want to interact with a window, press "i", then interact as normal. Press "ctrl" + "z" to leave interactive mode.
 
