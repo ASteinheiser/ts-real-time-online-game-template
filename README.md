@@ -20,10 +20,12 @@ A _highly opinionated_ template for creating real-time, online games using [Type
 
 This project relies on [Supabase](https://supabase.com/) for [JWT authentication](https://auth0.com/docs/secure/tokens/json-web-tokens). They offer a very generous free tier ([50k MAU](https://supabase.com/pricing)) and a straight-forward developer experience.
 
-You'll need to create a free tier [project](https://supabase.com/dashboard/) and add the relevant keys to the environment. Keys can be found by navigating to your [Supabase project](https://supabase.com/dashboard/), then from the sidebar, "Project Settings"->"Data API". Here you should see a few important sections: "Project URL", "Project API Keys" and "JWT Settings". **Use these values to fill out the following:**
+You'll need to create a free tier [project](https://supabase.com/dashboard/) and add the relevant keys to your local environment. Keys can be found by navigating to your [Supabase project](https://supabase.com/dashboard/), then from the sidebar, "Project Settings" > "Data API". Here you should see a few important sections: "Project URL", "Project API Keys" and "JWT Settings". **Use the values from these sections to create the following files based on the `.env.example` files:**
 - `apps/desktop/.env`
 - `apps/game-api/.env`
 - `apps/web/.env`
+
+### Auth Email Templates
 
 You can also quickly customize the auth emails using the templates under `packages/client-auth/email-templates` by navigating to:
 
