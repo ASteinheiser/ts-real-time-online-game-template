@@ -25,6 +25,12 @@ You'll need to create a free tier [project](https://supabase.com/dashboard/) and
 - `apps/game-api/.env`
 - `apps/web/.env`
 
+### Env Considerations
+- [Turborepo recommends](https://turborepo.com/docs/crafting-your-repository/using-environment-variables#best-practices) that you define environment variables for each "app" instead of trying to define them globally. This helps prevent sensitive env values from leaking across apps.
+- To ensure caches miss when updating env values, you may need to update the `turbo.json` section for `tasks.build.env`. It should be noted that [turborepo will infer](https://turborepo.com/docs/crafting-your-repository/using-environment-variables#framework-inference) any `VITE_`-prefixed env.
+  - This means that if you add more `VITE_WHATEVER` variables to either `apps/desktop/.env` or `apps/web/.env`, then you do **NOT** need to update the `turbo.json`.
+  - However, if you add another variable to `apps/game-api/.env`, then you **SHOULD** update the `build` tasks' `env` in the `turbo.json`.
+
 ### Auth Email Templates
 
 You can also quickly customize the auth emails using the templates under `packages/client-auth/email-templates` by navigating to:
