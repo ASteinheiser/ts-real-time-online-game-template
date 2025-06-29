@@ -4,7 +4,7 @@
   "concurrency": "13",
   "tasks": {
     "generate:gql-types": {
-      "inputs": ["$TURBO_DEFAULT$", "../../apps/game-server/src/graphql/schema.graphql"],
+      "inputs": ["$TURBO_DEFAULT$", "../../apps/game-api/src/graphql/schema.graphql"],
       "outputs": ["**/graphql/generated-types/**", "**/graphql/generated-types.ts"]
     },
     "generate:gql-types:watch": {
@@ -37,8 +37,8 @@
       "interactive": true
     },
     "test:load": {
-      "dependsOn": ["game-server#build"],
-      "with": ["game-server#preview"],
+      "dependsOn": ["game-api#build"],
+      "with": ["game-api#preview"],
       "cache": false,
       "persistent": true
     },

@@ -21,8 +21,8 @@ A _highly opinionated_ template for creating real-time, online games using [Type
 This project relies on [Supabase](https://supabase.com/) for [JWT authentication](https://auth0.com/docs/secure/tokens/json-web-tokens). They offer a very generous free tier ([50k MAU](https://supabase.com/pricing)) and a straight-forward developer experience.
 
 You'll need to create a free tier [project](https://supabase.com/dashboard/) and add the relevant keys to the environment. Keys can be found by navigating to your [Supabase project](https://supabase.com/dashboard/), then from the sidebar, "Project Settings"->"Data API". Here you should see a few important sections: "Project URL", "Project API Keys" and "JWT Settings". **Use these values to fill out the following:**
-- `apps/electron/.env`
-- `apps/game-server/.env`
+- `apps/desktop/.env`
+- `apps/game-api/.env`
 - `apps/web/.env`
 
 You can also quickly customize the auth emails using the templates under `packages/client-auth/email-templates` by navigating to:
@@ -86,7 +86,7 @@ These commands are available from the root directory whether you decide to insta
 | `pnpm dev` | Run local development servers for each app |
 | `pnpm test` | Runs the typecheck, linter and tests for each repo |
 | `pnpm test:watch` | Runs the test suite in each repo and watches for changes |
-| `pnpm test:load` | Builds and runs the `game-server` then starts the load test |
+| `pnpm test:load` | Builds and runs the `game-api` then starts the load test |
 | `pnpm preview` | Builds each app and runs a local server using the output |
 | `pnpm build:[win\|mac\|linux]` | Builds the desktop app via Electron |
 
@@ -105,7 +105,7 @@ pnpm db:sync
 
 `pnpm generate:db-types` will run during `dev`, `build`, etc., if you're using the monorepo commands.
 
-However, if you change the DB schema via `apps/game-server/prisma/schema.prisma`, then you'll need to run:
+However, if you change the DB schema via `apps/game-api/prisma/schema.prisma`, then you'll need to run:
 ```
 pnpm db:sync
 ```
@@ -122,7 +122,7 @@ This will generate a SQL migration, migrate your local DB, and update your types
 | `pnpm install:clean` | Runs a script to clear builds, caches, deps, etc., then runs install |
 | `pnpm test` | Runs the typecheck, linter and tests for each repo |
 | `pnpm test:watch` | Runs the test suite in each repo and watches for changes |
-| `pnpm test:load` | Builds and runs the `game-server` then starts the load test |
+| `pnpm test:load` | Builds and runs the `game-api` then starts the load test |
 | `pnpm lint` | Runs the code linting check in each repo |
 | `pnpm lint:fix` | Runs the linter and fixes code when possible |
 | `pnpm check-types` | Runs the typescript check in each repo |

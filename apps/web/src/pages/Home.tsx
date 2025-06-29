@@ -48,7 +48,7 @@ export const Home = () => {
           description={
             <>
               Create your game inside of <code>apps/electron</code> (Electron/React/Phaser client) and{' '}
-              <code>apps/game-server</code> (Colyseus/Apollo server).
+              <code>apps/game-api</code> (Colyseus/Apollo server).
             </>
           }
         />
