@@ -31,6 +31,7 @@ You'll need to create a free tier [project](https://supabase.com/dashboard/) and
 - To ensure caches miss when updating env values, you may need to update the `turbo.json` section for `tasks.build.env`. It should be noted that [turborepo will infer](https://turborepo.com/docs/crafting-your-repository/using-environment-variables#framework-inference) any `VITE_`-prefixed env.
   - This means that if you add more `VITE_WHATEVER` variables to either `apps/desktop/.env` or `apps/web/.env`, then you do **NOT** need to update the `turbo.json`.
   - However, if you add another variable to `apps/game-api/.env`, then you **SHOULD** update the `build` tasks' `env` in the `turbo.json`.
+  - *NOTE:* the `dev` task does not need the `env` field since it's `cache` setting is set to `false`.
 
 ### Auth Email Templates
 
