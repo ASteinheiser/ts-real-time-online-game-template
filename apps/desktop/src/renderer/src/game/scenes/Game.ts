@@ -7,8 +7,10 @@ import { PunchBox } from '../objects/PunchBox';
 import { Enemy } from '../objects/Enemy';
 import { CustomText } from '../objects/CustomText';
 
-const GAME_SERVER_URL = 'ws://localhost:4204';
-const GAME_API_URL = 'http://localhost:4204';
+const API_URL = import.meta.env.VITE_API_URL;
+const WEBSOCKET_URL = import.meta.env.VITE_WEBSOCKET_URL;
+if (!API_URL) throw new Error('VITE_API_URL is not set');
+if (!WEBSOCKET_URL) throw new Error('VITE_WEBSOCKET_URL is not set');
 
 export class Game extends Scene {
   client: Client;
@@ -31,7 +33,7 @@ export class Game extends Scene {
   constructor() {
     super('Game');
 
-    this.client = new Client(GAME_SERVER_URL);
+    this.client = new Client(WEBSOCKET_URL);
   }
 
   preload() {
@@ -189,7 +191,7 @@ export class Game extends Scene {
   }
 
   async changeScene() {
-    const response = await fetch(`${GAME_API_URL}/game-results`);
+    const response = await fetch(`${API_URL}/game-results`);
     const data: Record<string, { username: string; attackCount: number; killCount: number }> =
       await response.json();
     const gameResults = Object.keys(data).map((sessionId) => ({

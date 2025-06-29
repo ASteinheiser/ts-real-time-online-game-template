@@ -3,6 +3,8 @@ import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 import tailwindcss from '@tailwindcss/vite';
 
+// NOTE: this is only used for dev purposes. Vite will build the
+// site into static files, so the PORT won't be relevant in prod
 const PORT = 4200;
 
 export default defineConfig({
