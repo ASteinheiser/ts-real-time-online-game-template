@@ -69,8 +69,13 @@
     },
     "build": {
       "dependsOn": ["^build", "generate:app-icons", "test"],
+      "outputs": ["dist/**"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": ["dist/**"]
+      "env": [
+        "SUPABASE_URL",
+        "SUPABASE_SERVICE_ROLE",
+        "JWT_SECRET"
+      ]
     },
     "preview": {
       "dependsOn": ["build"],
