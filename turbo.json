@@ -78,15 +78,15 @@
       "persistent": true
     },
     "build:win": {
-      "dependsOn": ["electron#build"],
+      "dependsOn": ["desktop#build"],
       "outputs": ["dist/**"]
     },
     "build:mac": {
-      "dependsOn": ["electron#build"],
+      "dependsOn": ["desktop#build"],
       "outputs": ["dist/**"]
     },
     "build:linux": {
-      "dependsOn": ["electron#build"],
+      "dependsOn": ["desktop#build"],
       "outputs": ["dist/**"]
     }
   }
