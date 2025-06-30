@@ -152,8 +152,10 @@ This will generate a SQL migration, migrate your local DB, and update your types
 | `pnpm build:mac` | Builds the desktop app (via Electron) for MacOS |
 | `pnpm build:linux` | Builds the desktop app (via Electron) for Linux |
 
-## Hosting setup
+## Infra/Hosting Setup
 
-The goal is to provide Infrastructure as Code (IaC) for hosting a scalable, cheap setup:
+This is TBD at this point still...
+
+The goal is to provide Infrastructure as Code (IaC) for hosting a scalable, cheap setup. Possibly:
 
 <img src="./infra/system-design.png" width="800px" height="auto">
