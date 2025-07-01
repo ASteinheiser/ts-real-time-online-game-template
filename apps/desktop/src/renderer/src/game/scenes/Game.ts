@@ -7,9 +7,7 @@ import { PunchBox } from '../objects/PunchBox';
 import { Enemy } from '../objects/Enemy';
 import { CustomText } from '../objects/CustomText';
 
-const API_URL = import.meta.env.VITE_API_URL;
 const WEBSOCKET_URL = import.meta.env.VITE_WEBSOCKET_URL;
-if (!API_URL) throw new Error('VITE_API_URL is not set');
 if (!WEBSOCKET_URL) throw new Error('VITE_WEBSOCKET_URL is not set');
 
 export class Game extends Scene {

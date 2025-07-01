@@ -8,6 +8,10 @@ import { client } from './graphql/client';
 import { router } from './router';
 import './theme.css';
 
+// this is required by the content security policy defined in index.html
+const API_URL = import.meta.env.VITE_API_URL;
+if (!API_URL) throw new Error('VITE_API_URL is not set');
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ApolloProvider client={client}>
