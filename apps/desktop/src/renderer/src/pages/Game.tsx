@@ -6,8 +6,8 @@ import { IRefPhaserGame, PhaserGame } from '../game/PhaserGame';
 import { MainMenu } from '../game/scenes/MainMenu';
 import { EventBus } from '../game/EventBus';
 import { Desktop_GetTotalPlayersQuery, Desktop_GetTotalPlayersQueryVariables } from '../graphql';
-import { ProfileModal } from '../components/ProfileModal';
-import { OptionsModal } from '../components/OptionsModal';
+import { ProfileModal } from '../modals/ProfileModal';
+import { OptionsModal } from '../modals/OptionsModal';
 import { SEARCH_PARAMS } from '../router/constants';
 
 const GET_TOTAL_PLAYERS = gql`
