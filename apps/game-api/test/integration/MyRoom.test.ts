@@ -1,7 +1,7 @@
 import assert from 'assert';
 import { ColyseusTestServer, boot } from '@colyseus/testing';
 import type { GoTrueAdminApi } from '@supabase/supabase-js';
-import { setupApp } from '../../src/app.config';
+import { makeApp } from '../../src/app.config';
 import { MyRoomState } from '../../src/rooms/schema/MyRoomState';
 import { createWSClient } from './utils';
 import type { PrismaClient } from '../../src/prisma-client';
@@ -11,7 +11,7 @@ describe('Colyseus WebSocket Server', () => {
 
   const prisma = {} as PrismaClient;
   const authClient = {} as GoTrueAdminApi;
-  const app = setupApp({ prisma, authClient });
+  const app = makeApp({ prisma, authClient });
 
   before(async () => (server = await boot(app)));
   after(async () => server.shutdown());

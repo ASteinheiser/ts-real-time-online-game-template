@@ -1,4 +1,4 @@
-import config from '@colyseus/tools';
+import makeColyseusApp from '@colyseus/tools';
 import { monitor } from '@colyseus/monitor';
 import { playground } from '@colyseus/playground';
 import { expressMiddleware } from '@as-integrations/express5';
@@ -10,13 +10,13 @@ import { MyRoom, RESULTS } from './rooms/MyRoom';
 import { createContext } from './graphql/context';
 import type { PrismaClient } from './prisma-client';
 
-interface SetupAppArgs {
+interface MakeAppArgs {
   authClient: GoTrueAdminApi;
   prisma: PrismaClient;
 }
 
-export const setupApp = ({ authClient, prisma }: SetupAppArgs) => {
-  return config({
+export const makeApp = ({ authClient, prisma }: MakeAppArgs) => {
+  return makeColyseusApp({
     initializeGameServer: (gameServer) => {
       /**
        * Define your room handlers:
@@ -25,6 +25,9 @@ export const setupApp = ({ authClient, prisma }: SetupAppArgs) => {
     },
 
     initializeExpress: async (app) => {
+      /**
+       * Configure GraphQL route, middleware and context
+       */
       app.use(
         '/graphql',
         cors<cors.CorsRequest>(),
