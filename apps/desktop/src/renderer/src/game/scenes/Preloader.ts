@@ -1,5 +1,7 @@
 import { Scene } from 'phaser';
 import { PLAYER_SIZE, ENEMY_SIZE } from '@repo/core-game';
+import enemy from '../../assets/evil-dude.png';
+import player from '../../assets/muscle-duck-sprite.png';
 
 export class Preloader extends Scene {
   constructor() {
@@ -24,14 +26,11 @@ export class Preloader extends Scene {
   }
 
   preload() {
-    //  Load the assets for the game
-    this.load.setPath('assets');
-
-    this.load.spritesheet('enemy', 'evil-dude.png', {
+    this.load.spritesheet('enemy', enemy, {
       frameWidth: ENEMY_SIZE.width,
       frameHeight: ENEMY_SIZE.height,
     });
-    this.load.spritesheet('player', 'muscle-duck-sprite.png', {
+    this.load.spritesheet('player', player, {
       frameWidth: PLAYER_SIZE.width,
       frameHeight: PLAYER_SIZE.height,
     });
