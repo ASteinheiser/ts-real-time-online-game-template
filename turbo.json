@@ -74,7 +74,9 @@
       "env": [
         "SUPABASE_URL",
         "SUPABASE_SERVICE_ROLE",
-        "JWT_SECRET"
+        "JWT_SECRET",
+        "DATABASE_URL",
+        "PORT"
       ]
     },
     "preview": {
