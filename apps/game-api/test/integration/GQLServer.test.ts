@@ -1,5 +1,4 @@
 import assert from 'assert';
-import type { GoTrueAdminApi } from '@supabase/supabase-js';
 import { server } from '../../src/graphql';
 import { ProfilesRepository } from '../../src/repo/Profiles';
 import type { PrismaClient } from '../../src/prisma-client';
@@ -21,19 +20,16 @@ describe('GQLServer', () => {
     const TOTAL_PLAYERS = 5;
     profilesDb.getTotalPlayers = async () => TOTAL_PLAYERS;
 
-    const authClient = {} as GoTrueAdminApi;
-    const user = {
-      id: 'abc',
-      email: 'test@test.com',
-    };
-
     const result = await server.executeOperation<{ totalPlayers: number }>(
       { query: GET_TOTAL_PLAYERS },
       {
         contextValue: {
-          dataSources: { profilesDb },
-          authClient,
-          user,
+          dataSources: {
+            profilesDb,
+            gameResults: null,
+          },
+          authClient: null,
+          user: null,
         },
       }
     );

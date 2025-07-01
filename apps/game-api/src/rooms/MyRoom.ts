@@ -18,14 +18,18 @@ import {
 } from '@repo/core-game';
 import { PrismaClient } from '../prisma-client';
 
-// Basic storage of results for all players in the room
-// Expires when the room is disposed
-interface Result {
-  username: string;
-  attackCount: number;
-  killCount: number;
+// basic in-memory storage of results for all players in a room
+interface ResultStorage {
+  [roomId: string]: {
+    [sessionId: string]: {
+      username: string;
+      attackCount: number;
+      killCount: number;
+    };
+  };
 }
-export const RESULTS: Record<string, Result> = {};
+
+export const RESULTS: ResultStorage = {};
 
 interface MyRoomArgs {
   prisma: PrismaClient;
@@ -95,7 +99,7 @@ export class MyRoom extends Room<MyRoomState> {
             ) {
               this.state.enemies.splice(this.state.enemies.indexOf(enemy), 1);
               player.killCount++;
-              RESULTS[sessionId].killCount++;
+              RESULTS[this.roomId][sessionId].killCount++;
             }
           }
         } else {
@@ -110,7 +114,7 @@ export class MyRoom extends Room<MyRoomState> {
           player.isAttacking = true;
           player.attackCount++;
           player.lastAttackTime = currentTime;
-          RESULTS[sessionId].attackCount++;
+          RESULTS[this.roomId][sessionId].attackCount++;
         } else {
           player.isAttacking = false;
         }
@@ -157,7 +161,8 @@ export class MyRoom extends Room<MyRoomState> {
     // (client.sessionId is unique per connection!)
     this.state.players.set(client.sessionId, player);
 
-    RESULTS[client.sessionId] = { username, attackCount: 0, killCount: 0 };
+    if (!RESULTS[this.roomId]) RESULTS[this.roomId] = {};
+    RESULTS[this.roomId][client.sessionId] = { username, attackCount: 0, killCount: 0 };
   }
 
   onLeave(client: Client) {

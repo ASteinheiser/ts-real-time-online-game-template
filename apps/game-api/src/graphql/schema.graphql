@@ -2,10 +2,17 @@ type Profile {
   userName: String!
 }
 
+type GameResult {
+  username: String!
+  attackCount: Int!
+  killCount: Int!
+}
+
 type Query {
   profile: Profile
   userExists(userName: String!): Boolean
   totalPlayers: Int
+  gameResults(roomId: String!): [GameResult!]
 }
 
 type Mutation {

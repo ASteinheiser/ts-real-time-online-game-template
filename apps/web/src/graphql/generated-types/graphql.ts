@@ -16,6 +16,13 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
+export type GameResult = {
+  __typename?: 'GameResult';
+  attackCount: Scalars['Int']['output'];
+  killCount: Scalars['Int']['output'];
+  username: Scalars['String']['output'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createProfile?: Maybe<Profile>;
@@ -40,9 +47,15 @@ export type Profile = {
 
 export type Query = {
   __typename?: 'Query';
+  gameResults?: Maybe<Array<GameResult>>;
   profile?: Maybe<Profile>;
   totalPlayers?: Maybe<Scalars['Int']['output']>;
   userExists?: Maybe<Scalars['Boolean']['output']>;
+};
+
+
+export type QueryGameResultsArgs = {
+  roomId: Scalars['String']['input'];
 };
 
 

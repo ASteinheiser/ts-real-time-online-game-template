@@ -16,6 +16,13 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
+export type GameResult = {
+  __typename?: 'GameResult';
+  attackCount: Scalars['Int']['output'];
+  killCount: Scalars['Int']['output'];
+  username: Scalars['String']['output'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createProfile?: Maybe<Profile>;
@@ -40,9 +47,15 @@ export type Profile = {
 
 export type Query = {
   __typename?: 'Query';
+  gameResults?: Maybe<Array<GameResult>>;
   profile?: Maybe<Profile>;
   totalPlayers?: Maybe<Scalars['Int']['output']>;
   userExists?: Maybe<Scalars['Boolean']['output']>;
+};
+
+
+export type QueryGameResultsArgs = {
+  roomId: Scalars['String']['input'];
 };
 
 
@@ -123,6 +136,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  GameResult: ResolverTypeWrapper<GameResult>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Mutation: ResolverTypeWrapper<{}>;
   Profile: ResolverTypeWrapper<Profile>;
@@ -133,11 +147,19 @@ export type ResolversTypes = ResolversObject<{
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
   Boolean: Scalars['Boolean']['output'];
+  GameResult: GameResult;
   Int: Scalars['Int']['output'];
   Mutation: {};
   Profile: Profile;
   Query: {};
   String: Scalars['String']['output'];
+}>;
+
+export type GameResultResolvers<ContextType = any, ParentType extends ResolversParentTypes['GameResult'] = ResolversParentTypes['GameResult']> = ResolversObject<{
+  attackCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  killCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
@@ -152,12 +174,14 @@ export type ProfileResolvers<ContextType = any, ParentType extends ResolversPare
 }>;
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
+  gameResults?: Resolver<Maybe<Array<ResolversTypes['GameResult']>>, ParentType, ContextType, RequireFields<QueryGameResultsArgs, 'roomId'>>;
   profile?: Resolver<Maybe<ResolversTypes['Profile']>, ParentType, ContextType>;
   totalPlayers?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   userExists?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<QueryUserExistsArgs, 'userName'>>;
 }>;
 
 export type Resolvers<ContextType = any> = ResolversObject<{
+  GameResult?: GameResultResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Profile?: ProfileResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;

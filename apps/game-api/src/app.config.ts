@@ -6,7 +6,7 @@ import express from 'express';
 import cors from 'cors';
 import type { GoTrueAdminApi } from '@supabase/supabase-js';
 import { server as GQLServer } from './graphql';
-import { MyRoom, RESULTS } from './rooms/MyRoom';
+import { MyRoom } from './rooms/MyRoom';
 import { createContext } from './graphql/context';
 import type { PrismaClient } from './prisma-client';
 
@@ -39,11 +39,6 @@ export const makeApp = ({ authClient, prisma }: MakeAppArgs) => {
           },
         })
       );
-
-      // TODO: remove this
-      app.get('/game-results', (_, res) => {
-        res.send(RESULTS);
-      });
 
       /**
        * Use @colyseus/playground

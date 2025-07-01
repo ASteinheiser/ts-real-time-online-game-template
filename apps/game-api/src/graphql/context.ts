@@ -3,6 +3,7 @@ import { type GoTrueAdminApi } from '@supabase/supabase-js';
 import { ProfilesRepository } from '../repo/Profiles';
 import type { PrismaClient } from '../prisma-client';
 import { validateJwt, type User } from '../auth/jwt';
+import { RESULTS } from '../rooms/MyRoom';
 
 interface CreateContextArgs {
   authHeader?: string;
@@ -15,6 +16,8 @@ export interface Context {
   authClient: GoTrueAdminApi;
   dataSources: {
     profilesDb: ProfilesRepository;
+    // this is a cheap solution, you'll probably want to use the DB for actual usage
+    gameResults: typeof RESULTS;
   };
 }
 
@@ -30,6 +33,7 @@ export const createContext: ContextFunction<[CreateContextArgs], Context> = asyn
     authClient,
     dataSources: {
       profilesDb: new ProfilesRepository(prisma),
+      gameResults: RESULTS,
     },
   };
 };

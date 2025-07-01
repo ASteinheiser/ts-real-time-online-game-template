@@ -1,6 +1,9 @@
 import { Scene } from 'phaser';
 import { Client, Room, getStateCallbacks } from 'colyseus.js';
 import { calculateMovement, FIXED_TIME_STEP, PLAYER_SIZE } from '@repo/core-game';
+import { gql } from '@apollo/client';
+import { client } from '../../graphql/client';
+import { Desktop_GetGameResultsQuery, Desktop_GetGameResultsQueryVariables } from '../../graphql';
 import { EventBus } from '../EventBus';
 import { Player } from '../objects/Player';
 import { PunchBox } from '../objects/PunchBox';
@@ -189,14 +192,10 @@ export class Game extends Scene {
   }
 
   async changeScene() {
-    const response = await fetch(`${API_URL}/game-results`);
-    const data: Record<string, { username: string; attackCount: number; killCount: number }> =
-      await response.json();
-    const gameResults = Object.keys(data).map((sessionId) => ({
-      username: data[sessionId].username,
-      attackCount: data[sessionId].attackCount,
-      killCount: data[sessionId].killCount,
-    }));
+    const roomId = this.room?.roomId;
+    if (!roomId) return;
+
+    const gameResults = await getGameResults(roomId);
 
     this.currentPlayer?.destroy();
     delete this.currentPlayer;
@@ -212,3 +211,22 @@ export class Game extends Scene {
     this.scene.start('GameOver', { gameResults });
   }
 }
+
+const getGameResults = async (roomId: string) => {
+  const { data } = await client.query<Desktop_GetGameResultsQuery, Desktop_GetGameResultsQueryVariables>({
+    variables: {
+      roomId,
+    },
+    query: gql`
+      query Desktop_GetGameResults($roomId: String!) {
+        gameResults(roomId: $roomId) {
+          username
+          attackCount
+          killCount
+        }
+      }
+    `,
+  });
+
+  return data?.gameResults ?? [];
+};

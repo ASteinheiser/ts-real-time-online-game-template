@@ -13,6 +13,13 @@ export const resolvers: Resolvers<Context> = {
     totalPlayers: async (_, __, { dataSources }) => {
       return dataSources.profilesDb.getTotalPlayers();
     },
+    gameResults: async (_, { roomId }, { dataSources }) => {
+      const gameResultObject = dataSources.gameResults[roomId];
+      const gameResultArray = Object.values(gameResultObject ?? {});
+
+      if (gameResultArray.length === 0) return null;
+      return gameResultArray;
+    },
   },
   Mutation: {
     createProfile: async (_, { userName }, { dataSources, user }) => {
