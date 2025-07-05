@@ -54,6 +54,13 @@ export const makeApp = ({ authClient, prisma }: MakeAppArgs) => {
        * Read more: https://docs.colyseus.io/tools/monitor/#restrict-access-to-the-panel-using-a-password
        */
       app.use('/monitor', monitor());
+
+      /**
+       * Simple health check endpoint
+       */
+      app.get('/health', (_, res) => {
+        res.status(200).json({ status: 'ok' });
+      });
     },
 
     beforeListen: () => {
