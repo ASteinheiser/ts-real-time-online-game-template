@@ -7,7 +7,7 @@ import {
   AuthTokenResponsePassword,
   UserResponse,
 } from '@supabase/supabase-js';
-import { LoadingSpinner, toast } from '@repo/ui';
+import { Button, LoadingSpinner, toast } from '@repo/ui';
 import { supabase } from './supabase-client';
 import type { Auth_GetProfileQuery, Auth_GetProfileQueryVariables } from '../graphql';
 import { AUTH_ROUTES } from '../router/constants';
@@ -69,7 +69,13 @@ interface SessionProviderProps {
 export const SessionProvider = ({ children, healthCheckEnabled = false }: SessionProviderProps) => {
   const client = useApolloClient();
 
-  const { isHealthy, loading: isHealthCheckLoading } = useHealthCheck({ enabled: healthCheckEnabled });
+  const {
+    isHealthy,
+    loading: isHealthCheckLoading,
+    refetch: refetchHealthCheck,
+  } = useHealthCheck({
+    enabled: healthCheckEnabled,
+  });
 
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -173,9 +179,17 @@ export const SessionProvider = ({ children, healthCheckEnabled = false }: Sessio
     }
 
     if (healthCheckEnabled && !isHealthy) {
-      // TODO: style this
       return (
-        <div className="flex justify-center items-center h-screen">{"Oops! Server ain't healthy...!"}</div>
+        <div className="flex justify-center items-center h-screen">
+          <div className="text-center">
+            <h1 className="text-3xl font-bold">Oops! Sorry about that...</h1>
+            <p className="text-lg text-muted pt-4 pb-6">There was an issue connecting to the server</p>
+
+            <Button size="lg" onClick={refetchHealthCheck}>
+              Try Again
+            </Button>
+          </div>
+        </div>
       );
     }
 
