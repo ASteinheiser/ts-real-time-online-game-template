@@ -74,15 +74,15 @@ export const SessionProvider = ({ children }: SessionProviderProps) => {
 
   useEffect(() => {
     const authStateListener = supabase.auth.onAuthStateChange((event, session) => {
-      setSession((prev) => {
+      setSession((previous) => {
         // only set loading state on initial load -- prevents showing create profile when logging in
-        if (session && prev === null) setIsLoading(true);
+        if (session && previous === null) setIsLoading(true);
         return session;
       });
-      setIsPasswordRecovery((isRecovery) => {
+      setIsPasswordRecovery((previous) => {
         if (event === 'PASSWORD_RECOVERY') return true;
-        if (isRecovery && event === 'USER_UPDATED') return false;
-        return isRecovery;
+        if (previous && event === 'USER_UPDATED') return false;
+        return previous;
       });
     });
 
