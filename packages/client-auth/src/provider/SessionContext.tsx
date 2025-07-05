@@ -149,10 +149,12 @@ export const SessionProvider = ({ children, healthCheckEnabled = false }: Sessio
   };
 
   const logout = async () => {
+    const result = await supabase.auth.signOut();
+
     setSession(null);
     setProfile(null);
     setProfileError(false);
-    return await supabase.auth.signOut();
+    return result;
   };
 
   const forgotPassword = async (email: string) => {
