@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ApolloError, gql, useApolloClient } from '@apollo/client';
 import { useDebounce } from '@repo/ui/hooks';
-import { Auth_GetUserExistsQuery, Auth_GetUserExistsQueryVariables } from '../graphql';
+import type { Auth_GetUserExistsQuery, Auth_GetUserExistsQueryVariables } from '../graphql';
 
 const GET_USER_NAME_EXISTS = gql`
   query Auth_GetUserExists($userName: String!) {

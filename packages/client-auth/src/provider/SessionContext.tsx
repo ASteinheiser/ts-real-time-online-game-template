@@ -9,7 +9,7 @@ import {
 } from '@supabase/supabase-js';
 import { LoadingSpinner, toast } from '@repo/ui';
 import { supabase } from './supabase-client';
-import { Auth_GetProfileQuery, Auth_GetProfileQueryVariables } from '../graphql';
+import type { Auth_GetProfileQuery, Auth_GetProfileQueryVariables } from '../graphql';
 import { AUTH_ROUTES } from '../router/constants';
 
 const GET_PROFILE = gql`

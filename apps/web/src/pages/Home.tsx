@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { useQuery, gql } from '@apollo/client';
 import { ChevronDown } from '@repo/ui/icons';
 import { cn } from '@repo/ui/utils';
-import { Web_GetTotalPlayersQuery, Web_GetTotalPlayersQueryVariables } from '../graphql';
+import type { Web_GetTotalPlayersQuery, Web_GetTotalPlayersQueryVariables } from '../graphql';
 
 const GET_TOTAL_PLAYERS = gql`
   query Web_GetTotalPlayers {

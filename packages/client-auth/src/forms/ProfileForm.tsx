@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { isEmail } from 'validator';
 import { Button, ConfirmationModal, Input, Label, toast } from '@repo/ui';
 import { CheckMark } from '@repo/ui/icons';
-import {
+import type {
   Auth_UpdateUserNameMutation,
   Auth_UpdateUserNameMutationVariables,
   Auth_DeleteAccountMutation,

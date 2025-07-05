@@ -3,7 +3,7 @@ import { gql, useApolloClient } from '@apollo/client';
 import { Button, Input, Label, toast } from '@repo/ui';
 import { CheckMark } from '@repo/ui/icons';
 import { useSession } from '../provider/SessionContext';
-import { Auth_CreateProfileMutation, Auth_CreateProfileMutationVariables } from '../graphql';
+import type { Auth_CreateProfileMutation, Auth_CreateProfileMutationVariables } from '../graphql';
 import { useUserNameExists } from '../hooks/useUserNameExists';
 
 const CREATE_PROFILE = gql`
