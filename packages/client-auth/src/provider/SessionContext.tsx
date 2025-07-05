@@ -11,6 +11,7 @@ import { LoadingSpinner, toast } from '@repo/ui';
 import { supabase } from './supabase-client';
 import type { Auth_GetProfileQuery, Auth_GetProfileQueryVariables } from '../graphql';
 import { AUTH_ROUTES } from '../router/constants';
+import { useHealthCheck } from '../hooks/useHealthCheck';
 
 const GET_PROFILE = gql`
   query Auth_GetProfile {
@@ -62,10 +63,13 @@ export const useSession = () => {
 
 interface SessionProviderProps {
   children: React.ReactNode;
+  healthCheckEnabled?: boolean;
 }
 
-export const SessionProvider = ({ children }: SessionProviderProps) => {
+export const SessionProvider = ({ children, healthCheckEnabled = false }: SessionProviderProps) => {
   const client = useApolloClient();
+
+  const { isHealthy, loading: isHealthCheckLoading } = useHealthCheck({ enabled: healthCheckEnabled });
 
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -92,12 +96,21 @@ export const SessionProvider = ({ children }: SessionProviderProps) => {
   }, [supabase]);
 
   useEffect(() => {
-    if (session) {
-      getProfile(session);
-    } else {
+    if (healthCheckEnabled && !isHealthy) {
+      // if still loading, wait for server to be healthy before fetching profile
+      if (isHealthCheckLoading) return;
+      // otherwise, assume server is down -- don't fetch profile, set loading to false
       setIsLoading(false);
+      return;
     }
-  }, [session]);
+    // if no session, remove existing profile and don't try to fetch
+    if (!session) {
+      setProfile(null);
+      setIsLoading(false);
+      return;
+    }
+    getProfile(session);
+  }, [session, healthCheckEnabled, isHealthy]);
 
   const getProfile = async (_session: Session) => {
     try {
@@ -150,6 +163,25 @@ export const SessionProvider = ({ children }: SessionProviderProps) => {
     if (session) await getProfile(session);
   };
 
+  const renderContent = () => {
+    if (isLoading || isHealthCheckLoading) {
+      return (
+        <div className="flex justify-center items-center h-screen">
+          <LoadingSpinner size="lg" color="primary" />
+        </div>
+      );
+    }
+
+    if (healthCheckEnabled && !isHealthy) {
+      // TODO: style this
+      return (
+        <div className="flex justify-center items-center h-screen">{"Oops! Server ain't healthy...!"}</div>
+      );
+    }
+
+    return children;
+  };
+
   return (
     <SessionContext.Provider
       value={{
@@ -165,13 +197,7 @@ export const SessionProvider = ({ children }: SessionProviderProps) => {
         refetchProfile,
       }}
     >
-      {isLoading ? (
-        <div className="flex justify-center items-center h-screen">
-          <LoadingSpinner size="lg" color="primary" />
-        </div>
-      ) : (
-        children
-      )}
+      {renderContent()}
     </SessionContext.Provider>
   );
 };

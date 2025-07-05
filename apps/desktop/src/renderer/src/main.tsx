@@ -15,7 +15,7 @@ if (!API_URL) throw new Error('VITE_API_URL is not set');
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ApolloProvider client={client}>
-      <SessionProvider>
+      <SessionProvider healthCheckEnabled>
         <RouterProvider router={router} />
       </SessionProvider>
     </ApolloProvider>

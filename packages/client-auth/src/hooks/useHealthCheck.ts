@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react';
-import { gql, useLazyQuery } from '@apollo/client';
+import { useEffect, useRef, useState } from 'react';
+import { gql, useApolloClient } from '@apollo/client';
 import type { Auth_GetHealthCheckQuery } from '../graphql';
 
 const MAX_RETRIES = 10;
@@ -21,23 +21,32 @@ interface UseHealthCheckResult {
 }
 
 export const useHealthCheck = ({ enabled }: UseHealthCheckProps): UseHealthCheckResult => {
+  const client = useApolloClient();
   const retries = useRef(0);
 
-  const [getHealthCheck, { data, loading }] = useLazyQuery<Auth_GetHealthCheckQuery>(GET_HEALTH_CHECK, {
-    fetchPolicy: 'network-only',
-  });
-  const isHealthy = data?.healthCheck ?? false;
+  const [isHealthy, setIsHealthy] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (enabled) checkHealth();
+    if (enabled) {
+      setLoading(true);
+      checkHealth();
+    }
   }, [enabled]);
 
   const checkHealth = async () => {
-    if (retries.current >= MAX_RETRIES) return;
-
+    if (retries.current >= MAX_RETRIES) {
+      setLoading(false);
+      return;
+    }
     try {
-      const { error } = await getHealthCheck();
+      const { data, error } = await client.query<Auth_GetHealthCheckQuery>({
+        query: GET_HEALTH_CHECK,
+        fetchPolicy: 'network-only',
+      });
       if (error) throw error;
+      setIsHealthy(data?.healthCheck ?? false);
+      setLoading(false);
     } catch {
       retries.current++;
       await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY));
