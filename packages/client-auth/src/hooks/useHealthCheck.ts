@@ -18,24 +18,33 @@ interface UseHealthCheckProps {
 interface UseHealthCheckResult {
   isHealthy: boolean;
   loading: boolean;
+  refetch: () => Promise<void>;
 }
 
 export const useHealthCheck = ({ enabled }: UseHealthCheckProps): UseHealthCheckResult => {
   const client = useApolloClient();
   const retries = useRef(0);
+  const checkInProgress = useRef(false);
 
   const [isHealthy, setIsHealthy] = useState(false);
   const [loading, setLoading] = useState(enabled);
 
   useEffect(() => {
-    if (enabled) {
-      setLoading(true);
-      checkHealth();
-    }
+    if (enabled) handleHealthCheck();
   }, [enabled]);
+
+  const handleHealthCheck = async () => {
+    if (checkInProgress.current) return;
+
+    checkInProgress.current = true;
+    retries.current = 0;
+    setLoading(true);
+    await checkHealth();
+  };
 
   const checkHealth = async () => {
     if (retries.current >= MAX_RETRIES) {
+      checkInProgress.current = false;
       setLoading(false);
       return;
     }
@@ -54,5 +63,9 @@ export const useHealthCheck = ({ enabled }: UseHealthCheckProps): UseHealthCheck
     }
   };
 
-  return { isHealthy, loading };
+  return {
+    isHealthy,
+    loading,
+    refetch: handleHealthCheck,
+  };
 };
