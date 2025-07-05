@@ -48,6 +48,7 @@ export type Profile = {
 export type Query = {
   __typename?: 'Query';
   gameResults?: Maybe<Array<GameResult>>;
+  healthCheck?: Maybe<Scalars['Boolean']['output']>;
   profile?: Maybe<Profile>;
   totalPlayers?: Maybe<Scalars['Int']['output']>;
   userExists?: Maybe<Scalars['Boolean']['output']>;

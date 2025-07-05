@@ -3,6 +3,9 @@ import type { Context } from './context';
 
 export const resolvers: Resolvers<Context> = {
   Query: {
+    healthCheck: async () => {
+      return true;
+    },
     profile: async (_, __, { dataSources, user }) => {
       return dataSources.profilesDb.getProfileByUserId(user.id);
     },

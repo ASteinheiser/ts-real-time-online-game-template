@@ -48,6 +48,7 @@ export type Profile = {
 export type Query = {
   __typename?: 'Query';
   gameResults?: Maybe<Array<GameResult>>;
+  healthCheck?: Maybe<Scalars['Boolean']['output']>;
   profile?: Maybe<Profile>;
   totalPlayers?: Maybe<Scalars['Int']['output']>;
   userExists?: Maybe<Scalars['Boolean']['output']>;
@@ -175,6 +176,7 @@ export type ProfileResolvers<ContextType = any, ParentType extends ResolversPare
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   gameResults?: Resolver<Maybe<Array<ResolversTypes['GameResult']>>, ParentType, ContextType, RequireFields<QueryGameResultsArgs, 'roomId'>>;
+  healthCheck?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   profile?: Resolver<Maybe<ResolversTypes['Profile']>, ParentType, ContextType>;
   totalPlayers?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   userExists?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<QueryUserExistsArgs, 'userName'>>;

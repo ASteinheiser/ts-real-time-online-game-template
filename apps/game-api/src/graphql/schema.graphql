@@ -9,6 +9,7 @@ type GameResult {
 }
 
 type Query {
+  healthCheck: Boolean
   profile: Profile
   userExists(userName: String!): Boolean
   totalPlayers: Int
