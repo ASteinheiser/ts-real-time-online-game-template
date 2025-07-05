@@ -79,6 +79,7 @@ export const SessionProvider = ({ children, healthCheckEnabled = false }: Sessio
 
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [profileError, setProfileError] = useState(false);
   const [isPasswordRecovery, setIsPasswordRecovery] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -128,9 +129,11 @@ export const SessionProvider = ({ children, healthCheckEnabled = false }: Sessio
       if (error) throw error;
 
       setProfile(data?.profile ?? null);
+      setProfileError(false);
     } catch (error) {
       console.error(error);
       toast.error('Oops! Something went wrong fetching your profile...');
+      setProfileError(true);
       setProfile(null);
     } finally {
       setIsLoading(false);
@@ -146,6 +149,9 @@ export const SessionProvider = ({ children, healthCheckEnabled = false }: Sessio
   };
 
   const logout = async () => {
+    setSession(null);
+    setProfile(null);
+    setProfileError(false);
     return await supabase.auth.signOut();
   };
 
@@ -178,16 +184,22 @@ export const SessionProvider = ({ children, healthCheckEnabled = false }: Sessio
       );
     }
 
-    if (healthCheckEnabled && !isHealthy) {
+    if (profileError || (healthCheckEnabled && !isHealthy)) {
       return (
         <div className="flex justify-center items-center h-screen">
-          <div className="text-center">
+          <div className="text-center flex flex-col">
             <h1 className="text-3xl font-bold">Oops! Sorry about that...</h1>
             <p className="text-lg text-muted pt-4 pb-6">There was an issue connecting to the server</p>
 
-            <Button size="lg" onClick={refetchHealthCheck}>
+            <Button size="lg" onClick={profileError ? refetchProfile : refetchHealthCheck}>
               Try Again
             </Button>
+
+            {profileError && (
+              <Button size="lg" variant="secondary" onClick={logout} className="mt-4">
+                Logout
+              </Button>
+            )}
           </div>
         </div>
       );
