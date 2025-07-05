@@ -9,7 +9,7 @@ import {
 } from '@supabase/supabase-js';
 import { LoadingSpinner, toast } from '@repo/ui';
 import { supabase } from './supabase-client';
-import { Auth_GetProfileQuery } from '../graphql';
+import { Auth_GetProfileQuery, Auth_GetProfileQueryVariables } from '../graphql';
 import { AUTH_ROUTES } from '../router/constants';
 
 const GET_PROFILE = gql`
@@ -70,18 +70,20 @@ export const SessionProvider = ({ children }: SessionProviderProps) => {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isPasswordRecovery, setIsPasswordRecovery] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [isSessionLoading, setIsSessionLoading] = useState(true);
+  const [isProfileLoading, setIsProfileLoading] = useState(false);
+
+  const loading = isSessionLoading || isProfileLoading;
 
   useEffect(() => {
-    const authStateListener = supabase.auth.onAuthStateChange(async (event, session) => {
+    const authStateListener = supabase.auth.onAuthStateChange((event, session) => {
       setSession(session);
       setIsPasswordRecovery((isRecovery) => {
         if (event === 'PASSWORD_RECOVERY') return true;
         if (isRecovery && event === 'USER_UPDATED') return false;
         return isRecovery;
       });
-      await getProfile(session);
-      setLoading(false);
+      setIsSessionLoading(false);
     });
 
     return () => {
@@ -89,18 +91,18 @@ export const SessionProvider = ({ children }: SessionProviderProps) => {
     };
   }, [supabase]);
 
-  const getProfile = async (_session: Session | null) => {
-    if (!_session) {
-      setProfile(null);
-      return;
+  useEffect(() => {
+    if (session) {
+      // only set loading state on initial load -- prevents showing create profile when logging in
+      if (!profile) setIsProfileLoading(true);
+
+      getProfile(session);
     }
-    // only set loading state on initial load
-    // prevents showing create profile when logging in
-    if (_session && !profile) {
-      setLoading(true);
-    }
+  }, [session]);
+
+  const getProfile = async (_session: Session) => {
     try {
-      const { data, error } = await client.query<Auth_GetProfileQuery>({
+      const { data, error } = await client.query<Auth_GetProfileQuery, Auth_GetProfileQueryVariables>({
         query: GET_PROFILE,
         context: { headers: { authorization: _session.access_token } },
         fetchPolicy: 'network-only',
@@ -113,7 +115,7 @@ export const SessionProvider = ({ children }: SessionProviderProps) => {
       toast.error('Oops! Something went wrong fetching your profile...');
       setProfile(null);
     } finally {
-      setLoading(false);
+      setIsProfileLoading(false);
     }
   };
 
@@ -146,7 +148,7 @@ export const SessionProvider = ({ children }: SessionProviderProps) => {
   };
 
   const refetchProfile = async () => {
-    await getProfile(session);
+    if (session) await getProfile(session);
   };
 
   return (
