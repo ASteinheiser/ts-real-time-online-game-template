@@ -70,20 +70,20 @@ export const SessionProvider = ({ children }: SessionProviderProps) => {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isPasswordRecovery, setIsPasswordRecovery] = useState(false);
-  const [isSessionLoading, setIsSessionLoading] = useState(true);
-  const [isProfileLoading, setIsProfileLoading] = useState(false);
-
-  const loading = isSessionLoading || isProfileLoading;
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const authStateListener = supabase.auth.onAuthStateChange((event, session) => {
-      setSession(session);
+      setSession((prev) => {
+        // only set loading state on initial load -- prevents showing create profile when logging in
+        if (session && prev === null) setIsLoading(true);
+        return session;
+      });
       setIsPasswordRecovery((isRecovery) => {
         if (event === 'PASSWORD_RECOVERY') return true;
         if (isRecovery && event === 'USER_UPDATED') return false;
         return isRecovery;
       });
-      setIsSessionLoading(false);
     });
 
     return () => {
@@ -93,10 +93,9 @@ export const SessionProvider = ({ children }: SessionProviderProps) => {
 
   useEffect(() => {
     if (session) {
-      // only set loading state on initial load -- prevents showing create profile when logging in
-      if (!profile) setIsProfileLoading(true);
-
       getProfile(session);
+    } else {
+      setIsLoading(false);
     }
   }, [session]);
 
@@ -115,7 +114,7 @@ export const SessionProvider = ({ children }: SessionProviderProps) => {
       toast.error('Oops! Something went wrong fetching your profile...');
       setProfile(null);
     } finally {
-      setIsProfileLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -166,7 +165,7 @@ export const SessionProvider = ({ children }: SessionProviderProps) => {
         refetchProfile,
       }}
     >
-      {loading ? (
+      {isLoading ? (
         <div className="flex justify-center items-center h-screen">
           <LoadingSpinner size="lg" color="primary" />
         </div>
