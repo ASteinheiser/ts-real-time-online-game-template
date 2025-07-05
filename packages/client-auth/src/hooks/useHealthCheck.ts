@@ -25,7 +25,7 @@ export const useHealthCheck = ({ enabled }: UseHealthCheckProps): UseHealthCheck
   const retries = useRef(0);
 
   const [isHealthy, setIsHealthy] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(enabled);
 
   useEffect(() => {
     if (enabled) {

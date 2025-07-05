@@ -110,7 +110,7 @@ export const SessionProvider = ({ children, healthCheckEnabled = false }: Sessio
       return;
     }
     getProfile(session);
-  }, [session, healthCheckEnabled, isHealthy]);
+  }, [session, healthCheckEnabled, isHealthy, isHealthCheckLoading]);
 
   const getProfile = async (_session: Session) => {
     try {
