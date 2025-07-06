@@ -52,7 +52,7 @@ export class Game extends Scene {
     } catch (error) {
       console.error(error);
       EventBus.emit('join-error', error);
-      await this.backToMainMenu();
+      await this.sendToMainMenu();
     }
     if (!this.room) return;
 
@@ -153,7 +153,7 @@ export class Game extends Scene {
 
     // press shift to leave the game
     if (this.cursorKeys.shift.isDown) {
-      this.changeScene();
+      this.sendToGameOver();
       return;
     }
 
@@ -206,12 +206,12 @@ export class Game extends Scene {
     await this.room?.leave();
   }
 
-  async backToMainMenu() {
+  async sendToMainMenu() {
     await this.cleanup();
     this.scene.start('MainMenu');
   }
 
-  async changeScene() {
+  async sendToGameOver() {
     const roomId = this.room?.roomId;
     if (!roomId) return;
 
