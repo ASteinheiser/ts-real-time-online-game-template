@@ -10,7 +10,7 @@ interface ProfileModalProps {
 export const ProfileModal = ({ isOpen, onOpenChange }: ProfileModalProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent onOpenAutoFocus={(e) => e.preventDefault()}>
+      <DialogContent onOpenAutoFocus={(e) => e.preventDefault()} aria-describedby={undefined}>
         <DialogTitle className="hidden">Profile</DialogTitle>
 
         <div className="py-6">
