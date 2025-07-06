@@ -41,14 +41,14 @@ export class Game extends Scene {
     this.cursorKeys = this.input.keyboard?.createCursorKeys();
   }
 
-  async create({ username }: { username: string }) {
+  async create({ token }: { token: string }) {
     this.cameras.main.setBackgroundColor(0x00ff00);
     this.add.image(512, 384, 'background').setAlpha(0.5);
 
     new CustomText(this, 340, 10, 'Press Shift to leave the game', { fontSize: 20 });
 
     try {
-      this.room = await this.client.joinOrCreate('my_room', { username });
+      this.room = await this.client.joinOrCreate('my_room', { token });
     } catch (error) {
       console.error(error);
       EventBus.emit('join-error', error);

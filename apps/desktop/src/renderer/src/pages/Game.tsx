@@ -18,7 +18,7 @@ const GET_TOTAL_PLAYERS = gql`
 `;
 
 export const Game = () => {
-  const { profile } = useSession();
+  const { session } = useSession();
 
   const phaserRef = useRef<IRefPhaserGame | null>(null);
 
@@ -52,17 +52,23 @@ export const Game = () => {
 
   useEffect(() => {
     EventBus.on('menu-open__game-start', () => {
+      if (!session?.access_token) return;
       const scene = phaserRef?.current?.scene as MainMenu;
-      scene?.changeScene(profile?.userName);
+
+      scene?.startGame?.(session.access_token);
     });
-
-    EventBus.on('menu-open__profile', () => setIsProfileModalOpen(true));
-    EventBus.on('menu-open__options', () => setIsOptionsModalOpen(true));
-
-    EventBus.on('join-error', (error) => toast.error(error.message));
 
     return () => {
       EventBus.off('menu-open__game-start');
+    };
+  }, [session]);
+
+  useEffect(() => {
+    EventBus.on('menu-open__profile', () => setIsProfileModalOpen(true));
+    EventBus.on('menu-open__options', () => setIsOptionsModalOpen(true));
+    EventBus.on('join-error', (error) => toast.error(error.message));
+
+    return () => {
       EventBus.off('menu-open__profile');
       EventBus.off('menu-open__options');
       EventBus.off('join-error');
