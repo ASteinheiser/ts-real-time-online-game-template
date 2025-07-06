@@ -48,7 +48,8 @@ export class Game extends Scene {
     new CustomText(this, 340, 10, 'Press Shift to leave the game', { fontSize: 20 });
 
     try {
-      this.room = await this.client.joinOrCreate('my_room', { token });
+      this.client.auth.token = token;
+      this.room = await this.client.joinOrCreate('my_room');
     } catch (error) {
       console.error(error);
       EventBus.emit('join-error', error);

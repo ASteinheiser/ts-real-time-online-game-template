@@ -1,6 +1,6 @@
-import { Room, Client } from '@colyseus/core';
+import { Room, type Client, type AuthContext } from '@colyseus/core';
 import { nanoid } from 'nanoid';
-import { MyRoomState, Player, InputPayload, Enemy } from './schema/MyRoomState';
+import { MyRoomState, Player, Enemy, type InputPayload } from './schema/MyRoomState';
 import {
   calculateMovement,
   FIXED_TIME_STEP,
@@ -16,7 +16,7 @@ import {
   MAX_ENEMIES,
   ENEMY_SIZE,
 } from '@repo/core-game';
-import { PrismaClient } from '../prisma-client';
+import type { PrismaClient, Profile } from '../prisma-client';
 import { validateJwt } from '../auth/jwt';
 
 // basic in-memory storage of results for all players in a room
@@ -147,18 +147,22 @@ export class MyRoom extends Room<MyRoomState> {
     });
   }
 
-  async onJoin(client: Client, options: { token: string }) {
-    const authUser = validateJwt(options?.token);
+  async onAuth(_: unknown, __: unknown, context: AuthContext) {
+    const authUser = validateJwt(context.token);
     if (!authUser) throw new Error('Invalid or expired token');
 
     const dbUser = await this.prisma.profile.findUnique({ where: { userId: authUser.id } });
     if (!dbUser) throw new Error('Profile not found');
 
-    console.log(`${dbUser.userName} (${client.sessionId}) joined!`);
+    return { user: dbUser };
+  }
+
+  onJoin(client: Client, _: Record<string, unknown>, { user }: { user: Profile }) {
+    console.log(`${user.userName} (${client.sessionId}) joined!`);
 
     const player = new Player();
 
-    player.username = dbUser.userName;
+    player.username = user.userName;
     player.x = Math.random() * MAP_SIZE.width;
     player.y = Math.random() * MAP_SIZE.height;
 
@@ -168,7 +172,7 @@ export class MyRoom extends Room<MyRoomState> {
 
     if (!RESULTS[this.roomId]) RESULTS[this.roomId] = {};
     RESULTS[this.roomId][client.sessionId] = {
-      username: dbUser.userName,
+      username: user.userName,
       attackCount: 0,
       killCount: 0,
     };
