@@ -22,7 +22,7 @@ export const OptionsModal = ({ isOpen, onOpenChange }: OptionsModalProps) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[425px]">
+      <DialogContent className="max-w-[425px]" onOpenAutoFocus={(e) => e.preventDefault()}>
         <DialogHeader>
           <DialogTitle>Options</DialogTitle>
           <DialogDescription>Adjust settings for audio, video, etc.</DialogDescription>

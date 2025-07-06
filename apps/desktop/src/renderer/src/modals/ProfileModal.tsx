@@ -10,7 +10,7 @@ interface ProfileModalProps {
 export const ProfileModal = ({ isOpen, onOpenChange }: ProfileModalProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent onOpenAutoFocus={(e) => e.preventDefault()}>
         <div className="py-6">
           <ProfileForm logoutRedirectPath={AUTH_ROUTES.LOGIN} />
         </div>
