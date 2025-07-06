@@ -1,4 +1,4 @@
-import { Dialog, DialogContent } from '@repo/ui';
+import { Dialog, DialogContent, DialogTitle } from '@repo/ui';
 import { ProfileForm } from '@repo/client-auth/forms';
 import { AUTH_ROUTES } from '@repo/client-auth/router';
 
@@ -11,6 +11,8 @@ export const ProfileModal = ({ isOpen, onOpenChange }: ProfileModalProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent onOpenAutoFocus={(e) => e.preventDefault()}>
+        <DialogTitle className="hidden">Profile</DialogTitle>
+
         <div className="py-6">
           <ProfileForm logoutRedirectPath={AUTH_ROUTES.LOGIN} />
         </div>
