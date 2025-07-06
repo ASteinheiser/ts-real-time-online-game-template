@@ -193,11 +193,10 @@ export class Game extends Scene {
     this.inputPayload.up = this.cursorKeys.up.isDown;
     this.inputPayload.down = this.cursorKeys.down.isDown;
     this.inputPayload.attack = this.cursorKeys.space.isDown;
+
     this.room.send('playerInput', this.inputPayload);
 
-    if (this.inputPayload.attack) {
-      this.currentPlayer.punch();
-    }
+    if (this.inputPayload.attack) this.currentPlayer.punch();
 
     const { x, y } = this.currentPlayer.entity;
     const { left, right, up, down } = this.inputPayload;
