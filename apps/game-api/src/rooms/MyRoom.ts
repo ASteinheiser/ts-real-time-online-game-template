@@ -17,6 +17,7 @@ import {
   ENEMY_SIZE,
 } from '@repo/core-game';
 import { PrismaClient } from '../prisma-client';
+import { validateJwt } from '../auth/jwt';
 
 // basic in-memory storage of results for all players in a room
 interface ResultStorage {
@@ -146,14 +147,18 @@ export class MyRoom extends Room<MyRoomState> {
     });
   }
 
-  onJoin(client: Client, options: { username: string }) {
-    const username = options.username ?? `random-user-${Math.floor(Math.random() * 10000)}`;
+  async onJoin(client: Client, options: { token: string }) {
+    const authUser = validateJwt(options?.token);
+    if (!authUser) throw new Error('Invalid or expired token');
 
-    console.log(`${username} (${client.sessionId}) joined!`);
+    const dbUser = await this.prisma.profile.findUnique({ where: { userId: authUser.id } });
+    if (!dbUser) throw new Error('Profile not found');
+
+    console.log(`${dbUser.userName} (${client.sessionId}) joined!`);
 
     const player = new Player();
 
-    player.username = username;
+    player.username = dbUser.userName;
     player.x = Math.random() * MAP_SIZE.width;
     player.y = Math.random() * MAP_SIZE.height;
 
@@ -162,15 +167,21 @@ export class MyRoom extends Room<MyRoomState> {
     this.state.players.set(client.sessionId, player);
 
     if (!RESULTS[this.roomId]) RESULTS[this.roomId] = {};
-    RESULTS[this.roomId][client.sessionId] = { username, attackCount: 0, killCount: 0 };
+    RESULTS[this.roomId][client.sessionId] = {
+      username: dbUser.userName,
+      attackCount: 0,
+      killCount: 0,
+    };
   }
 
   onLeave(client: Client) {
     const player = this.state.players.get(client.sessionId);
 
-    console.log(`${player?.username} (${client.sessionId}) left!`);
+    if (player) {
+      console.log(`${player.username} (${client.sessionId}) left!`);
 
-    this.state.players.delete(client.sessionId);
+      this.state.players.delete(client.sessionId);
+    }
   }
 
   onDispose() {
