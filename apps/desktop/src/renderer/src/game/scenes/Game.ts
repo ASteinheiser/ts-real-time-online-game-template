@@ -41,6 +41,17 @@ export class Game extends Scene {
     this.cursorKeys = this.input.keyboard?.createCursorKeys();
   }
 
+  async refreshToken({ token }: { token: string }) {
+    if (token === this.client?.auth?.token) return;
+
+    try {
+      this.client.auth.token = token;
+      this.room?.send('refreshToken', { token });
+    } catch (error) {
+      console.error('Failed to refresh token: ', error);
+    }
+  }
+
   async create({ token }: { token: string }) {
     this.cameras.main.setBackgroundColor(0x00ff00);
     this.add.image(512, 384, 'background').setAlpha(0.5);
@@ -51,11 +62,30 @@ export class Game extends Scene {
       this.client.auth.token = token;
       this.room = await this.client.joinOrCreate('my_room');
     } catch (error) {
-      console.error(error);
-      EventBus.emit('join-error', error);
-      await this.sendToMainMenu();
+      await this.sendToMainMenu(error);
     }
     if (!this.room) return;
+
+    this.room.onError((code, message) => {
+      const errorMessage = `Room error: ${code} - ${message}`;
+      console.error(errorMessage);
+
+      this.sendToMainMenu(new Error(errorMessage));
+    });
+
+    this.room.onLeave((code) => {
+      switch (code) {
+        case 1000: // WS code for "normal" disconnection
+          this.sendToGameOver();
+          break;
+        case 3003: // WS code for "forbidden"
+        case 3008: // WS code for "timeout"
+          this.sendToMainMenu(new Error('You were removed from the game'));
+          break;
+        default:
+          this.sendToMainMenu(new Error(`Disconnected from room with code: ${code}`));
+      }
+    });
 
     const $ = getStateCallbacks(this.room);
 
@@ -154,7 +184,7 @@ export class Game extends Scene {
 
     // press shift to leave the game
     if (this.cursorKeys.shift.isDown) {
-      this.sendToGameOver();
+      this.room.send('leaveRoom');
       return;
     }
 
@@ -203,11 +233,12 @@ export class Game extends Scene {
     this.playerEntities = {};
     Object.values(this.enemyEntities).forEach((enemy) => enemy.destroy());
     this.enemyEntities = {};
-
-    await this.room?.leave();
   }
 
-  async sendToMainMenu() {
+  async sendToMainMenu(error: unknown) {
+    console.error(error);
+    EventBus.emit('join-error', error);
+
     await this.cleanup();
     this.scene.start('MainMenu');
   }
@@ -225,9 +256,8 @@ export class Game extends Scene {
 
 const getGameResults = async (roomId: string) => {
   const { data } = await client.query<Desktop_GetGameResultsQuery, Desktop_GetGameResultsQueryVariables>({
-    variables: {
-      roomId,
-    },
+    variables: { roomId },
+    fetchPolicy: 'network-only',
     query: gql`
       query Desktop_GetGameResults($roomId: String!) {
         gameResults(roomId: $roomId) {

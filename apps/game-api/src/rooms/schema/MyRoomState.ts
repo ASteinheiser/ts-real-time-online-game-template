@@ -1,6 +1,8 @@
 import { ArraySchema, MapSchema, Schema, type } from '@colyseus/schema';
 
 export class Player extends Schema {
+  @type('string') userId: string;
+  @type('number') tokenExpiresIn: number;
   @type('string') username: string;
   @type('number') x: number;
   @type('number') y: number;

@@ -4,7 +4,8 @@ import { useSession } from '@repo/client-auth/provider';
 import { useSearchParamFlag } from '@repo/ui/hooks';
 import { toast } from '@repo/ui';
 import { PhaserGame, type IRefPhaserGame } from '../game/PhaserGame';
-import { MainMenu } from '../game/scenes/MainMenu';
+import type { MainMenu } from '../game/scenes/MainMenu';
+import type { Game as GameScene } from '../game/scenes/Game';
 import { EventBus } from '../game/EventBus';
 import type { Desktop_GetTotalPlayersQuery, Desktop_GetTotalPlayersQueryVariables } from '../graphql';
 import { ProfileModal } from '../modals/ProfileModal';
@@ -49,6 +50,13 @@ export const Game = () => {
 
     console.log(scene);
   };
+
+  useEffect(() => {
+    if (!session?.access_token) return;
+
+    const scene = phaserRef?.current?.scene as GameScene;
+    scene?.refreshToken?.({ token: session.access_token });
+  }, [session]);
 
   useEffect(() => {
     EventBus.on('menu-open__game-start', () => {

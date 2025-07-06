@@ -52,6 +52,30 @@ export class MyRoom extends Room<MyRoomState> {
       player?.inputQueue.push(payload);
     });
 
+    this.onMessage('refreshToken', (client, payload: { token: string }) => {
+      try {
+        const authUser = validateJwt(payload.token);
+        if (!authUser) throw new Error('Invalid or expired token');
+
+        const player = this.state.players.get(client.sessionId);
+        if (!player) throw new Error('Player not found');
+
+        if (player.userId !== authUser.id) {
+          throw new Error('userId changed during token refresh, kicking player...');
+        }
+
+        player.tokenExpiresIn = authUser.expiresIn;
+        console.log(`Token refreshed for ${player.username}`);
+      } catch (error) {
+        console.error('Refresh token failed: ', error);
+        client?.leave(3003); // WS code for "forbidden"
+      }
+    });
+
+    this.onMessage('leaveRoom', (client) => {
+      client?.leave(1000); // WS code for "normal" disconnection
+    });
+
     this.setSimulationInterval((deltaTime) => {
       this.elapsedTime += deltaTime;
 
@@ -64,6 +88,13 @@ export class MyRoom extends Room<MyRoomState> {
 
   fixedTick() {
     this.state.players.forEach((player, sessionId) => {
+      if (player.tokenExpiresIn <= 0) {
+        console.log('token expired, kicking player...');
+        const client = this.clients.find((client) => client.sessionId === sessionId);
+        client?.leave(3008); // WS code for "timeout"
+        return;
+      }
+
       let input: undefined | InputPayload;
       // dequeue player inputs
       while ((input = player.inputQueue.shift())) {
@@ -154,14 +185,20 @@ export class MyRoom extends Room<MyRoomState> {
     const dbUser = await this.prisma.profile.findUnique({ where: { userId: authUser.id } });
     if (!dbUser) throw new Error('Profile not found');
 
-    return { user: dbUser };
+    return { user: dbUser, tokenExpiresIn: authUser.expiresIn };
   }
 
-  onJoin(client: Client, _: Record<string, unknown>, { user }: { user: Profile }) {
+  onJoin(
+    client: Client,
+    _: Record<string, unknown>,
+    { user, tokenExpiresIn }: { user: Profile; tokenExpiresIn: number }
+  ) {
     console.log(`${user.userName} (${client.sessionId}) joined!`);
 
     const player = new Player();
 
+    player.userId = user.userId;
+    player.tokenExpiresIn = tokenExpiresIn;
     player.username = user.userName;
     player.x = Math.random() * MAP_SIZE.width;
     player.y = Math.random() * MAP_SIZE.height;
@@ -191,8 +228,9 @@ export class MyRoom extends Room<MyRoomState> {
   onDispose() {
     console.log('room', this.roomId, 'disposing...');
 
-    Object.keys(RESULTS).forEach((sessionId) => {
-      delete RESULTS[sessionId];
-    });
+    // delete results after 10 seconds -- stop gap for in-memory management
+    setTimeout(() => {
+      Object.keys(RESULTS).forEach((roomId) => delete RESULTS[roomId]);
+    }, 10000);
   }
 }
