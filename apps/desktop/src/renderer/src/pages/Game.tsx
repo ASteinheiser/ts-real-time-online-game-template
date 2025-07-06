@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useQuery, gql } from '@apollo/client';
 import { useSession } from '@repo/client-auth/provider';
 import { useSearchParamFlag } from '@repo/ui/hooks';
+import { toast } from '@repo/ui';
 import { PhaserGame, type IRefPhaserGame } from '../game/PhaserGame';
 import { MainMenu } from '../game/scenes/MainMenu';
 import { EventBus } from '../game/EventBus';
@@ -58,10 +59,13 @@ export const Game = () => {
     EventBus.on('menu-open__profile', () => setIsProfileModalOpen(true));
     EventBus.on('menu-open__options', () => setIsOptionsModalOpen(true));
 
+    EventBus.on('join-error', (error) => toast.error(error.message));
+
     return () => {
       EventBus.off('menu-open__game-start');
       EventBus.off('menu-open__profile');
       EventBus.off('menu-open__options');
+      EventBus.off('join-error');
     };
   }, []);
 

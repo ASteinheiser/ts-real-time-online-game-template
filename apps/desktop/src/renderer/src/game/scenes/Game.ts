@@ -49,8 +49,10 @@ export class Game extends Scene {
 
     try {
       this.room = await this.client.joinOrCreate('my_room', { username });
-    } catch (e) {
-      console.error('join error', e);
+    } catch (error) {
+      console.error(error);
+      EventBus.emit('join-error', error);
+      await this.backToMainMenu();
     }
     if (!this.room) return;
 
@@ -191,12 +193,7 @@ export class Game extends Scene {
     }
   }
 
-  async changeScene() {
-    const roomId = this.room?.roomId;
-    if (!roomId) return;
-
-    const gameResults = await getGameResults(roomId);
-
+  async cleanup() {
     this.currentPlayer?.destroy();
     delete this.currentPlayer;
     this.remoteRef?.destroy();
@@ -207,7 +204,20 @@ export class Game extends Scene {
     this.enemyEntities = {};
 
     await this.room?.leave();
+  }
 
+  async backToMainMenu() {
+    await this.cleanup();
+    this.scene.start('MainMenu');
+  }
+
+  async changeScene() {
+    const roomId = this.room?.roomId;
+    if (!roomId) return;
+
+    const gameResults = await getGameResults(roomId);
+
+    await this.cleanup();
     this.scene.start('GameOver', { gameResults });
   }
 }
