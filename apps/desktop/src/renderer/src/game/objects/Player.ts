@@ -1,5 +1,14 @@
+import { ASSET } from '../constants';
+
 // used to handle slight differences in player position due to interpolation of server values
 const MOVEMENT_THRESHOLD = 0.1;
+
+const FRAME_RATE = 8;
+const PLAYER_ANIM = {
+  IDLE: 'playerIdle',
+  WALK: 'playerWalk',
+  PUNCH: 'playerPunch',
+};
 
 export class Player {
   entity: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
@@ -10,23 +19,23 @@ export class Player {
     this.nameText = nameText;
 
     this.entity.anims.create({
-      key: 'playerIdle',
-      frames: this.entity.anims.generateFrameNumbers('player', { frames: [0] }),
-      frameRate: 8,
+      key: PLAYER_ANIM.IDLE,
+      frames: this.entity.anims.generateFrameNumbers(ASSET.PLAYER, { frames: [0] }),
+      frameRate: FRAME_RATE,
       repeat: 0,
     });
     this.entity.anims.create({
-      key: 'playerWalk',
-      frames: this.entity.anims.generateFrameNumbers('player', { frames: [2, 3, 4, 1] }),
-      frameRate: 8,
+      key: PLAYER_ANIM.WALK,
+      frames: this.entity.anims.generateFrameNumbers(ASSET.PLAYER, { frames: [2, 3, 4, 1] }),
+      frameRate: FRAME_RATE,
       repeat: -1,
     });
     // total animation length is 0.625s (5 frames at 8fps)
     // actual punch frame is 0.375s after start of animation (frame 3 / 5)
     this.entity.anims.create({
-      key: 'playerPunch',
-      frames: this.entity.anims.generateFrameNumbers('player', { frames: [5, 6, 7, 8, 5] }),
-      frameRate: 8,
+      key: PLAYER_ANIM.PUNCH,
+      frames: this.entity.anims.generateFrameNumbers(ASSET.PLAYER, { frames: [5, 6, 7, 8, 5] }),
+      frameRate: FRAME_RATE,
       repeat: 0,
     });
   }
@@ -46,16 +55,16 @@ export class Player {
     this.nameText.y = y;
 
     if (!isMoving && !this.isPunching()) {
-      this.entity.play('playerIdle');
+      this.entity.play(PLAYER_ANIM.IDLE);
     }
     if (isMoving && !(this.isPunching() || this.isWalking())) {
-      this.entity.play('playerWalk');
+      this.entity.play(PLAYER_ANIM.WALK);
     }
   }
 
   punch() {
     if (this.isPunching()) return;
-    this.entity.anims.play('playerPunch');
+    this.entity.anims.play(PLAYER_ANIM.PUNCH);
   }
 
   stopPunch() {
@@ -64,11 +73,11 @@ export class Player {
   }
 
   isPunching() {
-    return this.entity.anims.isPlaying && this.entity.anims.currentAnim?.key === 'playerPunch';
+    return this.entity.anims.isPlaying && this.entity.anims.currentAnim?.key === PLAYER_ANIM.PUNCH;
   }
 
   isWalking() {
-    return this.entity.anims.isPlaying && this.entity.anims.currentAnim?.key === 'playerWalk';
+    return this.entity.anims.isPlaying && this.entity.anims.currentAnim?.key === PLAYER_ANIM.WALK;
   }
 
   destroy() {

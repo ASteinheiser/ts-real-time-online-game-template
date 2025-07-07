@@ -1,7 +1,7 @@
 import { Scene } from 'phaser';
 import { EventBus, EVENT_BUS } from '../EventBus';
 import { CustomText } from '../objects/CustomText';
-import { ASSET, SCENE } from './constants';
+import { ASSET, SCENE } from '../constants';
 
 export class GameOver extends Scene {
   cursorKeys?: Phaser.Types.Input.Keyboard.CursorKeys;

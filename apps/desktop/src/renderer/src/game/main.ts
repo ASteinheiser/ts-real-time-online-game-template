@@ -5,8 +5,7 @@ import { Preloader } from './scenes/Preloader';
 import { MainMenu } from './scenes/MainMenu';
 import { Game as MainGame } from './scenes/Game';
 import { GameOver } from './scenes/GameOver';
-
-export const GAME_CONTAINER_ID = 'game-container';
+import { GAME_CONTAINER_ID } from './constants';
 
 const config: Phaser.Types.Core.GameConfig = {
   type: AUTO,

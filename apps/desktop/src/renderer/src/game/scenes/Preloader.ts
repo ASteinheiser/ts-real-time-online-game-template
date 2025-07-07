@@ -2,7 +2,7 @@ import { Scene } from 'phaser';
 import { PLAYER_SIZE, ENEMY_SIZE } from '@repo/core-game';
 import enemy from '../../assets/evil-dude.png';
 import player from '../../assets/muscle-duck-sprite.png';
-import { ASSET, SCENE } from './constants';
+import { ASSET, SCENE } from '../constants';
 
 export class Preloader extends Scene {
   constructor() {

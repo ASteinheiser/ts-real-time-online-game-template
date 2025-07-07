@@ -1,6 +1,6 @@
 import { Scene } from 'phaser';
 import background from '../../assets/bg.png';
-import { ASSET, SCENE } from './constants';
+import { ASSET, SCENE } from '../constants';
 
 export class Boot extends Scene {
   constructor() {

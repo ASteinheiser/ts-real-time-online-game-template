@@ -1,3 +1,5 @@
+export const GAME_CONTAINER_ID = 'game-container';
+
 export const SCENE = {
   BOOT: 'Boot',
   PRELOADER: 'Preloader',

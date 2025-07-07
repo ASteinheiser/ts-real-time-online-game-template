@@ -18,7 +18,7 @@ import { Player } from '../objects/Player';
 import { PunchBox } from '../objects/PunchBox';
 import { Enemy } from '../objects/Enemy';
 import { CustomText } from '../objects/CustomText';
-import { ASSET, SCENE } from './constants';
+import { ASSET, SCENE } from '../constants';
 
 const WEBSOCKET_URL = import.meta.env.VITE_WEBSOCKET_URL;
 if (!WEBSOCKET_URL) throw new Error('VITE_WEBSOCKET_URL is not set');

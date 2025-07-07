@@ -2,7 +2,7 @@ import { Scene } from 'phaser';
 import type { AuthPayload } from '@repo/core-game';
 import { EventBus, EVENT_BUS } from '../EventBus';
 import { CustomText } from '../objects/CustomText';
-import { ASSET, SCENE } from './constants';
+import { ASSET, SCENE } from '../constants';
 
 export class MainMenu extends Scene {
   constructor() {
