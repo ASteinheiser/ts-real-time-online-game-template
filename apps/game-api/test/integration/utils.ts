@@ -1,6 +1,7 @@
 import { ColyseusTestServer } from '@colyseus/testing';
 import { Room } from '@colyseus/core';
 import type { GraphQLResponse } from '@apollo/server';
+import { WS_EVENT } from '@repo/core-game';
 import { MyRoomState } from '../../src/rooms/schema/MyRoomState';
 
 interface CreateWSClientArgs {
@@ -13,7 +14,7 @@ export const createWSClient = async ({ server, room, username }: CreateWSClientA
   const client = await server.connectTo(room, { username });
 
   // register onMessage handler otherwise colyseus throws a warning
-  client.onMessage('__playground_message_types', () => {});
+  client.onMessage(WS_EVENT.PLAYGROUND_MESSAGE_TYPES, () => {});
 
   return client;
 };

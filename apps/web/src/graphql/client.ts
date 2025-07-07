@@ -1,9 +1,10 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client';
+import { API_ROUTES } from '@repo/core-game';
 
-const GRAPHQL_URL = import.meta.env.VITE_GRAPHQL_URL;
-if (!GRAPHQL_URL) throw new Error('VITE_GRAPHQL_URL is not set');
+const API_URL = import.meta.env.VITE_API_URL;
+if (!API_URL) throw new Error('VITE_API_URL is not set');
 
 export const client = new ApolloClient({
-  uri: GRAPHQL_URL,
+  uri: API_URL + API_ROUTES.GRAPHQL,
   cache: new InMemoryCache(),
 });

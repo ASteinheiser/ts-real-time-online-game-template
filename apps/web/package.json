@@ -21,6 +21,7 @@
   "dependencies": {
     "@apollo/client": "catalog:",
     "@repo/client-auth": "workspace:*",
+    "@repo/core-game": "workspace:*",
     "@repo/ui": "workspace:*",
     "graphql": "catalog:",
     "react": "catalog:",

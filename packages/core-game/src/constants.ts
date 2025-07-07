@@ -45,7 +45,13 @@ export const ENEMY_SIZE = {
 };
 // #endregion
 
-// #region WS Server
+// #region API Server
+export const API_ROUTES = {
+  GRAPHQL: '/graphql',
+  MONITOR: '/monitor',
+  PLAYGROUND: '/',
+};
+
 export const WS_ROOM = {
   GAME_ROOM: 'game_room',
 };
@@ -54,6 +60,8 @@ export const WS_EVENT = {
   LEAVE_ROOM: 'leaveRoom',
   PLAYER_INPUT: 'playerInput',
   REFRESH_TOKEN: 'refreshToken',
+  // this comes from Colyseus, register this to handle playground messages
+  PLAYGROUND_MESSAGE_TYPES: '__playground_message_types',
 };
 
 export const WS_CODE = {

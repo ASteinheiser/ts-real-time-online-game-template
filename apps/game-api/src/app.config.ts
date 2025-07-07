@@ -5,7 +5,7 @@ import { expressMiddleware } from '@as-integrations/express5';
 import express from 'express';
 import cors from 'cors';
 import type { GoTrueAdminApi } from '@supabase/supabase-js';
-import { WS_ROOM } from '@repo/core-game';
+import { WS_ROOM, API_ROUTES } from '@repo/core-game';
 import { server as GQLServer } from './graphql';
 import { MyRoom } from './rooms/MyRoom';
 import { createContext } from './graphql/context';
@@ -30,7 +30,7 @@ export const makeApp = ({ authClient, prisma }: MakeAppArgs) => {
        * Configure GraphQL route, middleware and context
        */
       app.use(
-        '/graphql',
+        API_ROUTES.GRAPHQL,
         cors<cors.CorsRequest>(),
         express.json(),
         expressMiddleware(GQLServer, {
@@ -46,7 +46,7 @@ export const makeApp = ({ authClient, prisma }: MakeAppArgs) => {
        * (It is not recommended to expose this route in a production environment)
        */
       if (process.env.NODE_ENV !== 'production') {
-        app.use('/', playground());
+        app.use(API_ROUTES.PLAYGROUND, playground());
       }
 
       /**
@@ -54,7 +54,7 @@ export const makeApp = ({ authClient, prisma }: MakeAppArgs) => {
        * It is recommended to protect this route with a password
        * Read more: https://docs.colyseus.io/tools/monitor/#restrict-access-to-the-panel-using-a-password
        */
-      app.use('/monitor', monitor());
+      app.use(API_ROUTES.MONITOR, monitor());
     },
 
     beforeListen: () => {

@@ -18,7 +18,7 @@ export async function main(options: Options) {
   console.log('joined room successfully!');
 
   // add this listener otherwise colyseus will show a warning
-  room.onMessage('__playground_message_types', () => {});
+  room.onMessage(WS_EVENT.PLAYGROUND_MESSAGE_TYPES, () => {});
 
   room.onMessage(WS_EVENT.PLAYER_INPUT, (payload: InputPayload) => {
     console.log('received player input: ', JSON.stringify(payload));

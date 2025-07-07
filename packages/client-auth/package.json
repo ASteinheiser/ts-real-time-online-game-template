@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@apollo/client": "catalog:",
+    "@repo/core-game": "workspace:*",
     "@repo/ui": "workspace:*",
     "@supabase/supabase-js": "catalog:",
     "graphql": "catalog:",
