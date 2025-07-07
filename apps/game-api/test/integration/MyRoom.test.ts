@@ -1,6 +1,7 @@
 import assert from 'assert';
 import { ColyseusTestServer, boot } from '@colyseus/testing';
 import type { GoTrueAdminApi } from '@supabase/supabase-js';
+import { WS_ROOM } from '@repo/core-game';
 import { makeApp } from '../../src/app.config';
 import { MyRoomState } from '../../src/rooms/schema/MyRoomState';
 import { createWSClient } from './utils';
@@ -19,7 +20,7 @@ describe('Colyseus WebSocket Server', () => {
   beforeEach(async () => await server.cleanup());
 
   it('should connect a client to a room', async () => {
-    const room = await server.createRoom<MyRoomState>('my_room');
+    const room = await server.createRoom<MyRoomState>(WS_ROOM.GAME_ROOM);
 
     const client = await createWSClient({ server, room });
 
@@ -27,7 +28,7 @@ describe('Colyseus WebSocket Server', () => {
   });
 
   it('should add a player to the room', async () => {
-    const room = await server.createRoom<MyRoomState>('my_room');
+    const room = await server.createRoom<MyRoomState>(WS_ROOM.GAME_ROOM);
 
     const username = 'custom-username';
     const client = await createWSClient({ server, room, username });
@@ -40,7 +41,7 @@ describe('Colyseus WebSocket Server', () => {
   });
 
   it('should spawn an enemy in the room', async () => {
-    const room = await server.createRoom<MyRoomState>('my_room');
+    const room = await server.createRoom<MyRoomState>(WS_ROOM.GAME_ROOM);
 
     const client = await createWSClient({ server, room });
 
@@ -52,7 +53,7 @@ describe('Colyseus WebSocket Server', () => {
   });
 
   it('should add multiple players to the room', async () => {
-    const room = await server.createRoom<MyRoomState>('my_room');
+    const room = await server.createRoom<MyRoomState>(WS_ROOM.GAME_ROOM);
 
     const username1 = 'custom-username-1';
     const username2 = 'custom-username-2';

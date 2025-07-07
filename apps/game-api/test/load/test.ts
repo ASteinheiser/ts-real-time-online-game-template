@@ -1,5 +1,6 @@
 import { Client } from 'colyseus.js';
 import { cli, Options } from '@colyseus/loadtest';
+import { WS_ROOM } from '@repo/core-game';
 import { MyRoomState } from '../../src/rooms/schema/MyRoomState';
 
 const WEBSOCKET_URL = process.env.VITE_WEBSOCKET_URL;
@@ -8,10 +9,11 @@ if (!WEBSOCKET_URL) throw new Error('VITE_WEBSOCKET_URL is not set');
 const JOIN_DELAY_MS = 500;
 
 export async function main(options: Options) {
+  console.log('joining room...', options);
   await new Promise((resolve) => setTimeout(resolve, JOIN_DELAY_MS));
 
   const client = new Client(WEBSOCKET_URL);
-  const room = await client.joinOrCreate<MyRoomState>(options.roomName);
+  const room = await client.joinOrCreate<MyRoomState>(WS_ROOM.GAME_ROOM);
 
   console.log('joined room successfully!');
 
