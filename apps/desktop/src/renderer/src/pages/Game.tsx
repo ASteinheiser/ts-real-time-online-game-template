@@ -51,6 +51,8 @@ export const Game = () => {
     console.log(scene);
   };
 
+  // NOTE: the server will kick any clients with an expired token, however
+  // supabase will automatically refresh the token before it expires (every hour)
   useEffect(() => {
     if (!session?.access_token) return;
 
