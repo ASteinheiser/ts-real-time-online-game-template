@@ -38,7 +38,7 @@ export const RESULTS: ResultStorage = {};
 
 interface AuthResult {
   user: Profile;
-  tokenExpiresIn: number;
+  tokenExpiresAt: number;
 }
 
 interface MyRoomArgs {
@@ -73,7 +73,7 @@ export class MyRoom extends Room<MyRoomState> {
           throw new Error('userId changed during token refresh, kicking player...');
         }
 
-        player.tokenExpiresIn = authUser.expiresIn;
+        player.tokenExpiresAt = authUser.expiresAt;
         console.log(`Token refreshed for ${player.username}`);
       } catch (error) {
         console.error('Refresh token failed: ', error);
@@ -97,7 +97,8 @@ export class MyRoom extends Room<MyRoomState> {
 
   fixedTick() {
     this.state.players.forEach((player, sessionId) => {
-      if (player.tokenExpiresIn <= 0) {
+      const tokenExpiresIn = player.tokenExpiresAt - Date.now();
+      if (tokenExpiresIn <= 0) {
         console.log('token expired, kicking player...');
         const client = this.clients.find((client) => client.sessionId === sessionId);
         client?.leave(WS_CODE.TIMEOUT);
@@ -194,16 +195,16 @@ export class MyRoom extends Room<MyRoomState> {
     const dbUser = await this.prisma.profile.findUnique({ where: { userId: authUser.id } });
     if (!dbUser) throw new Error('Profile not found');
 
-    return { user: dbUser, tokenExpiresIn: authUser.expiresIn };
+    return { user: dbUser, tokenExpiresAt: authUser.expiresAt };
   }
 
-  onJoin(client: Client, _: unknown, { user, tokenExpiresIn }: AuthResult) {
+  onJoin(client: Client, _: unknown, { user, tokenExpiresAt }: AuthResult) {
     console.log(`${user.userName} (${client.sessionId}) joined!`);
 
     const player = new Player();
 
     player.userId = user.userId;
-    player.tokenExpiresIn = tokenExpiresIn;
+    player.tokenExpiresAt = tokenExpiresAt;
     player.username = user.userName;
     player.x = Math.random() * MAP_SIZE.width;
     player.y = Math.random() * MAP_SIZE.height;

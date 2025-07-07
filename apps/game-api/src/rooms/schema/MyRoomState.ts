@@ -3,7 +3,7 @@ import type { InputPayload } from '@repo/core-game';
 
 export class Player extends Schema {
   @type('string') userId: string;
-  @type('number') tokenExpiresIn: number;
+  @type('number') tokenExpiresAt: number;
   @type('string') username: string;
   @type('number') x: number;
   @type('number') y: number;

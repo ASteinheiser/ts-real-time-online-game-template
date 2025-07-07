@@ -6,7 +6,7 @@ if (!JWT_SECRET) throw new Error('JWT_SECRET is not set');
 export interface User {
   id: string;
   email: string;
-  expiresIn: number;
+  expiresAt: number;
 }
 
 export interface DecodedToken {
@@ -36,6 +36,6 @@ const mapDecodedTokenToUser = (token: DecodedToken): User => {
   return {
     id: token.sub,
     email: token.email,
-    expiresIn: token.exp * 1000 - Date.now(),
+    expiresAt: token.exp * 1000,
   };
 };
