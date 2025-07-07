@@ -29,7 +29,9 @@
       "dependsOn": ["^lint:fix"]
     },
     "test": {
-      "dependsOn": ["lint"]
+      "dependsOn": ["lint"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "env": ["JWT_SECRET"]
     },
     "test:watch": {
       "cache": false,

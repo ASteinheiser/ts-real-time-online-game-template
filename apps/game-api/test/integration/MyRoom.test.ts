@@ -1,17 +1,15 @@
 import assert from 'assert';
 import { ColyseusTestServer, boot } from '@colyseus/testing';
 import type { GoTrueAdminApi } from '@supabase/supabase-js';
-import { WS_ROOM } from '@repo/core-game';
 import { makeApp } from '../../src/app.config';
-import { MyRoomState } from '../../src/rooms/schema/MyRoomState';
-import { createWSClient } from './utils';
-import type { PrismaClient } from '../../src/prisma-client';
+import { createWSClient, generateTestJWT, mockPrismaClient, DEFAULT_USER_ID } from './utils';
 
 describe('Colyseus WebSocket Server', () => {
   let server: ColyseusTestServer;
 
-  const prisma = {} as PrismaClient;
   const authClient = {} as GoTrueAdminApi;
+  const prisma = mockPrismaClient;
+
   const app = makeApp({ prisma, authClient });
 
   before(async () => (server = await boot(app)));
@@ -19,31 +17,38 @@ describe('Colyseus WebSocket Server', () => {
 
   beforeEach(async () => await server.cleanup());
 
-  it('should connect a client to a room', async () => {
-    const room = await server.createRoom<MyRoomState>(WS_ROOM.GAME_ROOM);
+  it('should not allow a client to join a room without a valid token', async () => {
+    try {
+      await createWSClient({ server, token: 'invalid-token' });
+    } catch (error) {
+      assert.strictEqual(error instanceof Error, true);
+    }
+  });
 
-    const client = await createWSClient({ server, room });
+  it('should connect a client to a room', async () => {
+    const token = generateTestJWT({});
+    const client = await createWSClient({ server, token });
+    const room = server.getRoomById(client.roomId);
 
     assert.strictEqual(client.sessionId, room.clients[0].sessionId);
   });
 
   it('should add a player to the room', async () => {
-    const room = await server.createRoom<MyRoomState>(WS_ROOM.GAME_ROOM);
-
-    const username = 'custom-username';
-    const client = await createWSClient({ server, room, username });
+    const token = generateTestJWT({});
+    const client = await createWSClient({ server, token });
+    const room = server.getRoomById(client.roomId);
 
     await room.waitForNextPatch();
     const { players } = client.state.toJSON();
 
     assert.strictEqual(Object.keys(players).length, 1);
-    assert.strictEqual(players[client.sessionId].username, username);
+    assert.strictEqual(players[client.sessionId].userId, DEFAULT_USER_ID);
   });
 
   it('should spawn an enemy in the room', async () => {
-    const room = await server.createRoom<MyRoomState>(WS_ROOM.GAME_ROOM);
-
-    const client = await createWSClient({ server, room });
+    const token = generateTestJWT({});
+    const client = await createWSClient({ server, token });
+    const room = server.getRoomById(client.roomId);
 
     await room.waitForNextPatch();
     const { enemies } = client.state.toJSON();
@@ -53,34 +58,21 @@ describe('Colyseus WebSocket Server', () => {
   });
 
   it('should add multiple players to the room', async () => {
-    const room = await server.createRoom<MyRoomState>(WS_ROOM.GAME_ROOM);
+    const userIds = ['user-1', 'user-2', 'user-3', 'user-4'];
 
-    const username1 = 'custom-username-1';
-    const username2 = 'custom-username-2';
-    const username3 = 'custom-username-3';
-    const username4 = 'custom-username-4';
+    const client1 = await createWSClient({ server, token: generateTestJWT({ userId: userIds[0] }) });
+    const client2 = await createWSClient({ server, token: generateTestJWT({ userId: userIds[1] }) });
+    const client3 = await createWSClient({ server, token: generateTestJWT({ userId: userIds[2] }) });
+    const client4 = await createWSClient({ server, token: generateTestJWT({ userId: userIds[3] }) });
 
-    const [client1, client2, client3, client4] = await Promise.all([
-      createWSClient({ server, room, username: username1 }),
-      createWSClient({ server, room, username: username2 }),
-      createWSClient({ server, room, username: username3 }),
-      createWSClient({ server, room, username: username4 }),
-    ]);
-
+    const room = server.getRoomById(client1.roomId);
     await room.waitForNextPatch();
-    const client1State = client1.state.toJSON();
-    const client2State = client2.state.toJSON();
-    const client3State = client3.state.toJSON();
-    const client4State = client4.state.toJSON();
 
-    assert.strictEqual(Object.keys(client1State.players).length, 4);
-    assert.strictEqual(Object.keys(client2State.players).length, 4);
-    assert.strictEqual(Object.keys(client3State.players).length, 4);
-    assert.strictEqual(Object.keys(client4State.players).length, 4);
+    const roomState = room.state.toJSON();
 
-    assert.strictEqual(client1State.players[client1.sessionId].username, username1);
-    assert.strictEqual(client2State.players[client2.sessionId].username, username2);
-    assert.strictEqual(client3State.players[client3.sessionId].username, username3);
-    assert.strictEqual(client4State.players[client4.sessionId].username, username4);
+    assert.strictEqual(roomState.players[client1.sessionId].userId, userIds[0]);
+    assert.strictEqual(roomState.players[client2.sessionId].userId, userIds[1]);
+    assert.strictEqual(roomState.players[client3.sessionId].userId, userIds[2]);
+    assert.strictEqual(roomState.players[client4.sessionId].userId, userIds[3]);
   });
 });

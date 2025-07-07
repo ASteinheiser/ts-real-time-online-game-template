@@ -9,7 +9,7 @@ export interface User {
   expiresIn: number;
 }
 
-interface DecodedToken {
+export interface DecodedToken {
   sub: string;
   email: string;
   exp: number;

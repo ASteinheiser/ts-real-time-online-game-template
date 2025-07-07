@@ -62,6 +62,7 @@
     "@supabase/supabase-js": "catalog:",
     "colyseus": "catalog:",
     "cors": "^2.8.5",
+    "dotenv": "catalog:",
     "express": "catalog:",
     "graphql": "catalog:",
     "jsonwebtoken": "catalog:",
