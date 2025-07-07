@@ -56,7 +56,7 @@ export class Game extends Scene {
 
     try {
       this.client.auth.token = token;
-      this.room?.send('refreshToken', { token });
+      this.room?.send(WS_EVENT.REFRESH_TOKEN, { token });
     } catch (error) {
       console.error('Failed to refresh token: ', error);
     }
