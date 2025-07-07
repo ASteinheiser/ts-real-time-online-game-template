@@ -16,7 +16,7 @@
     "check-types": "tsc --noEmit",
     "test": "mocha --config test/.mocharc.yaml",
     "test:watch": "nodemon --ext ts --exec \"c8 --config test/.c8rc.json mocha --config test/.mocharc.yaml\"",
-    "test:load": "tsx test/load/test.ts --numClients 2",
+    "test:load": "tsx test/load/test.ts --numClients 2 --room",
     "dev": "tsx watch src/index.ts",
     "build": "vite build && npm run copy-files",
     "copy-files": "cp src/graphql/schema.graphql dist/schema.graphql",
