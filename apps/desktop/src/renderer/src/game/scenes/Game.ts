@@ -1,14 +1,24 @@
 import { Scene } from 'phaser';
 import { Client, Room, getStateCallbacks } from 'colyseus.js';
-import { calculateMovement, FIXED_TIME_STEP, PLAYER_SIZE } from '@repo/core-game';
+import {
+  calculateMovement,
+  FIXED_TIME_STEP,
+  PLAYER_SIZE,
+  WS_ROOM,
+  WS_EVENT,
+  WS_CODE,
+  type AuthPayload,
+  type InputPayload,
+} from '@repo/core-game';
 import { gql } from '@apollo/client';
 import { client } from '../../graphql/client';
 import { Desktop_GetGameResultsQuery, Desktop_GetGameResultsQueryVariables } from '../../graphql';
-import { EventBus } from '../EventBus';
+import { EventBus, EVENT_BUS } from '../EventBus';
 import { Player } from '../objects/Player';
 import { PunchBox } from '../objects/PunchBox';
 import { Enemy } from '../objects/Enemy';
 import { CustomText } from '../objects/CustomText';
+import { ASSET, SCENE } from './constants';
 
 const WEBSOCKET_URL = import.meta.env.VITE_WEBSOCKET_URL;
 if (!WEBSOCKET_URL) throw new Error('VITE_WEBSOCKET_URL is not set');
@@ -22,7 +32,7 @@ export class Game extends Scene {
   enemyEntities: Record<string, Enemy> = {};
 
   cursorKeys?: Phaser.Types.Input.Keyboard.CursorKeys;
-  inputPayload = {
+  inputPayload: InputPayload = {
     left: false,
     right: false,
     up: false,
@@ -32,7 +42,7 @@ export class Game extends Scene {
   elapsedTime = 0;
 
   constructor() {
-    super('Game');
+    super(SCENE.GAME);
 
     this.client = new Client(WEBSOCKET_URL);
   }
@@ -41,7 +51,7 @@ export class Game extends Scene {
     this.cursorKeys = this.input.keyboard?.createCursorKeys();
   }
 
-  async refreshToken({ token }: { token: string }) {
+  async refreshToken({ token }: AuthPayload) {
     if (token === this.client?.auth?.token) return;
 
     try {
@@ -52,15 +62,15 @@ export class Game extends Scene {
     }
   }
 
-  async create({ token }: { token: string }) {
+  async create({ token }: AuthPayload) {
     this.cameras.main.setBackgroundColor(0x00ff00);
-    this.add.image(512, 384, 'background').setAlpha(0.5);
+    this.add.image(512, 384, ASSET.BACKGROUND).setAlpha(0.5);
 
     new CustomText(this, 340, 10, 'Press Shift to leave the game', { fontSize: 20 });
 
     try {
       this.client.auth.token = token;
-      this.room = await this.client.joinOrCreate('my_room');
+      this.room = await this.client.joinOrCreate(WS_ROOM.GAME_ROOM);
     } catch (error) {
       await this.sendToMainMenu(error);
     }
@@ -75,11 +85,11 @@ export class Game extends Scene {
 
     this.room.onLeave((code) => {
       switch (code) {
-        case 1000: // WS code for "normal" disconnection
+        case WS_CODE.SUCCESS:
           this.sendToGameOver();
           break;
-        case 3003: // WS code for "forbidden"
-        case 3008: // WS code for "timeout"
+        case WS_CODE.FORBIDDEN:
+        case WS_CODE.TIMEOUT:
           this.sendToMainMenu(new Error('You were removed from the game'));
           break;
         default:
@@ -90,7 +100,7 @@ export class Game extends Scene {
     const $ = getStateCallbacks(this.room);
 
     $(this.room.state).players.onAdd((player, sessionId) => {
-      const entity = this.physics.add.sprite(player.x, player.y, 'player').setDepth(100);
+      const entity = this.physics.add.sprite(player.x, player.y, ASSET.PLAYER).setDepth(100);
 
       const nameText = new CustomText(this, player.x, player.y, player.username, {
         fontSize: 12,
@@ -165,7 +175,7 @@ export class Game extends Scene {
       }
     });
 
-    EventBus.emit('current-scene-ready', this);
+    EventBus.emit(EVENT_BUS.CURRENT_SCENE_READY, this);
   }
 
   update(_: number, delta: number): void {
@@ -184,7 +194,7 @@ export class Game extends Scene {
 
     // press shift to leave the game
     if (this.cursorKeys.shift.isDown) {
-      this.room.send('leaveRoom');
+      this.room.send(WS_EVENT.LEAVE_ROOM);
       return;
     }
 
@@ -194,7 +204,7 @@ export class Game extends Scene {
     this.inputPayload.down = this.cursorKeys.down.isDown;
     this.inputPayload.attack = this.cursorKeys.space.isDown;
 
-    this.room.send('playerInput', this.inputPayload);
+    this.room.send(WS_EVENT.PLAYER_INPUT, this.inputPayload);
 
     if (this.inputPayload.attack) this.currentPlayer.punch();
 
@@ -236,10 +246,10 @@ export class Game extends Scene {
 
   async sendToMainMenu(error: unknown) {
     console.error(error);
-    EventBus.emit('join-error', error);
+    EventBus.emit(EVENT_BUS.JOIN_ERROR, error);
 
     await this.cleanup();
-    this.scene.start('MainMenu');
+    this.scene.start(SCENE.MAIN_MENU);
   }
 
   async sendToGameOver() {
@@ -249,7 +259,7 @@ export class Game extends Scene {
     const gameResults = await getGameResults(roomId);
 
     await this.cleanup();
-    this.scene.start('GameOver', { gameResults });
+    this.scene.start(SCENE.GAME_OVER, { gameResults });
   }
 }
 

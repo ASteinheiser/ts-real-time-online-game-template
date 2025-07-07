@@ -5,6 +5,7 @@ import { expressMiddleware } from '@as-integrations/express5';
 import express from 'express';
 import cors from 'cors';
 import type { GoTrueAdminApi } from '@supabase/supabase-js';
+import { WS_ROOM } from '@repo/core-game';
 import { server as GQLServer } from './graphql';
 import { MyRoom } from './rooms/MyRoom';
 import { createContext } from './graphql/context';
@@ -21,7 +22,7 @@ export const makeApp = ({ authClient, prisma }: MakeAppArgs) => {
       /**
        * Define your room handlers:
        */
-      gameServer.define('my_room', MyRoom, { prisma });
+      gameServer.define(WS_ROOM.GAME_ROOM, MyRoom, { prisma });
     },
 
     initializeExpress: async (app) => {

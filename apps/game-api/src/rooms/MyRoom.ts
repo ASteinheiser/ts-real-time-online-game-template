@@ -1,6 +1,6 @@
 import { Room, type Client, type AuthContext } from '@colyseus/core';
 import { nanoid } from 'nanoid';
-import { MyRoomState, Player, Enemy, type InputPayload } from './schema/MyRoomState';
+import { MyRoomState, Player, Enemy } from './schema/MyRoomState';
 import {
   calculateMovement,
   FIXED_TIME_STEP,
@@ -15,6 +15,10 @@ import {
   ENEMY_SPAWN_RATE,
   MAX_ENEMIES,
   ENEMY_SIZE,
+  WS_EVENT,
+  WS_CODE,
+  type AuthPayload,
+  type InputPayload,
 } from '@repo/core-game';
 import type { PrismaClient, Profile } from '../prisma-client';
 import { validateJwt } from '../auth/jwt';
@@ -32,6 +36,11 @@ interface ResultStorage {
 
 export const RESULTS: ResultStorage = {};
 
+interface AuthResult {
+  user: Profile;
+  tokenExpiresIn: number;
+}
+
 interface MyRoomArgs {
   prisma: PrismaClient;
 }
@@ -46,13 +55,13 @@ export class MyRoom extends Room<MyRoomState> {
   onCreate({ prisma }: MyRoomArgs) {
     this.prisma = prisma;
 
-    this.onMessage('playerInput', (client, payload: InputPayload) => {
+    this.onMessage(WS_EVENT.PLAYER_INPUT, (client, payload: InputPayload) => {
       const player = this.state.players.get(client.sessionId);
 
       player?.inputQueue.push(payload);
     });
 
-    this.onMessage('refreshToken', (client, payload: { token: string }) => {
+    this.onMessage(WS_EVENT.REFRESH_TOKEN, (client, payload: AuthPayload) => {
       try {
         const authUser = validateJwt(payload.token);
         if (!authUser) throw new Error('Invalid or expired token');
@@ -68,12 +77,12 @@ export class MyRoom extends Room<MyRoomState> {
         console.log(`Token refreshed for ${player.username}`);
       } catch (error) {
         console.error('Refresh token failed: ', error);
-        client?.leave(3003); // WS code for "forbidden"
+        client?.leave(WS_CODE.FORBIDDEN);
       }
     });
 
-    this.onMessage('leaveRoom', (client) => {
-      client?.leave(1000); // WS code for "normal" disconnection
+    this.onMessage(WS_EVENT.LEAVE_ROOM, (client) => {
+      client?.leave(WS_CODE.SUCCESS);
     });
 
     this.setSimulationInterval((deltaTime) => {
@@ -91,7 +100,7 @@ export class MyRoom extends Room<MyRoomState> {
       if (player.tokenExpiresIn <= 0) {
         console.log('token expired, kicking player...');
         const client = this.clients.find((client) => client.sessionId === sessionId);
-        client?.leave(3008); // WS code for "timeout"
+        client?.leave(WS_CODE.TIMEOUT);
         return;
       }
 
@@ -178,7 +187,7 @@ export class MyRoom extends Room<MyRoomState> {
     });
   }
 
-  async onAuth(_: unknown, __: unknown, context: AuthContext) {
+  async onAuth(_: unknown, __: unknown, context: AuthContext): Promise<AuthResult> {
     const authUser = validateJwt(context.token);
     if (!authUser) throw new Error('Invalid or expired token');
 
@@ -188,11 +197,7 @@ export class MyRoom extends Room<MyRoomState> {
     return { user: dbUser, tokenExpiresIn: authUser.expiresIn };
   }
 
-  onJoin(
-    client: Client,
-    _: Record<string, unknown>,
-    { user, tokenExpiresIn }: { user: Profile; tokenExpiresIn: number }
-  ) {
+  onJoin(client: Client, _: unknown, { user, tokenExpiresIn }: AuthResult) {
     console.log(`${user.userName} (${client.sessionId}) joined!`);
 
     const player = new Player();

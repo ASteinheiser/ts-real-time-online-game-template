@@ -1,12 +1,13 @@
 import { Scene } from 'phaser';
-import { EventBus } from '../EventBus';
+import { EventBus, EVENT_BUS } from '../EventBus';
 import { CustomText } from '../objects/CustomText';
+import { ASSET, SCENE } from './constants';
 
 export class GameOver extends Scene {
   cursorKeys?: Phaser.Types.Input.Keyboard.CursorKeys;
 
   constructor() {
-    super('GameOver');
+    super(SCENE.GAME_OVER);
   }
 
   preload() {
@@ -19,7 +20,7 @@ export class GameOver extends Scene {
     gameResults: Array<{ username: string; attackCount: number; killCount: number }>;
   }) {
     this.cameras.main.setBackgroundColor(0xff0000);
-    this.add.image(512, 384, 'background').setAlpha(0.5);
+    this.add.image(512, 384, ASSET.BACKGROUND).setAlpha(0.5);
 
     new CustomText(this, 512, 184, 'Game Over', {
       fontFamily: 'Arial Black',
@@ -43,7 +44,7 @@ export class GameOver extends Scene {
         .fadeIn(500, 300 * (index + 1));
     });
 
-    EventBus.emit('current-scene-ready', this);
+    EventBus.emit(EVENT_BUS.CURRENT_SCENE_READY, this);
   }
 
   update() {
@@ -53,6 +54,6 @@ export class GameOver extends Scene {
   }
 
   changeScene() {
-    this.scene.start('MainMenu');
+    this.scene.start(SCENE.MAIN_MENU);
   }
 }

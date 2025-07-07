@@ -6,7 +6,7 @@ import { toast } from '@repo/ui';
 import { PhaserGame, type IRefPhaserGame } from '../game/PhaserGame';
 import type { MainMenu } from '../game/scenes/MainMenu';
 import type { Game as GameScene } from '../game/scenes/Game';
-import { EventBus } from '../game/EventBus';
+import { EventBus, EVENT_BUS } from '../game/EventBus';
 import type { Desktop_GetTotalPlayersQuery, Desktop_GetTotalPlayersQueryVariables } from '../graphql';
 import { ProfileModal } from '../modals/ProfileModal';
 import { OptionsModal } from '../modals/OptionsModal';
@@ -59,27 +59,27 @@ export const Game = () => {
   }, [session]);
 
   useEffect(() => {
-    EventBus.on('menu-open__game-start', () => {
+    EventBus.on(EVENT_BUS.GAME_START, () => {
       if (!session?.access_token) return;
       const scene = phaserRef?.current?.scene as MainMenu;
 
-      scene?.startGame?.(session.access_token);
+      scene?.startGame?.({ token: session.access_token });
     });
 
     return () => {
-      EventBus.off('menu-open__game-start');
+      EventBus.off(EVENT_BUS.GAME_START);
     };
   }, [session]);
 
   useEffect(() => {
-    EventBus.on('menu-open__profile', () => setIsProfileModalOpen(true));
-    EventBus.on('menu-open__options', () => setIsOptionsModalOpen(true));
-    EventBus.on('join-error', (error) => toast.error(error.message));
+    EventBus.on(EVENT_BUS.PROFILE_OPEN, () => setIsProfileModalOpen(true));
+    EventBus.on(EVENT_BUS.OPTIONS_OPEN, () => setIsOptionsModalOpen(true));
+    EventBus.on(EVENT_BUS.JOIN_ERROR, (error) => toast.error(error.message));
 
     return () => {
-      EventBus.off('menu-open__profile');
-      EventBus.off('menu-open__options');
-      EventBus.off('join-error');
+      EventBus.off(EVENT_BUS.PROFILE_OPEN);
+      EventBus.off(EVENT_BUS.OPTIONS_OPEN);
+      EventBus.off(EVENT_BUS.JOIN_ERROR);
     };
   }, []);
 

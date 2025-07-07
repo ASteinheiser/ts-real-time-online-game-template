@@ -44,3 +44,33 @@ export const ENEMY_SIZE = {
   height: 64,
 };
 // #endregion
+
+// #region WS Server
+export const WS_ROOM = {
+  GAME_ROOM: 'game_room',
+};
+
+export const WS_EVENT = {
+  LEAVE_ROOM: 'leaveRoom',
+  PLAYER_INPUT: 'playerInput',
+  REFRESH_TOKEN: 'refreshToken',
+};
+
+export const WS_CODE = {
+  SUCCESS: 1000,
+  FORBIDDEN: 3003,
+  TIMEOUT: 3008,
+};
+
+export interface AuthPayload {
+  token: string;
+}
+
+export interface InputPayload {
+  left: boolean;
+  right: boolean;
+  up: boolean;
+  down: boolean;
+  attack: boolean;
+}
+// #endregion

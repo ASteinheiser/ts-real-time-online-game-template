@@ -1,14 +1,16 @@
 import { Scene } from 'phaser';
-import { EventBus } from '../EventBus';
+import type { AuthPayload } from '@repo/core-game';
+import { EventBus, EVENT_BUS } from '../EventBus';
 import { CustomText } from '../objects/CustomText';
+import { ASSET, SCENE } from './constants';
 
 export class MainMenu extends Scene {
   constructor() {
-    super('MainMenu');
+    super(SCENE.MAIN_MENU);
   }
 
   create() {
-    this.add.image(512, 384, 'background');
+    this.add.image(512, 384, ASSET.BACKGROUND);
 
     new CustomText(this, 512, 300, 'Duck, Duck, Punch', {
       fontFamily: 'Arial Black',
@@ -25,7 +27,7 @@ export class MainMenu extends Scene {
     })
       .setOrigin(0.5)
       .makeButton('#ff00ff', () => {
-        EventBus.emit('menu-open__game-start');
+        EventBus.emit(EVENT_BUS.GAME_START);
       })
       .fadeIn(1000);
 
@@ -36,7 +38,7 @@ export class MainMenu extends Scene {
     })
       .setOrigin(0.5)
       .makeButton('#ff00ff', () => {
-        EventBus.emit('menu-open__profile');
+        EventBus.emit(EVENT_BUS.PROFILE_OPEN);
       })
       .fadeIn(1000);
 
@@ -47,14 +49,14 @@ export class MainMenu extends Scene {
     })
       .setOrigin(0.5)
       .makeButton('#ff00ff', () => {
-        EventBus.emit('menu-open__options');
+        EventBus.emit(EVENT_BUS.OPTIONS_OPEN);
       })
       .fadeIn(1000);
 
-    EventBus.emit('current-scene-ready', this);
+    EventBus.emit(EVENT_BUS.CURRENT_SCENE_READY, this);
   }
 
-  startGame(token: string) {
-    this.scene.start('Game', { token });
+  startGame({ token }: AuthPayload) {
+    this.scene.start(SCENE.GAME, { token });
   }
 }

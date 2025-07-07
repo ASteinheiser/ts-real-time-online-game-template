@@ -1,4 +1,5 @@
 import { ArraySchema, MapSchema, Schema, type } from '@colyseus/schema';
+import type { InputPayload } from '@repo/core-game';
 
 export class Player extends Schema {
   @type('string') userId: string;
@@ -15,14 +16,6 @@ export class Player extends Schema {
   // this is for debugging purposes
   @type('number') attackDamageFrameX: number;
   @type('number') attackDamageFrameY: number;
-}
-
-export interface InputPayload {
-  left: boolean;
-  right: boolean;
-  up: boolean;
-  down: boolean;
-  attack: boolean;
 }
 
 export class Enemy extends Schema {
