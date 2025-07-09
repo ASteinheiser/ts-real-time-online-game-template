@@ -66,6 +66,8 @@ export const WS_EVENT = {
 
 export const WS_CODE = {
   SUCCESS: 1000,
+  INTERNAL_SERVER_ERROR: 1011,
+  UNAUTHORIZED: 3000,
   FORBIDDEN: 3003,
   TIMEOUT: 3008,
 };

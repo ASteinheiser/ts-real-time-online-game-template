@@ -88,7 +88,15 @@ export class Game extends Scene {
         case WS_CODE.SUCCESS:
           this.sendToGameOver();
           break;
+        case WS_CODE.INTERNAL_SERVER_ERROR:
+          this.sendToMainMenu(new Error('Oops, something went wrong'));
+          break;
+        case WS_CODE.UNAUTHORIZED:
+          this.sendToMainMenu(new Error('You are not authorized'));
+          break;
         case WS_CODE.FORBIDDEN:
+          this.sendToMainMenu(new Error('You are not allowed'));
+          break;
         case WS_CODE.TIMEOUT:
           this.sendToMainMenu(new Error('You were removed from the game'));
           break;
