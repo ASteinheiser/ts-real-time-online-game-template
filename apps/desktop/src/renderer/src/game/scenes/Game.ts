@@ -73,6 +73,7 @@ export class Game extends Scene {
       this.room = await this.client.joinOrCreate(WS_ROOM.GAME_ROOM);
     } catch (error) {
       await this.sendToMainMenu(error);
+      return;
     }
     if (!this.room) {
       await this.sendToMainMenu(new Error('Failed to join'));
@@ -105,7 +106,7 @@ export class Game extends Scene {
           this.sendToMainMenu(new Error('You were removed from the game'));
           break;
         default:
-          this.sendToMainMenu(new Error(`Disconnected from room with code: ${code}`));
+          this.sendToMainMenu(new Error(`Disconnected with code: ${code}`));
       }
     });
 
