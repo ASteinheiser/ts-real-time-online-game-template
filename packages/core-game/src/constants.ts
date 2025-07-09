@@ -70,6 +70,7 @@ export const WS_CODE = {
   UNAUTHORIZED: 3000,
   FORBIDDEN: 3003,
   TIMEOUT: 3008,
+  NOT_FOUND: 4004,
 };
 
 export interface AuthPayload {

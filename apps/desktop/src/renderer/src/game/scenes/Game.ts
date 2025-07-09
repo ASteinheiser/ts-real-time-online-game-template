@@ -91,6 +91,7 @@ export class Game extends Scene {
         case WS_CODE.SUCCESS:
           this.sendToGameOver();
           break;
+        case WS_CODE.NOT_FOUND:
         case WS_CODE.INTERNAL_SERVER_ERROR:
           this.sendToMainMenu(new Error('Oops, something went wrong'));
           break;
