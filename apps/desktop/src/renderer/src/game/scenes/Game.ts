@@ -74,7 +74,10 @@ export class Game extends Scene {
     } catch (error) {
       await this.sendToMainMenu(error);
     }
-    if (!this.room) return;
+    if (!this.room) {
+      await this.sendToMainMenu(new Error('Failed to join'));
+      return;
+    }
 
     this.room.onError((code, message) => {
       const errorMessage = `Room error: ${code} - ${message}`;
