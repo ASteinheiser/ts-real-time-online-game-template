@@ -1,6 +1,5 @@
-import { Room, type Client, type AuthContext } from '@colyseus/core';
+import { Room, ServerError, type AuthContext, type Client } from '@colyseus/core';
 import { nanoid } from 'nanoid';
-import { MyRoomState, Player, Enemy } from './schema/MyRoomState';
 import {
   calculateMovement,
   FIXED_TIME_STEP,
@@ -20,21 +19,23 @@ import {
   type AuthPayload,
   type InputPayload,
 } from '@repo/core-game';
+import { MyRoomState, Player, Enemy } from './schema/MyRoomState';
 import type { PrismaClient, Profile } from '../prisma-client';
 import { validateJwt } from '../auth/jwt';
 
+const MAX_PLAYERS_PER_ROOM = 4;
+
 // basic in-memory storage of results for all players in a room
+export const RESULTS: ResultStorage = {};
 interface ResultStorage {
   [roomId: string]: {
-    [sessionId: string]: {
+    [userId: string]: {
       username: string;
       attackCount: number;
       killCount: number;
     };
   };
 }
-
-export const RESULTS: ResultStorage = {};
 
 interface AuthResult {
   user: Profile;
@@ -46,7 +47,7 @@ interface MyRoomArgs {
 }
 
 export class MyRoom extends Room<MyRoomState> {
-  maxClients = 4;
+  maxClients = MAX_PLAYERS_PER_ROOM;
   state = new MyRoomState();
   elapsedTime = 0;
   lastEnemySpawnTime = 0;
@@ -62,27 +63,22 @@ export class MyRoom extends Room<MyRoomState> {
     });
 
     this.onMessage(WS_EVENT.REFRESH_TOKEN, (client, payload: AuthPayload) => {
-      try {
-        const authUser = validateJwt(payload.token);
-        if (!authUser) throw new Error('Invalid or expired token');
+      const authUser = validateJwt(payload.token);
+      if (!authUser) throwError(WS_CODE.UNAUTHORIZED, 'Invalid or expired token', client);
 
-        const player = this.state.players.get(client.sessionId);
-        if (!player) throw new Error('Player not found');
+      const player = this.state.players.get(client.sessionId);
+      if (!player) throwError(WS_CODE.NOT_FOUND, 'Connection not found', client);
 
-        if (player.userId !== authUser.id) {
-          throw new Error('userId changed during token refresh, kicking player...');
-        }
-
-        player.tokenExpiresAt = authUser.expiresAt;
-        console.log(`Token refreshed for ${player.username}`);
-      } catch (error) {
-        console.error('Refresh token failed: ', error);
-        client?.leave(WS_CODE.FORBIDDEN);
+      if (player.userId !== authUser.id) {
+        throwError(WS_CODE.FORBIDDEN, 'userId changed during token refresh', client);
       }
+
+      player.tokenExpiresAt = authUser.expiresAt;
+      console.log(`Token refreshed for ${player.username}`);
     });
 
     this.onMessage(WS_EVENT.LEAVE_ROOM, (client) => {
-      client?.leave(WS_CODE.SUCCESS);
+      client.leave(WS_CODE.SUCCESS);
     });
 
     this.setSimulationInterval((deltaTime) => {
@@ -99,10 +95,10 @@ export class MyRoom extends Room<MyRoomState> {
     this.state.players.forEach((player, sessionId) => {
       const tokenExpiresIn = player.tokenExpiresAt - Date.now();
       if (tokenExpiresIn <= 0) {
-        console.log('token expired, kicking player...');
+        console.log(`token expired, kicking ${player.username}...`);
+
         const client = this.clients.find((client) => client.sessionId === sessionId);
-        client?.leave(WS_CODE.TIMEOUT);
-        return;
+        throwError(WS_CODE.TIMEOUT, 'Token expired', client);
       }
 
       let input: undefined | InputPayload;
@@ -141,7 +137,7 @@ export class MyRoom extends Room<MyRoomState> {
             ) {
               this.state.enemies.splice(this.state.enemies.indexOf(enemy), 1);
               player.killCount++;
-              RESULTS[this.roomId][sessionId].killCount++;
+              RESULTS[this.roomId][player.userId].killCount++;
             }
           }
         } else {
@@ -156,7 +152,7 @@ export class MyRoom extends Room<MyRoomState> {
           player.isAttacking = true;
           player.attackCount++;
           player.lastAttackTime = currentTime;
-          RESULTS[this.roomId][sessionId].attackCount++;
+          RESULTS[this.roomId][player.userId].attackCount++;
         } else {
           player.isAttacking = false;
         }
@@ -188,17 +184,23 @@ export class MyRoom extends Room<MyRoomState> {
     });
   }
 
-  async onAuth(_: unknown, __: unknown, context: AuthContext): Promise<AuthResult> {
+  async onAuth(client: Client, __: unknown, context: AuthContext): Promise<AuthResult> {
     const authUser = validateJwt(context.token);
-    if (!authUser) throw new Error('Invalid or expired token');
+    if (!authUser) throwError(WS_CODE.UNAUTHORIZED, 'Invalid or expired token', client);
 
     const dbUser = await this.prisma.profile.findUnique({ where: { userId: authUser.id } });
-    if (!dbUser) throw new Error('Profile not found');
+    if (!dbUser) throwError(WS_CODE.NOT_FOUND, 'Profile not found', client);
 
     return { user: dbUser, tokenExpiresAt: authUser.expiresAt };
   }
 
   onJoin(client: Client, _: unknown, { user, tokenExpiresAt }: AuthResult) {
+    this.state.players.forEach((player) => {
+      if (player.userId === user.userId) {
+        throwError(WS_CODE.FORBIDDEN, 'Player already has an active connection to this room', client);
+      }
+    });
+
     console.log(`${user.userName} (${client.sessionId}) joined!`);
 
     const player = new Player();
@@ -209,12 +211,10 @@ export class MyRoom extends Room<MyRoomState> {
     player.x = Math.random() * MAP_SIZE.width;
     player.y = Math.random() * MAP_SIZE.height;
 
-    // place player in the map of players by its sessionId
-    // (client.sessionId is unique per connection!)
     this.state.players.set(client.sessionId, player);
 
     if (!RESULTS[this.roomId]) RESULTS[this.roomId] = {};
-    RESULTS[this.roomId][client.sessionId] = {
+    RESULTS[this.roomId][player.userId] = {
       username: user.userName,
       attackCount: 0,
       killCount: 0,
@@ -239,4 +239,16 @@ export class MyRoom extends Room<MyRoomState> {
       Object.keys(RESULTS).forEach((roomId) => delete RESULTS[roomId]);
     }, 10000);
   }
+
+  onUncaughtException(error: Error) {
+    console.error('uncaught exception: ', error);
+
+    // possibly handle saving game state
+    // possibly handle disconnecting all clients if error is not recoverable
+  }
 }
+
+const throwError = (code: number, message: string, client: Client) => {
+  client.leave(code, JSON.stringify({ message }));
+  throw new ServerError(code, message);
+};
