@@ -249,6 +249,6 @@ export class MyRoom extends Room<MyRoomState> {
 }
 
 const throwError = (code: number, message: string, client: Client) => {
-  client.leave(code, JSON.stringify({ message }));
+  client.leave(code, message);
   throw new ServerError(code, message);
 };

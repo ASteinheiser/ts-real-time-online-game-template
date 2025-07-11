@@ -33,12 +33,12 @@ export const generateTestJWT = ({
   return jwt.sign(payload, JWT_SECRET);
 };
 
-interface CreateWSClientArgs {
+interface JoinTestRoomArgs {
   server: ColyseusTestServer;
   token: string;
 }
 
-export const createWSClient = async ({ server, token }: CreateWSClientArgs) => {
+export const joinTestRoom = async ({ server, token }: JoinTestRoomArgs) => {
   server.sdk.auth.token = token;
   const client = await server.sdk.joinOrCreate<MyRoomState>(WS_ROOM.GAME_ROOM);
 
