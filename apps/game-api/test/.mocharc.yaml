@@ -1,4 +1,6 @@
-require: tsx
+require: 
+  - tsx
+  - dotenv/config
 spec: test/integration/**/*.test.ts
 reporter: spec
 watch: false
