@@ -22,6 +22,7 @@ import {
 import { MyRoomState, Player, Enemy } from './schema/MyRoomState';
 import type { PrismaClient, Profile } from '../prisma-client';
 import { validateJwt } from '../auth/jwt';
+import { ROOM_ERROR } from './error';
 
 const MAX_PLAYERS_PER_ROOM = 4;
 
@@ -64,13 +65,13 @@ export class MyRoom extends Room<MyRoomState> {
 
     this.onMessage(WS_EVENT.REFRESH_TOKEN, (client, payload: AuthPayload) => {
       const authUser = validateJwt(payload.token);
-      if (!authUser) throwError(WS_CODE.UNAUTHORIZED, 'Invalid or expired token', client);
+      if (!authUser) throwError(WS_CODE.UNAUTHORIZED, ROOM_ERROR.INVALID_TOKEN, client);
 
       const player = this.state.players.get(client.sessionId);
-      if (!player) throwError(WS_CODE.NOT_FOUND, 'Connection not found', client);
+      if (!player) throwError(WS_CODE.NOT_FOUND, ROOM_ERROR.CONNECTION_NOT_FOUND, client);
 
       if (player.userId !== authUser.id) {
-        throwError(WS_CODE.FORBIDDEN, 'userId changed during token refresh', client);
+        throwError(WS_CODE.FORBIDDEN, ROOM_ERROR.USER_ID_CHANGED, client);
       }
 
       player.tokenExpiresAt = authUser.expiresAt;
@@ -95,10 +96,8 @@ export class MyRoom extends Room<MyRoomState> {
     this.state.players.forEach((player, sessionId) => {
       const tokenExpiresIn = player.tokenExpiresAt - Date.now();
       if (tokenExpiresIn <= 0) {
-        console.log(`token expired, kicking ${player.username}...`);
-
         const client = this.clients.find((client) => client.sessionId === sessionId);
-        throwError(WS_CODE.TIMEOUT, 'Token expired', client);
+        throwError(WS_CODE.TIMEOUT, ROOM_ERROR.TOKEN_EXPIRED, client);
       }
 
       let input: undefined | InputPayload;
@@ -186,10 +185,10 @@ export class MyRoom extends Room<MyRoomState> {
 
   async onAuth(client: Client, __: unknown, context: AuthContext): Promise<AuthResult> {
     const authUser = validateJwt(context.token);
-    if (!authUser) throwError(WS_CODE.UNAUTHORIZED, 'Invalid or expired token', client);
+    if (!authUser) throwError(WS_CODE.UNAUTHORIZED, ROOM_ERROR.INVALID_TOKEN, client);
 
     const dbUser = await this.prisma.profile.findUnique({ where: { userId: authUser.id } });
-    if (!dbUser) throwError(WS_CODE.NOT_FOUND, 'Profile not found', client);
+    if (!dbUser) throwError(WS_CODE.NOT_FOUND, ROOM_ERROR.PROFILE_NOT_FOUND, client);
 
     return { user: dbUser, tokenExpiresAt: authUser.expiresAt };
   }
@@ -197,7 +196,7 @@ export class MyRoom extends Room<MyRoomState> {
   onJoin(client: Client, _: unknown, { user, tokenExpiresAt }: AuthResult) {
     this.state.players.forEach((player) => {
       if (player.userId === user.userId) {
-        throwError(WS_CODE.FORBIDDEN, 'Player already has an active connection to this room', client);
+        throwError(WS_CODE.FORBIDDEN, ROOM_ERROR.PLAYER_ALREADY_JOINED, client);
       }
     });
 
@@ -243,7 +242,8 @@ export class MyRoom extends Room<MyRoomState> {
   onUncaughtException(error: Error, methodName: string) {
     if (
       methodName === 'onAuth' ||
-      (methodName === 'setSimulationInterval' && error?.message?.includes('Token expired'))
+      (methodName === 'onJoin' && error?.message?.includes(ROOM_ERROR.PLAYER_ALREADY_JOINED)) ||
+      (methodName === 'setSimulationInterval' && error?.message?.includes(ROOM_ERROR.TOKEN_EXPIRED))
     ) {
       console.log(error.message);
     } else {
