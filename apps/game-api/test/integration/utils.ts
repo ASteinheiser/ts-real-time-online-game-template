@@ -27,7 +27,7 @@ export const generateTestJWT = ({
   const payload: DecodedToken = {
     sub: userId,
     email,
-    exp: Math.floor(Date.now() / 1000) + expiresInMs,
+    exp: Math.floor((Date.now() + expiresInMs) / 1000),
   };
 
   return jwt.sign(payload, JWT_SECRET);
