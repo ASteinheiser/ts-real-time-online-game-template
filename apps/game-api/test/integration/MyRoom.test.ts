@@ -119,23 +119,25 @@ describe('Colyseus WebSocket Server', () => {
       assert.strictEqual(players[client2.sessionId], undefined);
     });
 
-    // it('should allow a client to refresh their auth token', async () => {
-    //   const token = generateTestJWT({ expiresInMs: 100 });
-    //   const client = await joinTestRoom({ server, token });
-    //   const room = server.getRoomById(client.roomId);
+    it('should allow a client to refresh their auth token', async () => {
+      // should be at least 1 second to account for joining a room and waiting for the next patch
+      const expiresInMs = 1000;
+      const client = await joinTestRoom({ server, token: generateTestJWT({ expiresInMs }) });
 
-    //   await room.waitForNextSimulationTick();
-    //   assert.strictEqual(room.clients.length, 1);
+      const room = server.getRoomById(client.roomId);
+      await room.waitForNextPatch();
 
-    //   await new Promise((resolve) => setTimeout(resolve, 1000));
+      assert.strictEqual(room.clients.length, 1);
+      assert.strictEqual(room.clients[0].sessionId, client.sessionId);
 
-    //   // await client.send(WS_EVENT.REFRESH_TOKEN, { token: generateTestJWT({}) });
-    //   await room.waitForNextSimulationTick();
+      await client.send(WS_EVENT.REFRESH_TOKEN, { token: generateTestJWT({}) });
 
-    //   assert.strictEqual(room.clients.length, 1);
+      await new Promise((resolve) => setTimeout(resolve, expiresInMs));
+      await room.waitForNextPatch();
 
-    //   // TODO: assert stuffss
-    // });
+      assert.strictEqual(room.clients.length, 1);
+      assert.strictEqual(room.clients[0].sessionId, client.sessionId);
+    });
 
     it('should add a player to the room', async () => {
       const token = generateTestJWT({});
