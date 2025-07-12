@@ -2,7 +2,7 @@ import assert from 'assert';
 import { ServerError } from '@colyseus/core';
 import { type ColyseusTestServer, boot } from '@colyseus/testing';
 import type { GoTrueAdminApi } from '@supabase/supabase-js';
-import { WS_CODE } from '@repo/core-game';
+import { WS_CODE, WS_EVENT } from '@repo/core-game';
 import { makeApp } from '../../src/app.config';
 import { joinTestRoom, generateTestJWT, mockPrismaClient, DEFAULT_USER_ID } from './utils';
 
@@ -20,6 +20,8 @@ describe('Colyseus WebSocket Server', () => {
   beforeEach(async () => await server.cleanup());
 
   describe('error handling', () => {
+    // todo: case for unhandled exception
+
     it('should throw an error if a client joins with an invalid token', async () => {
       try {
         await joinTestRoom({ server, token: 'invalid-token' });
@@ -42,6 +44,20 @@ describe('Colyseus WebSocket Server', () => {
         assert.strictEqual((error as ServerError).message, 'Invalid or expired token');
       }
     });
+
+    // todo: case for joining without a db user
+
+    // todo: case for joining with a user that already has an active connection to the room
+
+    // todo: handle case for auth token timeout
+
+    // todo: handle case for onMessage refreshToken bad token
+
+    // todo: handle case for onMessage refreshToken expired token
+
+    // todo: handle case for onMessage refreshToken no player
+
+    // todo: handle case for onMessage refreshToken userId changed
   });
 
   describe('basic room functionality', () => {
@@ -50,8 +66,54 @@ describe('Colyseus WebSocket Server', () => {
       const client = await joinTestRoom({ server, token });
       const room = server.getRoomById(client.roomId);
 
-      assert.strictEqual(client.sessionId, room.clients[0].sessionId);
+      assert.strictEqual(room.clients.length, 1);
+      assert.strictEqual(room.clients[0].sessionId, client.sessionId);
     });
+
+    it('should allow a client to gracefully leave the room', async () => {
+      const userIds = ['user-1', 'user-2'];
+      const client1 = await joinTestRoom({ server, token: generateTestJWT({ userId: userIds[0] }) });
+      const client2 = await joinTestRoom({ server, token: generateTestJWT({ userId: userIds[1] }) });
+
+      const room = server.getRoomById(client1.roomId);
+      await room.waitForNextPatch();
+      let { players } = room.state.toJSON();
+
+      assert.strictEqual(room.clients.length, 2);
+      assert.strictEqual(!!players[client1.sessionId], true);
+      assert.strictEqual(!!players[client2.sessionId], true);
+      assert.strictEqual(players[client1.sessionId].userId, userIds[0]);
+      assert.strictEqual(players[client2.sessionId].userId, userIds[1]);
+
+      await client2.send(WS_EVENT.LEAVE_ROOM);
+
+      await room.waitForNextPatch();
+      ({ players } = room.state.toJSON());
+
+      assert.strictEqual(room.clients.length, 1);
+      assert.strictEqual(!!players[client1.sessionId], true);
+      assert.strictEqual(!!players[client2.sessionId], false);
+      assert.strictEqual(players[client1.sessionId].userId, userIds[0]);
+      assert.strictEqual(players[client2.sessionId], undefined);
+    });
+
+    // it('should allow a client to refresh their auth token', async () => {
+    //   const token = generateTestJWT({ expiresInMs: 100 });
+    //   const client = await joinTestRoom({ server, token });
+    //   const room = server.getRoomById(client.roomId);
+
+    //   await room.waitForNextSimulationTick();
+    //   assert.strictEqual(room.clients.length, 1);
+
+    //   await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    //   // await client.send(WS_EVENT.REFRESH_TOKEN, { token: generateTestJWT({}) });
+    //   await room.waitForNextSimulationTick();
+
+    //   assert.strictEqual(room.clients.length, 1);
+
+    //   // TODO: assert stuffss
+    // });
 
     it('should add a player to the room', async () => {
       const token = generateTestJWT({});
@@ -63,6 +125,8 @@ describe('Colyseus WebSocket Server', () => {
 
       assert.strictEqual(Object.keys(players).length, 1);
       assert.strictEqual(players[client.sessionId].userId, DEFAULT_USER_ID);
+      assert.strictEqual(typeof players[client.sessionId].x, 'number');
+      assert.strictEqual(typeof players[client.sessionId].y, 'number');
     });
 
     it('should spawn an enemy in the room', async () => {
@@ -75,11 +139,12 @@ describe('Colyseus WebSocket Server', () => {
 
       assert.strictEqual(Object.keys(enemies).length, 1);
       assert.strictEqual(typeof enemies[0].id, 'string');
+      assert.strictEqual(typeof enemies[0].x, 'number');
+      assert.strictEqual(typeof enemies[0].y, 'number');
     });
 
     it('should add multiple players to the room', async () => {
       const userIds = ['user-1', 'user-2', 'user-3', 'user-4'];
-
       const client1 = await joinTestRoom({ server, token: generateTestJWT({ userId: userIds[0] }) });
       const client2 = await joinTestRoom({ server, token: generateTestJWT({ userId: userIds[1] }) });
       const client3 = await joinTestRoom({ server, token: generateTestJWT({ userId: userIds[2] }) });
@@ -87,13 +152,12 @@ describe('Colyseus WebSocket Server', () => {
 
       const room = server.getRoomById(client1.roomId);
       await room.waitForNextPatch();
+      const { players } = room.state.toJSON();
 
-      const roomState = room.state.toJSON();
-
-      assert.strictEqual(roomState.players[client1.sessionId].userId, userIds[0]);
-      assert.strictEqual(roomState.players[client2.sessionId].userId, userIds[1]);
-      assert.strictEqual(roomState.players[client3.sessionId].userId, userIds[2]);
-      assert.strictEqual(roomState.players[client4.sessionId].userId, userIds[3]);
+      assert.strictEqual(players[client1.sessionId].userId, userIds[0]);
+      assert.strictEqual(players[client2.sessionId].userId, userIds[1]);
+      assert.strictEqual(players[client3.sessionId].userId, userIds[2]);
+      assert.strictEqual(players[client4.sessionId].userId, userIds[3]);
     });
   });
 });
