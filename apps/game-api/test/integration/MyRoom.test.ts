@@ -5,6 +5,7 @@ import type { GoTrueAdminApi } from '@supabase/supabase-js';
 import { WS_CODE, WS_EVENT } from '@repo/core-game';
 import { makeApp } from '../../src/app.config';
 import { joinTestRoom, generateTestJWT, mockPrismaClient, DEFAULT_USER_ID } from './utils';
+import { ROOM_ERROR } from '../../src/rooms/error';
 
 describe('Colyseus WebSocket Server', () => {
   let server: ColyseusTestServer;
@@ -29,7 +30,7 @@ describe('Colyseus WebSocket Server', () => {
         assert.strictEqual(true, false);
       } catch (error) {
         assert.strictEqual((error as ServerError).code, WS_CODE.UNAUTHORIZED);
-        assert.strictEqual((error as ServerError).message, 'Invalid or expired token');
+        assert.strictEqual((error as ServerError).message, ROOM_ERROR.INVALID_TOKEN);
       }
     });
 
@@ -41,13 +42,24 @@ describe('Colyseus WebSocket Server', () => {
         assert.strictEqual(true, false);
       } catch (error) {
         assert.strictEqual((error as ServerError).code, WS_CODE.UNAUTHORIZED);
-        assert.strictEqual((error as ServerError).message, 'Invalid or expired token');
+        assert.strictEqual((error as ServerError).message, ROOM_ERROR.INVALID_TOKEN);
       }
     });
 
     // todo: case for joining without a db user
 
-    // todo: case for joining with a user that already has an active connection to the room
+    it('should throw an error if a client joins with a token that is already in use', async () => {
+      try {
+        // the default token generated will have the same userId
+        await joinTestRoom({ server, token: generateTestJWT({}) });
+        await joinTestRoom({ server, token: generateTestJWT({}) });
+        // should never reach this line
+        assert.strictEqual(true, false);
+      } catch (error) {
+        assert.strictEqual((error as ServerError).code, WS_CODE.FORBIDDEN);
+        assert.strictEqual((error as ServerError).message, ROOM_ERROR.PLAYER_ALREADY_JOINED);
+      }
+    });
 
     it('should kick a client if their token expires', async () => {
       // we need this client otherwise the room will be disposed when the client is kicked
