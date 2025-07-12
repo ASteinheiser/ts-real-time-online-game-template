@@ -16,6 +16,7 @@ export const DEFAULT_EXPIRES_IN_MS = 10 * 1000; // 10 seconds
 interface GenerateTestJWTArgs {
   userId?: string;
   email?: string;
+  /** Defaults to 10 seconds (10000ms) */
   expiresInMs?: number;
 }
 
