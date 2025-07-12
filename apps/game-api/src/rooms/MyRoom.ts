@@ -240,8 +240,15 @@ export class MyRoom extends Room<MyRoomState> {
     }, 10000);
   }
 
-  onUncaughtException(error: Error) {
-    console.error('uncaught exception: ', error);
+  onUncaughtException(error: Error, methodName: string) {
+    if (
+      methodName === 'onAuth' ||
+      (methodName === 'setSimulationInterval' && error?.message?.includes('Token expired'))
+    ) {
+      console.log(error.message);
+    } else {
+      console.error('uncaught exception: ', error);
+    }
 
     // possibly handle saving game state
     // possibly handle disconnecting all clients if error is not recoverable

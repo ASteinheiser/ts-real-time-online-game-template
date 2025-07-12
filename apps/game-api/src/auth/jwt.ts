@@ -28,7 +28,8 @@ export const validateJwt = (authHeader?: string): User | null => {
 
     return mapDecodedTokenToUser(decoded);
   } catch (error) {
-    console.error(error);
+    const message = (error as Error)?.message ?? error;
+    console.log(message);
     return null;
   }
 };
