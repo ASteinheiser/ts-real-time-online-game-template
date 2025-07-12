@@ -49,7 +49,29 @@ describe('Colyseus WebSocket Server', () => {
 
     // todo: case for joining with a user that already has an active connection to the room
 
-    // todo: handle case for auth token timeout
+    it('should kick a client if their token expires', async () => {
+      // we need this client otherwise the room will be disposed when the client is kicked
+      const keepAliveClient = await joinTestRoom({
+        server,
+        token: generateTestJWT({ userId: 'keep-alive' }),
+      });
+      // should be at least 1 second to account for joining a room and waiting for the next patch
+      const expiresInMs = 1000;
+      const client = await joinTestRoom({ server, token: generateTestJWT({ expiresInMs }) });
+
+      const room = server.getRoomById(keepAliveClient.roomId);
+      await room.waitForNextPatch();
+
+      assert.strictEqual(room.clients.length, 2);
+      assert.strictEqual(room.clients[0].sessionId, keepAliveClient.sessionId);
+      assert.strictEqual(room.clients[1].sessionId, client.sessionId);
+
+      await new Promise((resolve) => setTimeout(resolve, expiresInMs));
+      await room.waitForNextPatch();
+
+      assert.strictEqual(room.clients.length, 1);
+      assert.strictEqual(room.clients[0].sessionId, keepAliveClient.sessionId);
+    });
 
     // todo: handle case for onMessage refreshToken bad token
 
