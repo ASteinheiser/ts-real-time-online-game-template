@@ -13,6 +13,7 @@ export interface User {
 export interface DecodedToken {
   sub: string;
   email: string;
+  /** Unix timestamp (seconds) - comes from supabase */
   exp: number;
 }
 
