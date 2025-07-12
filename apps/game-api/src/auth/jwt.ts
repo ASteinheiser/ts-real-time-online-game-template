@@ -6,6 +6,7 @@ if (!JWT_SECRET) throw new Error('JWT_SECRET is not set');
 export interface User {
   id: string;
   email: string;
+  /** Token expiration timestamp in milliseconds */
   expiresAt: number;
 }
 
@@ -36,6 +37,7 @@ const mapDecodedTokenToUser = (token: DecodedToken): User => {
   return {
     id: token.sub,
     email: token.email,
+    /** Convert Unix timestamp (seconds) to milliseconds */
     expiresAt: token.exp * 1000,
   };
 };
