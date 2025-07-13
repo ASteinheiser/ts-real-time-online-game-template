@@ -94,13 +94,14 @@ These commands are available from the root directory whether you decide to insta
 |---------|-------------|
 | `pnpm db:[start\|stop\|sync]` | Uses `docker-compose` and `prisma` to manage a local PostgreSQL DB |
 | `pnpm dev` | Run local development servers for each app |
+| `pnpm db:test:[start\|stop\|sync]` | Uses `docker-compose` and `prisma` to manage a test PostgreSQL DB |
 | `pnpm test` | Runs the typecheck, linter and tests for each repo |
 | `pnpm test:watch` | Runs the test suite in each repo and watches for changes |
 | `pnpm test:load` | Builds and runs the `game-api` then starts the load test |
 | `pnpm preview` | Builds each app and runs a local server using the output |
 | `pnpm build:[win\|mac\|linux]` | Builds the desktop app via Electron |
 
-<b>NOTE</b>: If, for example, your Electron app is throwing an error when building, but was previously working, try:
+<b>NOTE</b>: If, for example, your Electron app is throwing an error when starting or building, but was previously working, try:
 ```
 pnpm install:clean
 ```
@@ -115,7 +116,7 @@ pnpm db:sync
 
 `pnpm generate:db-types` will run during `dev`, `build`, etc., if you're using the monorepo commands.
 
-However, if you change the DB schema via `apps/game-api/prisma/schema.prisma`, then you'll need to run:
+However, if you change the DB schema via `apps/game-api/prisma/schema.prisma`, then you'll need to run `db:sync` again:
 ```
 pnpm db:sync
 ```
@@ -123,6 +124,17 @@ pnpm db:sync
 This will generate a SQL migration, migrate your local DB, and update your types.
 
 <b>NOTE</b>: This project uses Turborepo's Terminal UI ([tui](https://turborepo.com/blog/turbo-2-0#new-terminal-ui)) and some tasks are interactive, such as `test:watch` and `db:sync`. When you want to interact with a window, press "i", then interact as normal. Press "ctrl" + "z" to leave interactive mode.
+
+## Testing
+
+When you run `pnpm test` or `pnpm test:watch`, it will run the `game-api` test suite, which requires a local test DB to be running. This can be accomplished by following the instructions for [working with the PostgreSQL DB](#working-with-the-postgresql-db), with the only difference being that you add `test:` to the `db:` commands, ie:
+```
+pnpm db:test:start
+pnpm db:test:sync
+pnpm db:test:stop
+```
+
+<b>NOTE</b>: `pnpm test:watch` offers a similar experience to `pnpm dev`, in the sense that it will watch for graphql and prisma type changes, and hot-reload as needed. `pnpm test` acts as a complete CI check as it will run all the type generators, typechecks, linters, then finally tests.
 
 ## Available Commands
 

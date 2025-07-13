@@ -29,15 +29,14 @@
       "dependsOn": ["^lint:fix"]
     },
     "test": {
-      "dependsOn": ["lint", "db:test:sync"],
+      "dependsOn": ["lint"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "env": ["JWT_SECRET"]
     },
     "test:watch": {
-      "dependsOn": ["db:test:sync"],
+      "with": ["generate:gql-types:watch", "generate:db-types:watch"],
       "cache": false,
-      "persistent": true,
-      "interactive": true
+      "persistent": true
     },
     "test:load": {
       "dependsOn": ["game-api#build"],
@@ -50,10 +49,7 @@
     "db:sync": { "cache": false },
     "db:test:start": { "cache": false },
     "db:test:stop": { "cache": false },
-    "db:test:sync": {
-      "dependsOn": ["db:test:start"],
-      "cache": false
-    },
+    "db:test:sync": { "cache": false },
     "dev": {
       "with": ["generate:gql-types:watch", "generate:db-types:watch"],
       "cache": false,
