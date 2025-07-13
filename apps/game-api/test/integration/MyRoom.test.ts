@@ -187,7 +187,31 @@ describe('Colyseus WebSocket Server', () => {
       assert.strictEqual(room.clients[1], undefined);
     });
 
-    // todo: handle case for onMessage refreshToken no player
+    it('should kick a client if they send a refresh token and there is no player for the session', async () => {
+      // we need this client otherwise the room will be disposed when the client is kicked
+      const keepAliveClient = await joinTestRoom({
+        server,
+        token: generateTestJWT({ userId: TEST_USER_IDS[0] }),
+      });
+      const client = await joinTestRoom({ server, token: generateTestJWT({}) });
+
+      const room = server.getRoomById(keepAliveClient.roomId);
+      await room.waitForNextPatch();
+
+      assert.strictEqual(room.clients.length, 2);
+      assert.strictEqual(room.clients[0].sessionId, keepAliveClient.sessionId);
+      assert.strictEqual(room.clients[1].sessionId, client.sessionId);
+
+      room.state.players.delete(client.sessionId);
+
+      await client.send(WS_EVENT.REFRESH_TOKEN, { token: generateTestJWT({}) });
+
+      await room.waitForNextPatch();
+
+      assert.strictEqual(room.clients.length, 1);
+      assert.strictEqual(room.clients[0].sessionId, keepAliveClient.sessionId);
+      assert.strictEqual(room.clients[1], undefined);
+    });
   });
 
   describe('basic room functionality', () => {
