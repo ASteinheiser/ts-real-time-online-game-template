@@ -53,8 +53,7 @@ describe('Colyseus WebSocket Server', () => {
 
     it('should throw an error if a client joins with an expired token', async () => {
       try {
-        const token = generateTestJWT({ expiresInMs: 0 });
-        await joinTestRoom({ server, token });
+        await joinTestRoom({ server, token: generateTestJWT({ expiresInMs: 0 }) });
         // should never reach this line
         assert.strictEqual(true, false);
       } catch (error) {
@@ -123,8 +122,7 @@ describe('Colyseus WebSocket Server', () => {
 
   describe('basic room functionality', () => {
     it('should connect a client to a room', async () => {
-      const token = generateTestJWT({});
-      const client = await joinTestRoom({ server, token });
+      const client = await joinTestRoom({ server, token: generateTestJWT({}) });
       const room = server.getRoomById(client.roomId);
 
       assert.strictEqual(room.clients.length, 1);
@@ -178,8 +176,7 @@ describe('Colyseus WebSocket Server', () => {
     });
 
     it('should add a player to the room', async () => {
-      const token = generateTestJWT({});
-      const client = await joinTestRoom({ server, token });
+      const client = await joinTestRoom({ server, token: generateTestJWT({}) });
       const room = server.getRoomById(client.roomId);
 
       await room.waitForNextPatch();
@@ -192,8 +189,7 @@ describe('Colyseus WebSocket Server', () => {
     });
 
     it('should spawn an enemy in the room', async () => {
-      const token = generateTestJWT({});
-      const client = await joinTestRoom({ server, token });
+      const client = await joinTestRoom({ server, token: generateTestJWT({}) });
       const room = server.getRoomById(client.roomId);
 
       await room.waitForNextPatch();
