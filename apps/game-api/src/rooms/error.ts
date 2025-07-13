@@ -5,10 +5,5 @@ export const ROOM_ERROR = {
   PROFILE_NOT_FOUND: 'Profile not found',
   TOKEN_EXPIRED: 'Token has expired',
   PLAYER_ALREADY_JOINED: 'Player already has an active connection to this room',
+  INTERNAL_SERVER_ERROR: 'Internal server error',
 } as const;
-
-export const REFRESH_TOKEN_ERRORS: string[] = [
-  ROOM_ERROR.INVALID_TOKEN,
-  ROOM_ERROR.CONNECTION_NOT_FOUND,
-  ROOM_ERROR.USER_ID_CHANGED,
-];

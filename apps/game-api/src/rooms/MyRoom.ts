@@ -22,7 +22,7 @@ import {
 import { MyRoomState, Player, Enemy } from './schema/MyRoomState';
 import type { PrismaClient, Profile } from '../prisma-client';
 import { validateJwt } from '../auth/jwt';
-import { ROOM_ERROR, REFRESH_TOKEN_ERRORS } from './error';
+import { ROOM_ERROR } from './error';
 
 const MAX_PLAYERS_PER_ROOM = 4;
 
@@ -55,12 +55,14 @@ export class MyRoom extends Room<MyRoomState> {
   prisma: PrismaClient;
 
   onCreate({ prisma }: MyRoomArgs) {
+    console.log('room', this.roomId, 'created!');
+
     this.prisma = prisma;
 
     this.onMessage(WS_EVENT.PLAYER_INPUT, (client, payload: InputPayload) => {
       const player = this.state.players.get(client.sessionId);
 
-      player?.inputQueue.push(payload);
+      player?.inputQueue?.push(payload);
     });
 
     this.onMessage(WS_EVENT.REFRESH_TOKEN, (client, payload: AuthPayload) => {
@@ -99,62 +101,69 @@ export class MyRoom extends Room<MyRoomState> {
         const client = this.clients.find((client) => client.sessionId === sessionId);
         throwError(WS_CODE.TIMEOUT, ROOM_ERROR.TOKEN_EXPIRED, client);
       }
+      try {
+        let input: undefined | InputPayload;
+        // dequeue player inputs
+        while ((input = player.inputQueue.shift())) {
+          if (input.left) player.isFacingRight = false;
+          else if (input.right) player.isFacingRight = true;
 
-      let input: undefined | InputPayload;
-      // dequeue player inputs
-      while ((input = player.inputQueue.shift())) {
-        if (input.left) player.isFacingRight = false;
-        else if (input.right) player.isFacingRight = true;
+          const { x: newX, y: newY } = calculateMovement({ ...player, ...PLAYER_SIZE, ...input });
+          player.x = newX;
+          player.y = newY;
 
-        const { x: newX, y: newY } = calculateMovement({ ...player, ...PLAYER_SIZE, ...input });
-        player.x = newX;
-        player.y = newY;
+          // Check if enough time has passed since last attack
+          const currentTime = Date.now();
+          const timeSinceLastAttack = currentTime - player.lastAttackTime;
+          const canAttack = timeSinceLastAttack >= ATTACK_COOLDOWN;
 
-        // Check if enough time has passed since last attack
-        const currentTime = Date.now();
-        const timeSinceLastAttack = currentTime - player.lastAttackTime;
-        const canAttack = timeSinceLastAttack >= ATTACK_COOLDOWN;
+          // find the damage frames in the attack animation
+          if (
+            timeSinceLastAttack >= ATTACK_DAMAGE__DELAY &&
+            timeSinceLastAttack < ATTACK_DAMAGE__FRAME_TIME + ATTACK_DAMAGE__DELAY
+          ) {
+            // calculate the damage frame
+            player.attackDamageFrameX = player.isFacingRight
+              ? player.x + ATTACK_OFFSET_X
+              : player.x - ATTACK_OFFSET_X;
+            player.attackDamageFrameY = player.y - ATTACK_OFFSET_Y;
 
-        // find the damage frames in the attack animation
-        if (
-          timeSinceLastAttack >= ATTACK_DAMAGE__DELAY &&
-          timeSinceLastAttack < ATTACK_DAMAGE__FRAME_TIME + ATTACK_DAMAGE__DELAY
-        ) {
-          // calculate the damage frame
-          player.attackDamageFrameX = player.isFacingRight
-            ? player.x + ATTACK_OFFSET_X
-            : player.x - ATTACK_OFFSET_X;
-          player.attackDamageFrameY = player.y - ATTACK_OFFSET_Y;
-
-          // check if the attack hit an enemy
-          for (const enemy of this.state.enemies) {
-            if (
-              enemy.x - ENEMY_SIZE.width / 2 < player.attackDamageFrameX + ATTACK_SIZE.width / 2 &&
-              enemy.x + ENEMY_SIZE.width / 2 > player.attackDamageFrameX - ATTACK_SIZE.width / 2 &&
-              enemy.y - ENEMY_SIZE.height / 2 < player.attackDamageFrameY + ATTACK_SIZE.height / 2 &&
-              enemy.y + ENEMY_SIZE.height / 2 > player.attackDamageFrameY - ATTACK_SIZE.height / 2
-            ) {
-              this.state.enemies.splice(this.state.enemies.indexOf(enemy), 1);
-              player.killCount++;
-              RESULTS[this.roomId][player.userId].killCount++;
+            // check if the attack hit an enemy
+            for (const enemy of this.state.enemies) {
+              if (
+                enemy.x - ENEMY_SIZE.width / 2 < player.attackDamageFrameX + ATTACK_SIZE.width / 2 &&
+                enemy.x + ENEMY_SIZE.width / 2 > player.attackDamageFrameX - ATTACK_SIZE.width / 2 &&
+                enemy.y - ENEMY_SIZE.height / 2 < player.attackDamageFrameY + ATTACK_SIZE.height / 2 &&
+                enemy.y + ENEMY_SIZE.height / 2 > player.attackDamageFrameY - ATTACK_SIZE.height / 2
+              ) {
+                this.state.enemies.splice(this.state.enemies.indexOf(enemy), 1);
+                player.killCount++;
+                RESULTS[this.roomId][player.userId].killCount++;
+              }
             }
+          } else {
+            player.attackDamageFrameX = undefined;
+            player.attackDamageFrameY = undefined;
           }
-        } else {
-          player.attackDamageFrameX = undefined;
-          player.attackDamageFrameY = undefined;
-        }
 
-        // if the player is mid-attack, don't process any more inputs
-        if (!canAttack) {
-          return;
-        } else if (input.attack) {
-          player.isAttacking = true;
-          player.attackCount++;
-          player.lastAttackTime = currentTime;
-          RESULTS[this.roomId][player.userId].attackCount++;
-        } else {
-          player.isAttacking = false;
+          // if the player is mid-attack, don't process any more inputs
+          if (!canAttack) {
+            return;
+          } else if (input.attack) {
+            player.isAttacking = true;
+            player.attackCount++;
+            player.lastAttackTime = currentTime;
+            RESULTS[this.roomId][player.userId].attackCount++;
+          } else {
+            player.isAttacking = false;
+          }
         }
+      } catch (error) {
+        throwError(
+          WS_CODE.INTERNAL_SERVER_ERROR,
+          (error as Error)?.message || ROOM_ERROR.INTERNAL_SERVER_ERROR,
+          this.clients.find((client) => client.sessionId === sessionId)
+        );
       }
     });
 
@@ -240,19 +249,16 @@ export class MyRoom extends Room<MyRoomState> {
   }
 
   onUncaughtException(error: Error, methodName: string) {
-    if (
-      methodName === 'onAuth' ||
-      (methodName === 'onJoin' && error?.message?.includes(ROOM_ERROR.PLAYER_ALREADY_JOINED)) ||
-      (methodName === 'setSimulationInterval' && error?.message?.includes(ROOM_ERROR.TOKEN_EXPIRED)) ||
-      (methodName === 'onMessage' && REFRESH_TOKEN_ERRORS.includes(error?.message))
-    ) {
+    // simply log the error message for "expected" errors
+    if (Object.values(ROOM_ERROR as Record<string, string>).includes(error.message)) {
       console.log(error.message);
-    } else {
-      console.error('uncaught exception: ', error);
+      return;
     }
+    // log any uncaught errors for debugging purposes
+    console.error('uncaught exception in', methodName, error);
 
     // possibly handle saving game state
-    // possibly handle disconnecting all clients if error is not recoverable
+    // possibly handle disconnecting all clients if needed
   }
 }
 
