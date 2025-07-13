@@ -1,5 +1,6 @@
 import { Resolvers } from './generated-types';
 import type { Context } from './context';
+import { logger } from '../logger';
 
 export const resolvers: Resolvers<Context> = {
   Query: {
@@ -43,7 +44,7 @@ export const resolvers: Resolvers<Context> = {
         await authClient.deleteUser(user.id);
         return true;
       } catch (error) {
-        console.error(error);
+        logger.error({ message: 'Failed to delete profile', data: { error } });
         return false;
       }
     },

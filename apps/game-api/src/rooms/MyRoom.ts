@@ -23,6 +23,7 @@ import { MyRoomState, Player, Enemy } from './schema/MyRoomState';
 import type { PrismaClient, Profile } from '../prisma-client';
 import { validateJwt } from '../auth/jwt';
 import { ROOM_ERROR } from './error';
+import { logger } from '../logger';
 
 const MAX_PLAYERS_PER_ROOM = 4;
 
@@ -55,7 +56,7 @@ export class MyRoom extends Room<MyRoomState> {
   prisma: PrismaClient;
 
   onCreate({ prisma }: MyRoomArgs) {
-    console.log('room', this.roomId, 'created!');
+    logger.info({ message: `room ${this.roomId} created!` });
 
     this.prisma = prisma;
 
@@ -77,7 +78,7 @@ export class MyRoom extends Room<MyRoomState> {
       }
 
       player.tokenExpiresAt = authUser.expiresAt;
-      console.log(`Token refreshed for ${player.username}`);
+      logger.info({ message: `Token refreshed for ${player.username}` });
     });
 
     this.onMessage(WS_EVENT.LEAVE_ROOM, (client) => {
@@ -209,7 +210,7 @@ export class MyRoom extends Room<MyRoomState> {
       }
     });
 
-    console.log(`${user.userName} (${client.sessionId}) joined!`);
+    logger.info({ message: `${user.userName} (${client.sessionId}) joined!` });
 
     const player = new Player();
 
@@ -233,14 +234,14 @@ export class MyRoom extends Room<MyRoomState> {
     const player = this.state.players.get(client.sessionId);
 
     if (player) {
-      console.log(`${player.username} (${client.sessionId}) left!`);
+      logger.info({ message: `${player.username} (${client.sessionId}) left...` });
 
       this.state.players.delete(client.sessionId);
     }
   }
 
   onDispose() {
-    console.log('room', this.roomId, 'disposing...');
+    logger.info({ message: `room ${this.roomId} disposing...` });
 
     // delete results after 10 seconds -- stop gap for in-memory management
     setTimeout(() => {
@@ -251,11 +252,11 @@ export class MyRoom extends Room<MyRoomState> {
   onUncaughtException(error: Error, methodName: string) {
     // simply log the error message for "expected" errors
     if (Object.values(ROOM_ERROR as Record<string, string>).includes(error.message)) {
-      console.log(error.message);
+      logger.info({ message: error.message });
       return;
     }
     // log any uncaught errors for debugging purposes
-    console.error('uncaught exception in', methodName, error);
+    logger.error({ message: `uncaught exception in ${methodName}`, data: { error } });
 
     // possibly handle saving game state
     // possibly handle disconnecting all clients if needed

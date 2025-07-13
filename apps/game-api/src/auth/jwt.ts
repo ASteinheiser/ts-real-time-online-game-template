@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import { logger } from '../logger';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 if (!JWT_SECRET) throw new Error('JWT_SECRET is not set');
@@ -29,8 +30,8 @@ export const validateJwt = (authHeader?: string): User | null => {
 
     return mapDecodedTokenToUser(decoded);
   } catch (error) {
-    const message = (error as Error)?.message ?? error;
-    console.log(message);
+    const message = (error as Error)?.message ?? 'unknown jwt error occurred';
+    logger.info({ message });
     return null;
   }
 };
