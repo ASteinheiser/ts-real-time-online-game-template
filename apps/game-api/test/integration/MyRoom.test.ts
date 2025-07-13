@@ -23,6 +23,7 @@ describe('Colyseus WebSocket Server', () => {
 
   before(async () => {
     prisma = createTestPrismaClient();
+    await cleanupTestDb(prisma);
     await setupTestDb(prisma);
     const app = makeApp({ prisma, authClient });
     server = await boot(app);
