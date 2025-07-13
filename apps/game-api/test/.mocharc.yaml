@@ -7,4 +7,4 @@ watch: false
 watch-files:
   - src/**/*.ts
   - test/integration/**/*.test.ts
-timeout: 15000
+timeout: 10000
