@@ -301,6 +301,7 @@ describe('Colyseus WebSocket Server', () => {
 
       assert.strictEqual(Object.keys(players).length, 1);
       assert.strictEqual(players[client.sessionId].userId, TEST_USERS[0].id);
+      assert.strictEqual(players[client.sessionId].username, TEST_USERS[0].userName);
       assert.strictEqual(typeof players[client.sessionId].x, 'number');
       assert.strictEqual(typeof players[client.sessionId].y, 'number');
     });
