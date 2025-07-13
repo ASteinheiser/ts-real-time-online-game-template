@@ -6,8 +6,8 @@ import { WS_CODE, WS_EVENT } from '@repo/core-game';
 import { makeApp } from '../../src/app.config';
 import { ROOM_ERROR } from '../../src/rooms/error';
 import {
-  DEFAULT_USER_ID,
-  TEST_USER_IDS,
+  KEEP_ALIVE_USER,
+  TEST_USERS,
   joinTestRoom,
   generateTestJWT,
   createTestPrismaClient,
@@ -39,10 +39,29 @@ describe('Colyseus WebSocket Server', () => {
   });
 
   describe('error handling', () => {
-    // it('should throw an error if there is an unhandled exception', async () => {
-    // todo: figure out how to throw an error from inside the fixedTick function
-    // make one of the players in the room state array = to null
-    // });
+    it('should kick a client if there is an unhandled exception in fixedTick', async () => {
+      // we need this client otherwise the room will be disposed when the client is kicked
+      const keepAliveClient = await joinTestRoom({
+        server,
+        token: generateTestJWT({ userId: KEEP_ALIVE_USER.id }),
+      });
+      const client = await joinTestRoom({ server, token: generateTestJWT({}) });
+
+      const room = server.getRoomById(keepAliveClient.roomId);
+      await room.waitForNextPatch();
+
+      assert.strictEqual(room.clients.length, 2);
+      assert.strictEqual(room.clients[0].sessionId, keepAliveClient.sessionId);
+      assert.strictEqual(room.clients[1].sessionId, client.sessionId);
+
+      room.state.players.get(client.sessionId).inputQueue = null;
+
+      await room.waitForNextPatch();
+
+      assert.strictEqual(room.clients.length, 1);
+      assert.strictEqual(room.clients[0].sessionId, keepAliveClient.sessionId);
+      assert.strictEqual(room.clients[1], undefined);
+    });
 
     it('should throw an error if a client joins with an invalid token', async () => {
       try {
@@ -95,7 +114,7 @@ describe('Colyseus WebSocket Server', () => {
       // we need this client otherwise the room will be disposed when the client is kicked
       const keepAliveClient = await joinTestRoom({
         server,
-        token: generateTestJWT({ userId: TEST_USER_IDS[0] }),
+        token: generateTestJWT({ userId: KEEP_ALIVE_USER.id }),
       });
       // should be at least 1 second to account for joining a room and waiting for the next patch
       const expiresInMs = 1000;
@@ -119,7 +138,7 @@ describe('Colyseus WebSocket Server', () => {
       // we need this client otherwise the room will be disposed when the client is kicked
       const keepAliveClient = await joinTestRoom({
         server,
-        token: generateTestJWT({ userId: TEST_USER_IDS[0] }),
+        token: generateTestJWT({ userId: KEEP_ALIVE_USER.id }),
       });
       const client = await joinTestRoom({ server, token: generateTestJWT({}) });
 
@@ -143,7 +162,7 @@ describe('Colyseus WebSocket Server', () => {
       // we need this client otherwise the room will be disposed when the client is kicked
       const keepAliveClient = await joinTestRoom({
         server,
-        token: generateTestJWT({ userId: TEST_USER_IDS[0] }),
+        token: generateTestJWT({ userId: KEEP_ALIVE_USER.id }),
       });
       const client = await joinTestRoom({ server, token: generateTestJWT({}) });
 
@@ -167,7 +186,7 @@ describe('Colyseus WebSocket Server', () => {
       // we need this client otherwise the room will be disposed when the client is kicked
       const keepAliveClient = await joinTestRoom({
         server,
-        token: generateTestJWT({ userId: TEST_USER_IDS[0] }),
+        token: generateTestJWT({ userId: KEEP_ALIVE_USER.id }),
       });
       const client = await joinTestRoom({ server, token: generateTestJWT({}) });
 
@@ -178,7 +197,7 @@ describe('Colyseus WebSocket Server', () => {
       assert.strictEqual(room.clients[0].sessionId, keepAliveClient.sessionId);
       assert.strictEqual(room.clients[1].sessionId, client.sessionId);
 
-      await client.send(WS_EVENT.REFRESH_TOKEN, { token: generateTestJWT({ userId: TEST_USER_IDS[1] }) });
+      await client.send(WS_EVENT.REFRESH_TOKEN, { token: generateTestJWT({ userId: TEST_USERS[1].id }) });
 
       await room.waitForNextPatch();
 
@@ -191,7 +210,7 @@ describe('Colyseus WebSocket Server', () => {
       // we need this client otherwise the room will be disposed when the client is kicked
       const keepAliveClient = await joinTestRoom({
         server,
-        token: generateTestJWT({ userId: TEST_USER_IDS[0] }),
+        token: generateTestJWT({ userId: KEEP_ALIVE_USER.id }),
       });
       const client = await joinTestRoom({ server, token: generateTestJWT({}) });
 
@@ -224,29 +243,33 @@ describe('Colyseus WebSocket Server', () => {
     });
 
     it('should allow a client to gracefully leave the room', async () => {
-      const client1 = await joinTestRoom({ server, token: generateTestJWT({ userId: TEST_USER_IDS[0] }) });
-      const client2 = await joinTestRoom({ server, token: generateTestJWT({ userId: TEST_USER_IDS[1] }) });
+      // we need this client otherwise the room will be disposed when the client leaves
+      const keepAliveClient = await joinTestRoom({
+        server,
+        token: generateTestJWT({ userId: KEEP_ALIVE_USER.id }),
+      });
+      const client = await joinTestRoom({ server, token: generateTestJWT({}) });
 
-      const room = server.getRoomById(client1.roomId);
+      const room = server.getRoomById(keepAliveClient.roomId);
       await room.waitForNextPatch();
       let { players } = room.state.toJSON();
 
       assert.strictEqual(room.clients.length, 2);
-      assert.strictEqual(!!players[client1.sessionId], true);
-      assert.strictEqual(!!players[client2.sessionId], true);
-      assert.strictEqual(players[client1.sessionId].userId, TEST_USER_IDS[0]);
-      assert.strictEqual(players[client2.sessionId].userId, TEST_USER_IDS[1]);
+      assert.strictEqual(!!players[keepAliveClient.sessionId], true);
+      assert.strictEqual(!!players[client.sessionId], true);
+      assert.strictEqual(players[keepAliveClient.sessionId].userId, KEEP_ALIVE_USER.id);
+      assert.strictEqual(players[client.sessionId].userId, TEST_USERS[0].id);
 
-      await client2.send(WS_EVENT.LEAVE_ROOM);
+      await client.send(WS_EVENT.LEAVE_ROOM);
 
       await room.waitForNextPatch();
       ({ players } = room.state.toJSON());
 
       assert.strictEqual(room.clients.length, 1);
-      assert.strictEqual(!!players[client1.sessionId], true);
-      assert.strictEqual(!!players[client2.sessionId], false);
-      assert.strictEqual(players[client1.sessionId].userId, TEST_USER_IDS[0]);
-      assert.strictEqual(players[client2.sessionId], undefined);
+      assert.strictEqual(!!players[keepAliveClient.sessionId], true);
+      assert.strictEqual(!!players[client.sessionId], false);
+      assert.strictEqual(players[keepAliveClient.sessionId].userId, KEEP_ALIVE_USER.id);
+      assert.strictEqual(players[client.sessionId], undefined);
     });
 
     it('should allow a client to refresh their auth token', async () => {
@@ -277,7 +300,7 @@ describe('Colyseus WebSocket Server', () => {
       const { players } = client.state.toJSON();
 
       assert.strictEqual(Object.keys(players).length, 1);
-      assert.strictEqual(players[client.sessionId].userId, DEFAULT_USER_ID);
+      assert.strictEqual(players[client.sessionId].userId, TEST_USERS[0].id);
       assert.strictEqual(typeof players[client.sessionId].x, 'number');
       assert.strictEqual(typeof players[client.sessionId].y, 'number');
     });
@@ -296,19 +319,19 @@ describe('Colyseus WebSocket Server', () => {
     });
 
     it('should add multiple players to the room', async () => {
-      const client1 = await joinTestRoom({ server, token: generateTestJWT({ userId: TEST_USER_IDS[0] }) });
-      const client2 = await joinTestRoom({ server, token: generateTestJWT({ userId: TEST_USER_IDS[1] }) });
-      const client3 = await joinTestRoom({ server, token: generateTestJWT({ userId: TEST_USER_IDS[2] }) });
-      const client4 = await joinTestRoom({ server, token: generateTestJWT({ userId: TEST_USER_IDS[3] }) });
+      const client1 = await joinTestRoom({ server, token: generateTestJWT({ userId: TEST_USERS[0].id }) });
+      const client2 = await joinTestRoom({ server, token: generateTestJWT({ userId: TEST_USERS[1].id }) });
+      const client3 = await joinTestRoom({ server, token: generateTestJWT({ userId: TEST_USERS[2].id }) });
+      const client4 = await joinTestRoom({ server, token: generateTestJWT({ userId: TEST_USERS[3].id }) });
 
       const room = server.getRoomById(client1.roomId);
       await room.waitForNextPatch();
       const { players } = room.state.toJSON();
 
-      assert.strictEqual(players[client1.sessionId].userId, TEST_USER_IDS[0]);
-      assert.strictEqual(players[client2.sessionId].userId, TEST_USER_IDS[1]);
-      assert.strictEqual(players[client3.sessionId].userId, TEST_USER_IDS[2]);
-      assert.strictEqual(players[client4.sessionId].userId, TEST_USER_IDS[3]);
+      assert.strictEqual(players[client1.sessionId].userId, TEST_USERS[0].id);
+      assert.strictEqual(players[client2.sessionId].userId, TEST_USERS[1].id);
+      assert.strictEqual(players[client3.sessionId].userId, TEST_USERS[2].id);
+      assert.strictEqual(players[client4.sessionId].userId, TEST_USERS[3].id);
     });
   });
 });
