@@ -39,6 +39,11 @@ describe('Colyseus WebSocket Server', () => {
   });
 
   describe('error handling', () => {
+    // it('should throw an error if there is an unhandled exception', async () => {
+    // todo: figure out how to throw an error from inside the fixedTick function
+    // make one of the players in the room state array = to null
+    // });
+
     it('should throw an error if a client joins with an invalid token', async () => {
       try {
         await joinTestRoom({ server, token: 'invalid-token' });
@@ -134,11 +139,55 @@ describe('Colyseus WebSocket Server', () => {
       assert.strictEqual(room.clients[1], undefined);
     });
 
-    // todo: handle case for onMessage refreshToken expired token
+    it('should kick a client if their refresh token is expired', async () => {
+      // we need this client otherwise the room will be disposed when the client is kicked
+      const keepAliveClient = await joinTestRoom({
+        server,
+        token: generateTestJWT({ userId: TEST_USER_IDS[0] }),
+      });
+      const client = await joinTestRoom({ server, token: generateTestJWT({}) });
+
+      const room = server.getRoomById(keepAliveClient.roomId);
+      await room.waitForNextPatch();
+
+      assert.strictEqual(room.clients.length, 2);
+      assert.strictEqual(room.clients[0].sessionId, keepAliveClient.sessionId);
+      assert.strictEqual(room.clients[1].sessionId, client.sessionId);
+
+      await client.send(WS_EVENT.REFRESH_TOKEN, { token: generateTestJWT({ expiresInMs: 0 }) });
+
+      await room.waitForNextPatch();
+
+      assert.strictEqual(room.clients.length, 1);
+      assert.strictEqual(room.clients[0].sessionId, keepAliveClient.sessionId);
+      assert.strictEqual(room.clients[1], undefined);
+    });
+
+    it('should kick a client if their refresh token has a different userId', async () => {
+      // we need this client otherwise the room will be disposed when the client is kicked
+      const keepAliveClient = await joinTestRoom({
+        server,
+        token: generateTestJWT({ userId: TEST_USER_IDS[0] }),
+      });
+      const client = await joinTestRoom({ server, token: generateTestJWT({}) });
+
+      const room = server.getRoomById(keepAliveClient.roomId);
+      await room.waitForNextPatch();
+
+      assert.strictEqual(room.clients.length, 2);
+      assert.strictEqual(room.clients[0].sessionId, keepAliveClient.sessionId);
+      assert.strictEqual(room.clients[1].sessionId, client.sessionId);
+
+      await client.send(WS_EVENT.REFRESH_TOKEN, { token: generateTestJWT({ userId: TEST_USER_IDS[1] }) });
+
+      await room.waitForNextPatch();
+
+      assert.strictEqual(room.clients.length, 1);
+      assert.strictEqual(room.clients[0].sessionId, keepAliveClient.sessionId);
+      assert.strictEqual(room.clients[1], undefined);
+    });
 
     // todo: handle case for onMessage refreshToken no player
-
-    // todo: handle case for onMessage refreshToken userId changed
   });
 
   describe('basic room functionality', () => {
