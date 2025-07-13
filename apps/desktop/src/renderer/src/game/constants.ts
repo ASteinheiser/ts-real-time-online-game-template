@@ -6,10 +6,10 @@ export const SCENE = {
   MAIN_MENU: 'MainMenu',
   GAME: 'Game',
   GAME_OVER: 'GameOver',
-};
+} as const;
 
 export const ASSET = {
   BACKGROUND: 'background',
   ENEMY: 'enemy',
   PLAYER: 'player',
-};
+} as const;

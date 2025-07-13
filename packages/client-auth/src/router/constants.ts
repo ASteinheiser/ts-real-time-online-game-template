@@ -7,4 +7,4 @@ export const AUTH_ROUTES = {
   NEW_PASSWORD: `${AUTH_PATH_PREFIX}new-password`,
   CREATE_PROFILE: '/create-profile',
   PROFILE: '/profile',
-};
+} as const;

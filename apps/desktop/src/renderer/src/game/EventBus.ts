@@ -10,4 +10,4 @@ export const EVENT_BUS = {
   JOIN_ERROR: 'join-error',
   PROFILE_OPEN: 'menu-open__profile',
   OPTIONS_OPEN: 'menu-open__options',
-};
+} as const;

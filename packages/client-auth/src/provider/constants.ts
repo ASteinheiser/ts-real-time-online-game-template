@@ -8,4 +8,4 @@ export const SUPABASE_AUTH = {
   ERROR: {
     EMAIL_ALREADY_SENT: 'For security purposes, you can only request this after',
   },
-};
+} as const;

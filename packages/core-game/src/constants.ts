@@ -50,11 +50,11 @@ export const API_ROUTES = {
   GRAPHQL: '/graphql',
   MONITOR: '/monitor',
   PLAYGROUND: '/',
-};
+} as const;
 
 export const WS_ROOM = {
   GAME_ROOM: 'game_room',
-};
+} as const;
 
 export const WS_EVENT = {
   LEAVE_ROOM: 'leaveRoom',
@@ -62,7 +62,7 @@ export const WS_EVENT = {
   REFRESH_TOKEN: 'refreshToken',
   // this comes from Colyseus, register this to handle playground messages
   PLAYGROUND_MESSAGE_TYPES: '__playground_message_types',
-};
+} as const;
 
 export const WS_CODE = {
   SUCCESS: 1000,
@@ -71,7 +71,7 @@ export const WS_CODE = {
   FORBIDDEN: 3003,
   TIMEOUT: 3008,
   NOT_FOUND: 4004,
-};
+} as const;
 
 export interface AuthPayload {
   token: string;

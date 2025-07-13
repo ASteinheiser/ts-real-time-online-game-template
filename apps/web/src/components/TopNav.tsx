@@ -10,13 +10,15 @@ import { APP_ROUTES } from '../router/constants';
 // adds a smooth delay when closing the mobile menu
 const MENU_CLOSE_DELAY = 100;
 
+type NavLinks = Array<{ href: string; label: string }>;
+
 export const TopNav = () => {
   const { profile } = useSession();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const renderNavLinks = () => {
-    const navLinks = [{ href: APP_ROUTES.DEV_LOG, label: 'DevLog' }];
+    const navLinks: NavLinks = [{ href: APP_ROUTES.DEV_LOG, label: 'DevLog' }];
     if (profile) {
       navLinks.push({ href: APP_ROUTES.DOWNLOAD, label: 'Download' });
       navLinks.push({ href: AUTH_ROUTES.PROFILE, label: 'Profile' });
