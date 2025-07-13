@@ -39,8 +39,6 @@ describe('Colyseus WebSocket Server', () => {
   });
 
   describe('error handling', () => {
-    // todo: case for unhandled exception
-
     it('should throw an error if a client joins with an invalid token', async () => {
       try {
         await joinTestRoom({ server, token: 'invalid-token' });
@@ -112,7 +110,29 @@ describe('Colyseus WebSocket Server', () => {
       assert.strictEqual(room.clients[0].sessionId, keepAliveClient.sessionId);
     });
 
-    // todo: handle case for onMessage refreshToken bad token
+    it('should kick a client if they send an invalid refresh token', async () => {
+      // we need this client otherwise the room will be disposed when the client is kicked
+      const keepAliveClient = await joinTestRoom({
+        server,
+        token: generateTestJWT({ userId: TEST_USER_IDS[0] }),
+      });
+      const client = await joinTestRoom({ server, token: generateTestJWT({}) });
+
+      const room = server.getRoomById(keepAliveClient.roomId);
+      await room.waitForNextPatch();
+
+      assert.strictEqual(room.clients.length, 2);
+      assert.strictEqual(room.clients[0].sessionId, keepAliveClient.sessionId);
+      assert.strictEqual(room.clients[1].sessionId, client.sessionId);
+
+      await client.send(WS_EVENT.REFRESH_TOKEN, { token: 'invalid-token' });
+
+      await room.waitForNextPatch();
+
+      assert.strictEqual(room.clients.length, 1);
+      assert.strictEqual(room.clients[0].sessionId, keepAliveClient.sessionId);
+      assert.strictEqual(room.clients[1], undefined);
+    });
 
     // todo: handle case for onMessage refreshToken expired token
 
