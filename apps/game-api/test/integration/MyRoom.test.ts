@@ -32,6 +32,7 @@ describe('Colyseus WebSocket Server', () => {
   after(async () => {
     await server.shutdown();
     await cleanupTestDb(prisma);
+    await prisma.$disconnect();
   });
 
   beforeEach(async () => {

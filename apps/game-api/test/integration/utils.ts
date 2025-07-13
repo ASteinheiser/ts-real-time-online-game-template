@@ -97,9 +97,7 @@ export const setupTestDb = async (prisma: PrismaClient) => {
   ]);
 };
 
-/** deletes test data from each table then disconnects the client */
+/** deletes test data from each table */
 export const cleanupTestDb = async (prisma: PrismaClient) => {
   await prisma.profile.deleteMany();
-
-  await prisma.$disconnect();
 };
