@@ -11,6 +11,8 @@ import { MyRoom } from './rooms/MyRoom';
 import { createContext } from './graphql/context';
 import type { PrismaClient } from './prisma-client';
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 interface MakeAppArgs {
   authClient: GoTrueAdminApi;
   prisma: PrismaClient;
@@ -45,7 +47,7 @@ export const makeApp = ({ authClient, prisma }: MakeAppArgs) => {
        * Use @colyseus/playground
        * (It is not recommended to expose this route in a production environment)
        */
-      if (process.env.NODE_ENV !== 'production') {
+      if (!isProduction) {
         app.use(API_ROUTES.PLAYGROUND, playground());
       }
 
