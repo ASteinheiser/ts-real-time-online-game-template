@@ -22,7 +22,7 @@ import {
 import { MyRoomState, Player, Enemy } from './schema/MyRoomState';
 import type { PrismaClient, Profile } from '../prisma-client';
 import { validateJwt } from '../auth/jwt';
-import { ROOM_ERROR } from './error';
+import { ROOM_ERROR, REFRESH_TOKEN_ERRORS } from './error';
 
 const MAX_PLAYERS_PER_ROOM = 4;
 
@@ -243,7 +243,8 @@ export class MyRoom extends Room<MyRoomState> {
     if (
       methodName === 'onAuth' ||
       (methodName === 'onJoin' && error?.message?.includes(ROOM_ERROR.PLAYER_ALREADY_JOINED)) ||
-      (methodName === 'setSimulationInterval' && error?.message?.includes(ROOM_ERROR.TOKEN_EXPIRED))
+      (methodName === 'setSimulationInterval' && error?.message?.includes(ROOM_ERROR.TOKEN_EXPIRED)) ||
+      (methodName === 'onMessage' && REFRESH_TOKEN_ERRORS.includes(error?.message))
     ) {
       console.log(error.message);
     } else {
