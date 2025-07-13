@@ -334,5 +334,30 @@ describe('Colyseus WebSocket Server', () => {
       assert.strictEqual(players[client3.sessionId].userId, TEST_USERS[2].id);
       assert.strictEqual(players[client4.sessionId].userId, TEST_USERS[3].id);
     });
+
+    it('should add the maximum number of players to the room, then create a new room when needed', async () => {
+      const client1 = await joinTestRoom({ server, token: generateTestJWT({ userId: TEST_USERS[0].id }) });
+      const client2 = await joinTestRoom({ server, token: generateTestJWT({ userId: TEST_USERS[1].id }) });
+      const client3 = await joinTestRoom({ server, token: generateTestJWT({ userId: TEST_USERS[2].id }) });
+      const client4 = await joinTestRoom({ server, token: generateTestJWT({ userId: TEST_USERS[3].id }) });
+      const client5 = await joinTestRoom({ server, token: generateTestJWT({ userId: TEST_USERS[4].id }) });
+
+      const room1 = server.getRoomById(client1.roomId);
+      await room1.waitForNextPatch();
+      const players1 = room1.state.toJSON().players;
+
+      const room2 = server.getRoomById(client5.roomId);
+      await room2.waitForNextPatch();
+      const players2 = room2.state.toJSON().players;
+
+      assert.strictEqual(Object.keys(players1).length, 4);
+      assert.strictEqual(players1[client1.sessionId].userId, TEST_USERS[0].id);
+      assert.strictEqual(players1[client2.sessionId].userId, TEST_USERS[1].id);
+      assert.strictEqual(players1[client3.sessionId].userId, TEST_USERS[2].id);
+      assert.strictEqual(players1[client4.sessionId].userId, TEST_USERS[3].id);
+
+      assert.strictEqual(Object.keys(players2).length, 1);
+      assert.strictEqual(players2[client5.sessionId].userId, TEST_USERS[4].id);
+    });
   });
 });
