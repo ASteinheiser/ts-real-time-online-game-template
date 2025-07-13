@@ -12,12 +12,18 @@ if (!DATABASE_URL) throw new Error('DATABASE_URL is not set');
 const JWT_SECRET = process.env.JWT_SECRET;
 if (!JWT_SECRET) throw new Error('JWT_SECRET is not set');
 
-export const DEFAULT_USER_ID = 'test-user-id';
-export const DEFAULT_EMAIL = 'test@example.com';
-export const DEFAULT_EXPIRES_IN_MS = 10 * 1000; // 10 seconds
-export const TEST_USER_IDS = Array(5)
+/** default is 10 seconds (10000ms) */
+export const DEFAULT_EXPIRES_IN_MS = 10 * 1000;
+export const KEEP_ALIVE_USER = {
+  id: 'keep-alive-user-id',
+  userName: 'keep-alive-user-name',
+};
+export const TEST_USERS = Array(5)
   .fill(null)
-  .map((_, i) => `test-user-id-${i + 1}`);
+  .map((_, i) => ({
+    id: `test-user-id-${i + 1}`,
+    userName: `test-user-name-${i + 1}`,
+  }));
 
 interface GenerateTestJWTArgs {
   userId?: string;
@@ -27,8 +33,8 @@ interface GenerateTestJWTArgs {
 }
 
 export const generateTestJWT = ({
-  userId = DEFAULT_USER_ID,
-  email = DEFAULT_EMAIL,
+  userId = TEST_USERS[0].id,
+  email = `${userId}@email.com`,
   expiresInMs = DEFAULT_EXPIRES_IN_MS,
 }: GenerateTestJWTArgs): string => {
   const payload: DecodedToken = {
@@ -76,15 +82,15 @@ export const setupTestDb = async (prisma: PrismaClient) => {
   await Promise.all([
     prisma.profile.create({
       data: {
-        userId: DEFAULT_USER_ID,
-        userName: `${DEFAULT_USER_ID}-user-name`,
+        userId: KEEP_ALIVE_USER.id,
+        userName: KEEP_ALIVE_USER.userName,
       },
     }),
-    ...TEST_USER_IDS.map((userId) =>
+    ...TEST_USERS.map(({ id, userName }) =>
       prisma.profile.create({
         data: {
-          userId,
-          userName: `${userId}-user-name`,
+          userId: id,
+          userName,
         },
       })
     ),
