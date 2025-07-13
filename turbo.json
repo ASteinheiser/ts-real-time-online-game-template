@@ -29,11 +29,12 @@
       "dependsOn": ["^lint:fix"]
     },
     "test": {
-      "dependsOn": ["lint"],
+      "dependsOn": ["lint", "db:test:sync"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "env": ["JWT_SECRET"]
     },
     "test:watch": {
+      "dependsOn": ["db:test:sync"],
       "cache": false,
       "persistent": true,
       "interactive": true
@@ -44,16 +45,14 @@
       "cache": false,
       "persistent": true
     },
-    "db:start": {
+    "db:start": { "cache": false },
+    "db:stop": { "cache": false },
+    "db:sync": { "cache": false },
+    "db:test:start": { "cache": false },
+    "db:test:stop": { "cache": false },
+    "db:test:sync": {
+      "dependsOn": ["db:test:start"],
       "cache": false
-    },
-    "db:stop": {
-      "cache": false
-    },
-    "db:sync": {
-      "cache": false,
-      "persistent": true,
-      "interactive": true
     },
     "dev": {
       "with": ["generate:gql-types:watch", "generate:db-types:watch"],

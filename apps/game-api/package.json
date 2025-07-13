@@ -14,8 +14,9 @@
     "generate:db-types": "prisma generate",
     "generate:db-types:watch": "prisma generate --watch",
     "check-types": "tsc --noEmit",
-    "test": "mocha --config test/.mocharc.yaml",
-    "test:watch": "nodemon --ext ts --exec \"c8 --config test/.c8rc.json mocha --config test/.mocharc.yaml\"",
+    "test:load-env": "DATABASE_URL=postgresql://guest:guest@localhost:15432/game_db_test",
+    "test": "npm run test:load-env -- mocha --config test/.mocharc.yaml",
+    "test:watch": "npm run test:load-env -- nodemon --ext ts --exec \"c8 --config test/.c8rc.json mocha --config test/.mocharc.yaml\"",
     "test:load": "tsx test/load/test.ts --numClients 2 --room",
     "dev": "tsx watch src/index.ts",
     "build": "vite build && npm run copy-files",
@@ -24,7 +25,10 @@
     "preview": "npm run start",
     "db:start": "docker-compose -f docker-compose.yaml up -d",
     "db:stop": "docker-compose -f docker-compose.yaml down",
-    "db:sync": "prisma migrate dev"
+    "db:sync": "prisma migrate dev",
+    "db:test:start": "docker-compose -f docker-compose-test.yaml up -d",
+    "db:test:stop": "docker-compose -f docker-compose-test.yaml down",
+    "db:test:sync": "npm run test:load-env -- prisma migrate dev"
   },
   "devDependencies": {
     "@colyseus/loadtest": "^0.16.1",

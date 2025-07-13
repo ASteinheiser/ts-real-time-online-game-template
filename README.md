@@ -143,6 +143,9 @@ This will generate a SQL migration, migrate your local DB, and update your types
 | `pnpm db:start` | Uses `docker-compose` to start a local PostgreSQL DB |
 | `pnpm db:stop` | Uses `docker-compose` to stop the local PostgreSQL DB |
 | `pnpm db:sync` | Uses `prisma` to manage the local DB based on the `schema.prisma` |
+| `pnpm db:test:start` | Uses `docker-compose` to start a local PostgreSQL DB for testing |
+| `pnpm db:test:stop` | Uses `docker-compose` to stop the local PostgreSQL DB for testing |
+| `pnpm db:test:sync` | Uses `prisma` to manage the testing DB based on the `schema.prisma` |
 | `pnpm dev` | Run local development servers for each app |
 | `pnpm generate:app-icons` | Generates PWA/Electron icons from `apps/web/public/logo.svg` |
 | `pnpm generate:pwa-assets` | Generates PWA assets from `apps/web/public/logo.svg` |

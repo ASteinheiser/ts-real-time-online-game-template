@@ -1,0 +1,11 @@
+services:
+  postgres-db-test:
+    image: postgres:17.5
+    container_name: game_postgres_db_test
+    restart: always
+    environment:
+      POSTGRES_USER: guest
+      POSTGRES_PASSWORD: guest
+      POSTGRES_DB: game_db_test
+    ports:
+      - "15432:5432"
