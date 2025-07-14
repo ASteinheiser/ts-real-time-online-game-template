@@ -4,7 +4,7 @@ import type { GraphQLResponse } from '@apollo/server';
 import { WS_ROOM, WS_EVENT } from '@repo/core-game';
 import { MyRoomState } from '../../src/rooms/schema/MyRoomState';
 import { PrismaClient } from '../../src/prisma-client';
-import type { DecodedToken } from '../../src/auth/jwt';
+import type { DecodedToken, User } from '../../src/auth/jwt';
 
 const DATABASE_URL = process.env.DATABASE_URL;
 if (!DATABASE_URL) throw new Error('DATABASE_URL is not set');
@@ -14,32 +14,45 @@ if (!JWT_SECRET) throw new Error('JWT_SECRET is not set');
 
 /** default is 10 seconds (10000ms) */
 export const DEFAULT_EXPIRES_IN_MS = 10 * 1000;
-export const KEEP_ALIVE_USER = {
+interface TestUser {
+  id: string;
+  userName: string;
+  email: string;
+}
+export const KEEP_ALIVE_USER: TestUser = {
   id: 'keep-alive-user-id',
   userName: 'keep-alive-user-name',
+  email: 'keep-alive-user@email.com',
 };
-export const TEST_USERS = Array(5)
+export const TEST_USERS: Array<TestUser> = Array(5)
   .fill(null)
   .map((_, i) => ({
     id: `test-user-id-${i + 1}`,
     userName: `test-user-name-${i + 1}`,
+    email: `test-user-${i + 1}@email.com`,
   }));
 
+export const makeTestContextUser = (user: TestUser): User => {
+  return {
+    id: user.id,
+    email: user.email,
+    expiresAt: Date.now() + DEFAULT_EXPIRES_IN_MS,
+  };
+};
+
 interface GenerateTestJWTArgs {
-  userId?: string;
-  email?: string;
+  user?: TestUser;
   /** Defaults to 10 seconds (10000ms) */
   expiresInMs?: number;
 }
 
 export const generateTestJWT = ({
-  userId = TEST_USERS[0].id,
-  email = `${userId}@email.com`,
+  user = TEST_USERS[0],
   expiresInMs = DEFAULT_EXPIRES_IN_MS,
 }: GenerateTestJWTArgs): string => {
   const payload: DecodedToken = {
-    sub: userId,
-    email,
+    sub: user.id,
+    email: user.email,
     exp: Math.floor((Date.now() + expiresInMs) / 1000),
   };
 
