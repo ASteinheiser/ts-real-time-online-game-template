@@ -69,5 +69,11 @@ export type Test_GetTotalPlayersQueryVariables = Exact<{ [key: string]: never; }
 
 export type Test_GetTotalPlayersQuery = { __typename?: 'Query', totalPlayers?: number | null };
 
+export type Test_GetUserProfileQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type Test_GetUserProfileQuery = { __typename?: 'Query', profile?: { __typename?: 'Profile', userName: string } | null };
+
 
 export const Test_GetTotalPlayersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Test_GetTotalPlayers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalPlayers"}}]}}]} as unknown as DocumentNode<Test_GetTotalPlayersQuery, Test_GetTotalPlayersQueryVariables>;
+export const Test_GetUserProfileDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Test_GetUserProfile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userName"}}]}}]}}]} as unknown as DocumentNode<Test_GetUserProfileQuery, Test_GetUserProfileQueryVariables>;
