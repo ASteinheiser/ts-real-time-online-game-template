@@ -2,7 +2,7 @@ import assert from 'assert';
 import { ServerError } from '@colyseus/core';
 import { type ColyseusTestServer, boot } from '@colyseus/testing';
 import type { GoTrueAdminApi } from '@supabase/supabase-js';
-import { WS_CODE, WS_EVENT } from '@repo/core-game';
+import { WS_CODE, WS_EVENT, WS_ROOM } from '@repo/core-game';
 import { makeApp } from '../../src/app.config';
 import { ROOM_ERROR } from '../../src/rooms/error';
 import {
@@ -15,7 +15,7 @@ import {
   cleanupTestDb,
 } from './utils';
 
-describe('Colyseus WebSocket Server', () => {
+describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
   let server: ColyseusTestServer;
   let prisma: ReturnType<typeof createTestPrismaClient>;
   // currently unused, but required by the app config
