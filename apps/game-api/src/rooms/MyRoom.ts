@@ -27,7 +27,7 @@ import { logger } from '../logger';
 
 const MAX_PLAYERS_PER_ROOM = 4;
 
-// basic in-memory storage of results for all players in a room
+/** Basic in-memory storage of results for all players in a room */
 export const RESULTS: ResultStorage = {};
 interface ResultStorage {
   [roomId: string]: {

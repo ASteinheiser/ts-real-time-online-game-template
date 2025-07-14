@@ -1,7 +1,6 @@
 /** Used to handle slight differences in player position due to interpolation of server values */
 const MOVEMENT_THRESHOLD = 0.1;
 
-export const PLAYER_FRAME_RATE = 8;
 export const PLAYER_ANIM = {
   IDLE: 'playerIdle',
   WALK: 'playerWalk',

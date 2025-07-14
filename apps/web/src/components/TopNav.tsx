@@ -7,7 +7,7 @@ import { Menu } from '@repo/ui/icons';
 import { cn } from '@repo/ui/utils';
 import { APP_ROUTES } from '../router/constants';
 
-// adds a smooth delay when closing the mobile menu
+/** Adds a smooth delay when closing the mobile menu (in ms) */
 const MENU_CLOSE_DELAY = 100;
 
 type NavLinks = Array<{ href: string; label: string }>;

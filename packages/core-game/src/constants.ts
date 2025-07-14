@@ -1,69 +1,68 @@
-// #region Game
-// this is how many ticks per second the game has
+/** The number of ticks per second the game has */
 export const FIXED_TIME_STEP = 1000 / 128;
-// #endregion
 
-// #region Map
+/** The size of the map in pixels */
 export const MAP_SIZE = {
   width: 1024,
   height: 768,
 };
-// #endregion
 
-// #region Player
+/** The number of frames per second the player animates at (8fps) */
+export const PLAYER_FRAME_RATE = 8;
+/** The speed of the player in pixels per tick */
 export const PLAYER_MOVE_SPEED = 2;
+/** The size of the player in pixels */
 export const PLAYER_SIZE = {
   width: 47,
   height: 53,
 };
-// #endregion
 
-// #region Attack
+/** The size of the attack in pixels */
 export const ATTACK_SIZE = {
   width: 6,
   height: 8,
 };
-// offset from the center of the player to the center of the fist,
-// which is at the edge of the player's bounding box
+/** Offset from the center of the player to the center of the fist,
+ * which is at the edge of the player's bounding box */
 export const ATTACK_OFFSET_X = PLAYER_SIZE.width / 2 - ATTACK_SIZE.width / 2;
-// magic number, this is how high the fist is above the center of the player
+/** Magic number, this is how high the fist is above the center of the player */
 export const ATTACK_OFFSET_Y = 12.5;
-// attack animation takes 0.625 seconds total (5 frames at 8fps)
+/** Attack animation takes 0.625 seconds total (5 frames at 8fps) */
 export const ATTACK_COOLDOWN = 625;
-// attack damage frame is at .375 seconds (frame 3 / 5)
+/** Attack damage frame is at 0.375 seconds (frame 3 / 5) */
 export const ATTACK_DAMAGE__DELAY = 375;
-// time it takes for one frame in the attack animation (8fps)
+/** Time it takes for one frame in the attack animation (in ms) */
 export const ATTACK_DAMAGE__FRAME_TIME = 125;
-// #endregion
 
-// #region Enemy
+/** The rate at which enemies spawn (in ms) */
 export const ENEMY_SPAWN_RATE = 2000;
+/** The maximum number of enemies that can exist */
 export const MAX_ENEMIES = 10;
+/** The size of the enemy in pixels */
 export const ENEMY_SIZE = {
   width: 64,
   height: 64,
 };
-// #endregion
 
-// #region API Server
+/** The routes for the API server */
 export const API_ROUTES = {
   GRAPHQL: '/graphql',
   MONITOR: '/monitor',
   PLAYGROUND: '/',
 } as const;
-
+/** The websocket rooms available */
 export const WS_ROOM = {
   GAME_ROOM: 'game_room',
 } as const;
-
+/** The websocket message events available */
 export const WS_EVENT = {
   LEAVE_ROOM: 'leaveRoom',
   PLAYER_INPUT: 'playerInput',
   REFRESH_TOKEN: 'refreshToken',
-  // this comes from Colyseus, register this to handle playground messages
+  /** This comes from Colyseus, register this to handle playground messages */
   PLAYGROUND_MESSAGE_TYPES: '__playground_message_types',
 } as const;
-
+/** The websocket message codes available */
 export const WS_CODE = {
   SUCCESS: 1000,
   INTERNAL_SERVER_ERROR: 1011,
@@ -73,10 +72,11 @@ export const WS_CODE = {
   NOT_FOUND: 4004,
 } as const;
 
+/** The payload for joining a room or refreshing a token */
 export interface AuthPayload {
   token: string;
 }
-
+/** The payload for player input */
 export interface InputPayload {
   left: boolean;
   right: boolean;
@@ -84,4 +84,3 @@ export interface InputPayload {
   down: boolean;
   attack: boolean;
 }
-// #endregion

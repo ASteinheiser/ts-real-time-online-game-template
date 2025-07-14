@@ -28,6 +28,7 @@ export class Game extends Scene {
   room?: Room;
   playerEntities: Record<string, Player> = {};
   currentPlayer?: Player;
+  /** This is used to track the player according to the server */
   remoteRef?: Phaser.GameObjects.Rectangle;
   enemyEntities: Record<string, Enemy> = {};
 
@@ -127,8 +128,7 @@ export class Game extends Scene {
       if (sessionId === this.room?.sessionId) {
         this.currentPlayer = newPlayer;
 
-        // #START FOR DEBUGGING PURPOSES
-        // tracks the player according to the server
+        // #region FOR DEBUGGING PURPOSES
         this.remoteRef = this.add.rectangle(0, 0, entity.width, entity.height).setDepth(100);
         this.remoteRef.setStrokeStyle(1, 0xff0000);
 
@@ -142,7 +142,7 @@ export class Game extends Scene {
             }
           }
         });
-        // #END FOR DEBUGGING PURPOSES
+        // #endregion FOR DEBUGGING PURPOSES
       } else {
         // update the other players positions from the server
         $(player).onChange(() => {
@@ -151,11 +151,11 @@ export class Game extends Scene {
           entity.setData('serverY', player.y);
           entity.setData('serverAttack', player.isAttacking);
 
-          // #START FOR DEBUGGING PURPOSES
+          // #region FOR DEBUGGING PURPOSES
           if (player.attackDamageFrameX !== undefined && player.attackDamageFrameY !== undefined) {
             new PunchBox(this, player.attackDamageFrameX, player.attackDamageFrameY, 0xff0000);
           }
-          // #END FOR DEBUGGING PURPOSES
+          // #endregion FOR DEBUGGING PURPOSES
         });
       }
     });
@@ -228,9 +228,9 @@ export class Game extends Scene {
     this.currentPlayer.move(newPosition);
 
     for (const sessionId in this.playerEntities) {
-      // skip the current player
+      // skip the current player since we are handling on the client
       if (sessionId === this.room.sessionId) continue;
-      // interpolate all other player entities
+      // interpolate all other player entities from the server
       const serverPlayer = this.playerEntities[sessionId];
       const { serverX, serverY, serverAttack } = serverPlayer.entity.data.values;
 

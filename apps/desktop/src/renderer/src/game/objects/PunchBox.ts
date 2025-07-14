@@ -1,6 +1,6 @@
 import { ATTACK_SIZE } from '@repo/core-game';
 
-// how long the punch box should be visible
+/** How long the punch box should be visible in ms */
 const PUNCH_BOX_LIFETIME = 2000;
 
 export class PunchBox {

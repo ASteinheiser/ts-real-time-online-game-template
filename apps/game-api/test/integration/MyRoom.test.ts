@@ -41,7 +41,7 @@ describe('Colyseus WebSocket Server', () => {
 
   describe('error handling', () => {
     it('should kick a client if there is an unhandled exception in fixedTick', async () => {
-      // we need this client otherwise the room will be disposed when the client is kicked
+      /** We need this client otherwise the room will be disposed when the client is kicked */
       const keepAliveClient = await joinTestRoom({
         server,
         token: generateTestJWT({ userId: KEEP_ALIVE_USER.id }),
@@ -112,7 +112,7 @@ describe('Colyseus WebSocket Server', () => {
     });
 
     it('should kick a client if their token expires', async () => {
-      // we need this client otherwise the room will be disposed when the client is kicked
+      /** We need this client otherwise the room will be disposed when the client is kicked */
       const keepAliveClient = await joinTestRoom({
         server,
         token: generateTestJWT({ userId: KEEP_ALIVE_USER.id }),
@@ -136,7 +136,7 @@ describe('Colyseus WebSocket Server', () => {
     });
 
     it('should kick a client if they send an invalid refresh token', async () => {
-      // we need this client otherwise the room will be disposed when the client is kicked
+      /** We need this client otherwise the room will be disposed when the client is kicked */
       const keepAliveClient = await joinTestRoom({
         server,
         token: generateTestJWT({ userId: KEEP_ALIVE_USER.id }),
@@ -160,7 +160,7 @@ describe('Colyseus WebSocket Server', () => {
     });
 
     it('should kick a client if their refresh token is expired', async () => {
-      // we need this client otherwise the room will be disposed when the client is kicked
+      /** We need this client otherwise the room will be disposed when the client is kicked */
       const keepAliveClient = await joinTestRoom({
         server,
         token: generateTestJWT({ userId: KEEP_ALIVE_USER.id }),
@@ -184,7 +184,7 @@ describe('Colyseus WebSocket Server', () => {
     });
 
     it('should kick a client if their refresh token has a different userId', async () => {
-      // we need this client otherwise the room will be disposed when the client is kicked
+      /** We need this client otherwise the room will be disposed when the client is kicked */
       const keepAliveClient = await joinTestRoom({
         server,
         token: generateTestJWT({ userId: KEEP_ALIVE_USER.id }),
@@ -208,7 +208,7 @@ describe('Colyseus WebSocket Server', () => {
     });
 
     it('should kick a client if they send a refresh token and there is no player for the session', async () => {
-      // we need this client otherwise the room will be disposed when the client is kicked
+      /** We need this client otherwise the room will be disposed when the client is kicked */
       const keepAliveClient = await joinTestRoom({
         server,
         token: generateTestJWT({ userId: KEEP_ALIVE_USER.id }),
@@ -244,7 +244,7 @@ describe('Colyseus WebSocket Server', () => {
     });
 
     it('should allow a client to gracefully leave the room', async () => {
-      // we need this client otherwise the room will be disposed when the client leaves
+      /** We need this client otherwise the room will be disposed when the client leaves */
       const keepAliveClient = await joinTestRoom({
         server,
         token: generateTestJWT({ userId: KEEP_ALIVE_USER.id }),

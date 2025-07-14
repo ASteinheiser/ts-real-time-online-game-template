@@ -7,6 +7,7 @@ interface UseForcedAuthFlowProps {
   alreadyLoggedInRedirectPath: string;
 }
 
+/** Handles app forced navigation flows, primarily used for routing based on certain auth states */
 export const useForcedAuthFlow = ({ alreadyLoggedInRedirectPath }: UseForcedAuthFlowProps) => {
   const { session, profile, isPasswordRecovery } = useSession();
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ export const useForcedAuthFlow = ({ alreadyLoggedInRedirectPath }: UseForcedAuth
     const navigateTo = (path: string) => {
       if (location.pathname !== path) navigate(path);
     };
-    // handle app forced navigation flows (auth, profile creation, etc)
+
     if (session && isPasswordRecovery) {
       navigateTo(AUTH_ROUTES.NEW_PASSWORD);
     } else if (session && !isPasswordRecovery && location.pathname === AUTH_ROUTES.NEW_PASSWORD) {

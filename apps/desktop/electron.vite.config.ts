@@ -2,8 +2,10 @@ import { defineConfig, externalizeDepsPlugin } from 'electron-vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 
-// NOTE: this is only used for dev purposes. Vite will build the
-// site into static files, so the PORT won't be relevant in prod
+/**
+ * NOTE: this is only used for dev purposes. Vite will build the
+ * site into static files, so the PORT won't be relevant in prod
+ */
 const PORT = 4202;
 
 export default defineConfig({

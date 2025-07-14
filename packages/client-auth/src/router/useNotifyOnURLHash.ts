@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { toast } from '@repo/ui';
 import { SUPABASE_AUTH } from '../provider/constants';
 
+/** Handles showing a toast to the user when they click on a supabase email link */
 export const useNotifyOnURLHash = () => {
   const location = useLocation();
   const hashToastRef = useRef('');

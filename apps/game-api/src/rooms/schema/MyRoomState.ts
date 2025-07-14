@@ -13,8 +13,9 @@ export class Player extends Schema {
   @type('number') lastAttackTime: number = 0;
   @type('number') killCount: number = 0;
   inputQueue: Array<InputPayload> = [];
-  // this is for debugging purposes
+  /** This is stored for debugging purposes */
   @type('number') attackDamageFrameX: number;
+  /** This is stored for debugging purposes */
   @type('number') attackDamageFrameY: number;
 }
 
