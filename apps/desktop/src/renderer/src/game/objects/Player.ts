@@ -1,10 +1,8 @@
-import { ASSET } from '../constants';
-
-// used to handle slight differences in player position due to interpolation of server values
+/** Used to handle slight differences in player position due to interpolation of server values */
 const MOVEMENT_THRESHOLD = 0.1;
 
-const FRAME_RATE = 8;
-const PLAYER_ANIM = {
+export const PLAYER_FRAME_RATE = 8;
+export const PLAYER_ANIM = {
   IDLE: 'playerIdle',
   WALK: 'playerWalk',
   PUNCH: 'playerPunch',
@@ -17,27 +15,6 @@ export class Player {
   constructor(entity: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody, nameText: Phaser.GameObjects.Text) {
     this.entity = entity;
     this.nameText = nameText;
-
-    this.entity.anims.create({
-      key: PLAYER_ANIM.IDLE,
-      frames: this.entity.anims.generateFrameNumbers(ASSET.PLAYER, { frames: [0] }),
-      frameRate: FRAME_RATE,
-      repeat: 0,
-    });
-    this.entity.anims.create({
-      key: PLAYER_ANIM.WALK,
-      frames: this.entity.anims.generateFrameNumbers(ASSET.PLAYER, { frames: [2, 3, 4, 1] }),
-      frameRate: FRAME_RATE,
-      repeat: -1,
-    });
-    // total animation length is 0.625s (5 frames at 8fps)
-    // actual punch frame is 0.375s after start of animation (frame 3 / 5)
-    this.entity.anims.create({
-      key: PLAYER_ANIM.PUNCH,
-      frames: this.entity.anims.generateFrameNumbers(ASSET.PLAYER, { frames: [5, 6, 7, 8, 5] }),
-      frameRate: FRAME_RATE,
-      repeat: 0,
-    });
   }
 
   move({ x, y }: { x: number; y: number }) {
