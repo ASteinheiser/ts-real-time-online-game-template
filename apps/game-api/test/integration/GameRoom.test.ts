@@ -44,7 +44,7 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       /** We need this client otherwise the room will be disposed when the client is kicked */
       const keepAliveClient = await joinTestRoom({
         server,
-        token: generateTestJWT({ userId: KEEP_ALIVE_USER.id }),
+        token: generateTestJWT({ user: KEEP_ALIVE_USER }),
       });
       const client = await joinTestRoom({ server, token: generateTestJWT({}) });
 
@@ -89,7 +89,8 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
     it('should throw an error if a client joins without a db user', async () => {
       try {
         // pass a unique userId that does not exist in the seed data found in setupTestDb inside ./utils.ts
-        await joinTestRoom({ server, token: generateTestJWT({ userId: 'non-existent-user-id' }) });
+        const token = generateTestJWT({ user: { ...TEST_USERS[0], id: 'non-existent-user-id' } });
+        await joinTestRoom({ server, token });
         // should never reach this line
         assert.strictEqual(true, false);
       } catch (error) {
@@ -115,7 +116,7 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       /** We need this client otherwise the room will be disposed when the client is kicked */
       const keepAliveClient = await joinTestRoom({
         server,
-        token: generateTestJWT({ userId: KEEP_ALIVE_USER.id }),
+        token: generateTestJWT({ user: KEEP_ALIVE_USER }),
       });
       // should be at least 1 second to account for joining a room and waiting for the next patch
       const expiresInMs = 1000;
@@ -139,7 +140,7 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       /** We need this client otherwise the room will be disposed when the client is kicked */
       const keepAliveClient = await joinTestRoom({
         server,
-        token: generateTestJWT({ userId: KEEP_ALIVE_USER.id }),
+        token: generateTestJWT({ user: KEEP_ALIVE_USER }),
       });
       const client = await joinTestRoom({ server, token: generateTestJWT({}) });
 
@@ -163,7 +164,7 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       /** We need this client otherwise the room will be disposed when the client is kicked */
       const keepAliveClient = await joinTestRoom({
         server,
-        token: generateTestJWT({ userId: KEEP_ALIVE_USER.id }),
+        token: generateTestJWT({ user: KEEP_ALIVE_USER }),
       });
       const client = await joinTestRoom({ server, token: generateTestJWT({}) });
 
@@ -187,7 +188,7 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       /** We need this client otherwise the room will be disposed when the client is kicked */
       const keepAliveClient = await joinTestRoom({
         server,
-        token: generateTestJWT({ userId: KEEP_ALIVE_USER.id }),
+        token: generateTestJWT({ user: KEEP_ALIVE_USER }),
       });
       const client = await joinTestRoom({ server, token: generateTestJWT({}) });
 
@@ -198,7 +199,7 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       assert.strictEqual(room.clients[0].sessionId, keepAliveClient.sessionId);
       assert.strictEqual(room.clients[1].sessionId, client.sessionId);
 
-      await client.send(WS_EVENT.REFRESH_TOKEN, { token: generateTestJWT({ userId: TEST_USERS[1].id }) });
+      await client.send(WS_EVENT.REFRESH_TOKEN, { token: generateTestJWT({ user: TEST_USERS[1] }) });
 
       await room.waitForNextPatch();
 
@@ -211,7 +212,7 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       /** We need this client otherwise the room will be disposed when the client is kicked */
       const keepAliveClient = await joinTestRoom({
         server,
-        token: generateTestJWT({ userId: KEEP_ALIVE_USER.id }),
+        token: generateTestJWT({ user: KEEP_ALIVE_USER }),
       });
       const client = await joinTestRoom({ server, token: generateTestJWT({}) });
 
@@ -247,7 +248,7 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       /** We need this client otherwise the room will be disposed when the client leaves */
       const keepAliveClient = await joinTestRoom({
         server,
-        token: generateTestJWT({ userId: KEEP_ALIVE_USER.id }),
+        token: generateTestJWT({ user: KEEP_ALIVE_USER }),
       });
       const client = await joinTestRoom({ server, token: generateTestJWT({}) });
 
@@ -321,10 +322,10 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
     });
 
     it('should add multiple players to the room', async () => {
-      const client1 = await joinTestRoom({ server, token: generateTestJWT({ userId: TEST_USERS[0].id }) });
-      const client2 = await joinTestRoom({ server, token: generateTestJWT({ userId: TEST_USERS[1].id }) });
-      const client3 = await joinTestRoom({ server, token: generateTestJWT({ userId: TEST_USERS[2].id }) });
-      const client4 = await joinTestRoom({ server, token: generateTestJWT({ userId: TEST_USERS[3].id }) });
+      const client1 = await joinTestRoom({ server, token: generateTestJWT({ user: TEST_USERS[0] }) });
+      const client2 = await joinTestRoom({ server, token: generateTestJWT({ user: TEST_USERS[1] }) });
+      const client3 = await joinTestRoom({ server, token: generateTestJWT({ user: TEST_USERS[2] }) });
+      const client4 = await joinTestRoom({ server, token: generateTestJWT({ user: TEST_USERS[3] }) });
 
       const room = server.getRoomById(client1.roomId);
       await room.waitForNextPatch();
@@ -337,11 +338,11 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
     });
 
     it('should add the maximum number of players to the room, then create a new room when needed', async () => {
-      const client1 = await joinTestRoom({ server, token: generateTestJWT({ userId: TEST_USERS[0].id }) });
-      const client2 = await joinTestRoom({ server, token: generateTestJWT({ userId: TEST_USERS[1].id }) });
-      const client3 = await joinTestRoom({ server, token: generateTestJWT({ userId: TEST_USERS[2].id }) });
-      const client4 = await joinTestRoom({ server, token: generateTestJWT({ userId: TEST_USERS[3].id }) });
-      const client5 = await joinTestRoom({ server, token: generateTestJWT({ userId: TEST_USERS[4].id }) });
+      const client1 = await joinTestRoom({ server, token: generateTestJWT({ user: TEST_USERS[0] }) });
+      const client2 = await joinTestRoom({ server, token: generateTestJWT({ user: TEST_USERS[1] }) });
+      const client3 = await joinTestRoom({ server, token: generateTestJWT({ user: TEST_USERS[2] }) });
+      const client4 = await joinTestRoom({ server, token: generateTestJWT({ user: TEST_USERS[3] }) });
+      const client5 = await joinTestRoom({ server, token: generateTestJWT({ user: TEST_USERS[4] }) });
 
       const room1 = server.getRoomById(client1.roomId);
       await room1.waitForNextPatch();
