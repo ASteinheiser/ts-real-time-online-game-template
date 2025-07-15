@@ -67,8 +67,8 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
     it('should throw an error if a client joins with an invalid token', async () => {
       try {
         await joinTestRoom({ server, token: 'invalid-token' });
-        // should never reach this line
-        assert.strictEqual(true, false);
+
+        assert.fail('should have thrown an error');
       } catch (error) {
         assert.strictEqual((error as ServerError).code, WS_CODE.UNAUTHORIZED);
         assert.strictEqual((error as ServerError).message, ROOM_ERROR.INVALID_TOKEN);
@@ -78,8 +78,8 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
     it('should throw an error if a client joins with an expired token', async () => {
       try {
         await joinTestRoom({ server, token: generateTestJWT({ expiresInMs: 0 }) });
-        // should never reach this line
-        assert.strictEqual(true, false);
+
+        assert.fail('should have thrown an error');
       } catch (error) {
         assert.strictEqual((error as ServerError).code, WS_CODE.UNAUTHORIZED);
         assert.strictEqual((error as ServerError).message, ROOM_ERROR.INVALID_TOKEN);
@@ -91,8 +91,8 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
         // pass a unique userId that does not exist in the seed data found in setupTestDb inside ./utils.ts
         const token = generateTestJWT({ user: { ...TEST_USERS[0], id: 'non-existent-user-id' } });
         await joinTestRoom({ server, token });
-        // should never reach this line
-        assert.strictEqual(true, false);
+
+        assert.fail('should have thrown an error');
       } catch (error) {
         assert.strictEqual((error as ServerError).code, WS_CODE.NOT_FOUND);
         assert.strictEqual((error as ServerError).message, ROOM_ERROR.PROFILE_NOT_FOUND);
@@ -104,8 +104,8 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
         // the default token generated will have the same userId
         await joinTestRoom({ server, token: generateTestJWT({}) });
         await joinTestRoom({ server, token: generateTestJWT({}) });
-        // should never reach this line
-        assert.strictEqual(true, false);
+
+        assert.fail('should have thrown an error');
       } catch (error) {
         assert.strictEqual((error as ServerError).code, WS_CODE.FORBIDDEN);
         assert.strictEqual((error as ServerError).message, ROOM_ERROR.PLAYER_ALREADY_JOINED);
