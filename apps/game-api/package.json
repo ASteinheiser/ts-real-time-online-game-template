@@ -17,7 +17,7 @@
     "test:env": "DATABASE_URL=postgresql://guest:guest@localhost:15432/game_db_test",
     "test": "npm run test:env -- mocha --config test/.mocharc.yaml",
     "test:watch": "npm run test:env -- nodemon --ext ts --exec \"c8 --config test/.c8rc.json mocha --config test/.mocharc.yaml\"",
-    "test:load": "npm run test:env -- tsx test/load/test.ts --numClients 2 --room",
+    "test:load": "npm run test:env -- tsx test/load/test.ts --numClients 2 --endpoint localhost:4204 --room",
     "dev": "tsx watch src/index.ts",
     "build": "vite build && npm run copy-files",
     "copy-files": "cp src/graphql/schema.graphql dist/schema.graphql",
