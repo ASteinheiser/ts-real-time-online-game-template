@@ -136,6 +136,20 @@ pnpm db:test:stop
 
 <b>NOTE</b>: `pnpm test:watch` offers a similar experience to `pnpm dev`, in the sense that it will watch for graphql and prisma type changes, and hot-reload as needed. `pnpm test` acts as a complete CI check as it will run all the type generators, typechecks, linters, then finally tests.
 
+## Load Testing
+
+Colyseus has a built-in load testing tool that can be used to test the scalability of the game rooms. The example load test is located in `apps/game-api/test/load/test.ts`. To start the load test, run:
+```
+pnpm test:load
+```
+
+<b>NOTE</b>: This will run the `game-api` CI checks, start the server in preview mode, then run the load test. The preview server is production-like, but pointed at a local test DB. Please ensure the test DB is running and synced, same as the [testing instructions](#testing) above:
+```
+pnpm db:test:start
+pnpm db:test:sync
+```
+
+
 ## Available Commands
 
 | Command | Description |
