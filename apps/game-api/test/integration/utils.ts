@@ -1,8 +1,8 @@
 import jwt from 'jsonwebtoken';
-import { ColyseusTestServer } from '@colyseus/testing';
+import type { ColyseusTestServer } from '@colyseus/testing';
 import type { GraphQLResponse } from '@apollo/server';
 import { WS_ROOM, WS_EVENT } from '@repo/core-game';
-import { MyRoomState } from '../../src/rooms/schema/MyRoomState';
+import type { MyRoomState } from '../../src/rooms/schema/MyRoomState';
 import { PrismaClient } from '../../src/prisma-client';
 import type { DecodedToken, User } from '../../src/auth/jwt';
 

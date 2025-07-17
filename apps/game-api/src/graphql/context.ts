@@ -1,4 +1,4 @@
-import { ContextFunction } from '@apollo/server';
+import type { ContextFunction } from '@apollo/server';
 import { type GoTrueAdminApi } from '@supabase/supabase-js';
 import { ProfilesRepository } from '../repo/Profiles';
 import type { PrismaClient } from '../prisma-client';

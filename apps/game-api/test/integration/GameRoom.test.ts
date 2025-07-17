@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { ServerError } from '@colyseus/core';
+import type { ServerError } from '@colyseus/core';
 import { type ColyseusTestServer, boot } from '@colyseus/testing';
 import type { GoTrueAdminApi } from '@supabase/supabase-js';
 import { WS_CODE, WS_EVENT, WS_ROOM } from '@repo/core-game';

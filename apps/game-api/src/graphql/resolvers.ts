@@ -1,4 +1,4 @@
-import { Resolvers } from './generated-types';
+import type { Resolvers } from './generated-types';
 import type { Context } from './context';
 import { logger } from '../logger';
 

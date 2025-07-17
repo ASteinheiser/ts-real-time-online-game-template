@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, LinkProps, useLocation } from 'react-router-dom';
+import { useLocation, Link, type LinkProps } from 'react-router-dom';
 import { useSession } from '@repo/client-auth/provider';
 import { AUTH_ROUTES, AUTH_PATH_PREFIX } from '@repo/client-auth/router';
 import { Sheet, SheetContent, SheetTrigger } from '@repo/ui';

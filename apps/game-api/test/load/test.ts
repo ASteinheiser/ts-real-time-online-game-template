@@ -1,8 +1,8 @@
 import 'dotenv/config';
 import { Client } from 'colyseus.js';
-import { cli, Options } from '@colyseus/loadtest';
+import { cli, type Options } from '@colyseus/loadtest';
 import { WS_ROOM, WS_EVENT, type InputPayload } from '@repo/core-game';
-import { MyRoomState, type Enemy } from '../../src/rooms/schema/MyRoomState';
+import type { MyRoomState, Enemy } from '../../src/rooms/schema/MyRoomState';
 import {
   generateTestJWT,
   createTestPrismaClient,

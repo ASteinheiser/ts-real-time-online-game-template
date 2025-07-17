@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { gql, useApolloClient } from '@apollo/client';
-import {
+import type {
   Session,
   AuthError,
   AuthResponse,

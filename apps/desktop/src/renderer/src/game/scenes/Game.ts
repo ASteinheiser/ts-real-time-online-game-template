@@ -1,5 +1,5 @@
 import { Scene } from 'phaser';
-import { Client, Room, getStateCallbacks } from 'colyseus.js';
+import { Client, getStateCallbacks, type Room } from 'colyseus.js';
 import {
   calculateMovement,
   FIXED_TIME_STEP,
@@ -12,7 +12,7 @@ import {
 } from '@repo/core-game';
 import { gql } from '@apollo/client';
 import { client } from '../../graphql/client';
-import { Desktop_GetGameResultsQuery, Desktop_GetGameResultsQueryVariables } from '../../graphql';
+import type { Desktop_GetGameResultsQuery, Desktop_GetGameResultsQueryVariables } from '../../graphql';
 import { EventBus, EVENT_BUS } from '../EventBus';
 import { Player } from '../objects/Player';
 import { PunchBox } from '../objects/PunchBox';

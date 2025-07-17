@@ -1,4 +1,4 @@
-import { GameObjects, Scene } from 'phaser';
+import { GameObjects, type Scene } from 'phaser';
 
 export class CustomText extends GameObjects.Text {
   color: string | CanvasGradient | CanvasPattern;

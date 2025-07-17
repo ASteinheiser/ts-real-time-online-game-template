@@ -13,7 +13,7 @@ import {
   setupTestDb,
   cleanupTestDb,
 } from './utils';
-import {
+import type {
   Test_GetTotalPlayersQuery,
   Test_GetTotalPlayersQueryVariables,
   Test_GetUserProfileQuery,

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ApolloError, gql, useApolloClient } from '@apollo/client';
+import { gql, useApolloClient, type ApolloError } from '@apollo/client';
 import { useDebounce } from '@repo/ui/hooks';
 import type { Auth_GetUserExistsQuery, Auth_GetUserExistsQueryVariables } from '../graphql';
 
