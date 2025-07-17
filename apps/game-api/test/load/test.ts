@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { Client } from 'colyseus.js';
 import { cli, Options } from '@colyseus/loadtest';
 import { WS_ROOM, WS_EVENT, type InputPayload } from '@repo/core-game';
-import { MyRoomState } from '../../src/rooms/schema/MyRoomState';
+import { MyRoomState, type Enemy } from '../../src/rooms/schema/MyRoomState';
 import {
   generateTestJWT,
   createTestPrismaClient,
@@ -11,10 +11,8 @@ import {
   TEST_USERS,
 } from '../integration/utils';
 
-const WEBSOCKET_URL = process.env.WEBSOCKET_URL;
-if (!WEBSOCKET_URL) throw new Error('WEBSOCKET_URL is not set');
-
 const JOIN_DELAY_MS = 500;
+const TEST_USER_EXPIRES_IN_MS = 30 * 1000; // 30 seconds
 
 let playerCount = 0;
 
@@ -22,26 +20,80 @@ export async function main(options: Options) {
   console.log('joining room...', options);
   await new Promise((resolve) => setTimeout(resolve, JOIN_DELAY_MS));
 
-  const client = new Client(WEBSOCKET_URL);
-  client.auth.token = generateTestJWT({ user: TEST_USERS[playerCount] });
-  playerCount++;
-  const room = await client.joinOrCreate<MyRoomState>(WS_ROOM.GAME_ROOM);
+  const websocketUrl = `ws://${options.endpoint}`;
+  const graphqlUrl = `http://${options.endpoint}/graphql`;
 
+  const client = new Client(websocketUrl);
+  client.auth.token = generateTestJWT({
+    user: TEST_USERS[playerCount++],
+    expiresInMs: TEST_USER_EXPIRES_IN_MS,
+  });
+
+  const room = await client.joinOrCreate<MyRoomState>(WS_ROOM.GAME_ROOM);
   console.log('joined room successfully!');
 
   // add this listener otherwise colyseus will show a warning
   room.onMessage(WS_EVENT.PLAYGROUND_MESSAGE_TYPES, () => {});
 
-  room.onMessage(WS_EVENT.PLAYER_INPUT, (payload: InputPayload) => {
-    console.log('received player input: ', JSON.stringify(payload));
+  let killCount = 0;
+  room.onStateChange((state) => {
+    const player = state.players.get(room.sessionId);
+
+    if (player.killCount > killCount) {
+      killCount = player.killCount;
+      console.log(`${player.username} hit an enemy!`);
+    }
+
+    let closestDistanceSquared = Infinity;
+    let closestEnemy: Enemy | null = null;
+
+    state.enemies.forEach((enemy) => {
+      const distanceSquared = (player.x - enemy.x) ** 2 + (player.y - enemy.y) ** 2;
+      if (distanceSquared < closestDistanceSquared) {
+        closestDistanceSquared = distanceSquared;
+        closestEnemy = enemy;
+      }
+    });
+
+    if (closestEnemy) {
+      const input: InputPayload = {
+        left: closestEnemy.x < player.x,
+        right: closestEnemy.x > player.x,
+        up: closestEnemy.y < player.y,
+        down: closestEnemy.y > player.y,
+        attack: true,
+      };
+
+      room.send(WS_EVENT.PLAYER_INPUT, input);
+    }
   });
 
-  room.onStateChange(() => {
-    console.log(`state change at: ${Date.now()}`);
-  });
-
-  room.onLeave((code) => {
+  room.onLeave(async (code) => {
     console.log(`leaving room with code: ${code}`);
+
+    const results = await fetch(graphqlUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        query: `
+          query Test_GetGameResults {
+            gameResults(roomId: "${room.roomId}") {
+              username
+              attackCount
+              killCount
+            }
+          }
+        `,
+      }),
+    });
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const response: any = await results.json();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    response.data.gameResults.forEach((result: any) => {
+      const accuracy = (result.killCount / result.attackCount).toFixed(2);
+      console.log(`${result.username} - kill count: ${result.killCount} (accuracy ${accuracy}%)`);
+    });
   });
 }
 
