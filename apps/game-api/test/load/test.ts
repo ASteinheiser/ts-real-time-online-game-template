@@ -3,22 +3,28 @@ import { Client } from 'colyseus.js';
 import { cli, Options } from '@colyseus/loadtest';
 import { WS_ROOM, WS_EVENT, type InputPayload } from '@repo/core-game';
 import { MyRoomState } from '../../src/rooms/schema/MyRoomState';
-import { generateTestJWT } from '../integration/utils';
+import {
+  generateTestJWT,
+  createTestPrismaClient,
+  setupTestDb,
+  cleanupTestDb,
+  TEST_USERS,
+} from '../integration/utils';
 
 const WEBSOCKET_URL = process.env.WEBSOCKET_URL;
 if (!WEBSOCKET_URL) throw new Error('WEBSOCKET_URL is not set');
 
 const JOIN_DELAY_MS = 500;
 
-// NOTE: if this is your first time running the load test and it's failing on profile fetch,
-// add a test profile row to your local db that matches the userId defined in generateTestJWT
+let playerCount = 0;
 
 export async function main(options: Options) {
   console.log('joining room...', options);
   await new Promise((resolve) => setTimeout(resolve, JOIN_DELAY_MS));
 
   const client = new Client(WEBSOCKET_URL);
-  client.auth.token = generateTestJWT({});
+  client.auth.token = generateTestJWT({ user: TEST_USERS[playerCount] });
+  playerCount++;
   const room = await client.joinOrCreate<MyRoomState>(WS_ROOM.GAME_ROOM);
 
   console.log('joined room successfully!');
@@ -38,5 +44,9 @@ export async function main(options: Options) {
     console.log(`leaving room with code: ${code}`);
   });
 }
+
+const prisma = createTestPrismaClient();
+await cleanupTestDb(prisma);
+await setupTestDb(prisma);
 
 cli(main);
