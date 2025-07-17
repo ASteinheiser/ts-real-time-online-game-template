@@ -12,7 +12,7 @@ import {
 } from '../integration/utils';
 
 const JOIN_DELAY_MS = 500;
-const TEST_USER_EXPIRES_IN_MS = 30 * 1000; // 30 seconds
+const TEST_USER_EXPIRES_IN_MS = 3 * 60 * 1000; // 3 minutes
 
 let playerCount = 0;
 
