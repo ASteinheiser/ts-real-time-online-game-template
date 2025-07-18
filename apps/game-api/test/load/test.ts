@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { Client } from 'colyseus.js';
 import { cli, type Options } from '@colyseus/loadtest';
 import { WS_ROOM, WS_EVENT, type InputPayload } from '@repo/core-game';
-import type { MyRoomState, Enemy } from '../../src/rooms/schema/MyRoomState';
+import type { MyRoomState } from '../../src/rooms/schema/MyRoomState';
 import {
   generateTestJWT,
   createTestPrismaClient,
@@ -15,6 +15,8 @@ const JOIN_DELAY_MS = 500;
 const TEST_USER_EXPIRES_IN_MS = 3 * 60 * 1000; // 3 minutes
 
 let playerCount = 0;
+// keep track of which player is tracking which enemy
+const enemiesTracked: Record<string, string> = {};
 
 export async function main(options: Options) {
   console.log('joining room...', options);
@@ -45,16 +47,19 @@ export async function main(options: Options) {
     }
 
     let closestDistanceSquared = Infinity;
-    let closestEnemy: Enemy | null = null;
 
     state.enemies.forEach((enemy) => {
+      // only allow one player to track one enemy (simple way to prevent AI grouping)
+      if (Object.values(enemiesTracked).includes(enemy.id)) return;
+
       const distanceSquared = (player.x - enemy.x) ** 2 + (player.y - enemy.y) ** 2;
       if (distanceSquared < closestDistanceSquared) {
         closestDistanceSquared = distanceSquared;
-        closestEnemy = enemy;
+        enemiesTracked[player.userId] = enemy.id;
       }
     });
 
+    const closestEnemy = state.enemies.find((enemy) => enemiesTracked[player.userId] === enemy.id);
     if (closestEnemy) {
       const input: InputPayload = {
         left: closestEnemy.x < player.x,
