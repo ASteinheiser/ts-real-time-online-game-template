@@ -21,17 +21,26 @@ export const ProfileCreateForm = () => {
   const [userName, setUserName] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const { userNameExists, isTyping, loading: userExistsLoading } = useUserNameExists(userName);
-  const isUserNameAvailable = userNameExists === false;
+  const {
+    userNameExists,
+    isTyping: userNameIsTyping,
+    loading: userNameExistsLoading,
+    error: userNameExistsError,
+  } = useUserNameExists(userName);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (userNameIsTyping || userNameExistsLoading) return;
 
     if (!userName) {
       toast.error('Please enter a username');
       return;
     }
-    if (!isUserNameAvailable) {
+    if (userNameExists === undefined || userNameExistsError) {
+      toast.error('Oops, there was an issue checking available usernames');
+      return;
+    }
+    if (userNameExists === true) {
       toast.error('Username is already taken');
       return;
     }
@@ -53,6 +62,9 @@ export const ProfileCreateForm = () => {
     }
   };
 
+  const isCheckmarkActive =
+    !userNameIsTyping && !userNameExistsLoading && userName && userNameExists === false;
+
   return (
     <div className="flex flex-col gap-4 w-full max-w-xs mx-auto">
       <h1 className="text-4xl font-bold font-pixel text-center text-muted-foreground">Create Your Profile</h1>
@@ -62,17 +74,15 @@ export const ProfileCreateForm = () => {
           <Label className="text-md">Username</Label>
           <div className="flex flex-row items-center gap-4">
             <Input name="userName" value={userName} onChange={({ target }) => setUserName(target.value)} />
-            <CheckMark
-              size={24}
-              className={
-                !isTyping && !userExistsLoading && userName && isUserNameAvailable
-                  ? 'text-green-500'
-                  : 'text-gray-500'
-              }
-            />
+            <CheckMark size={24} className={isCheckmarkActive ? 'text-green-500' : 'text-gray-500'} />
           </div>
 
-          <Button type="submit" loading={loading} className="mt-2">
+          <Button
+            type="submit"
+            loading={loading}
+            disabled={userNameIsTyping || userNameExistsLoading}
+            className="mt-2"
+          >
             Create Profile
           </Button>
         </div>
