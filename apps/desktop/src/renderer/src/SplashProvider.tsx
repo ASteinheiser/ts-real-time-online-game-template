@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import logo from './assets/logo.png';
 
-const SPLASH_DURATION = 3 * 1000; // 3 seconds
+/** This is how long to show the splash screen. Should match 'splash-fade' animation in theme.css (4s) */
+const SPLASH_DURATION = 4 * 1000;
 
 interface SplashProviderProps {
   children: React.ReactNode;
@@ -21,7 +22,7 @@ export const SplashProvider = ({ children }: SplashProviderProps) => {
   if (!isSplashVisible) return children;
 
   return (
-    <div className="fullscreen-center">
+    <div className="fullscreen-center splash-fade">
       <img src={logo} className="h-40 w-auto mb-15" />
       <h1 className="text-5xl font-pixel text-primary">iamandrew.io games</h1>
     </div>

@@ -5,4 +5,18 @@
   .fullscreen-center {
     @apply h-screen flex flex-col items-center justify-center;
   }
+  /** total animation time is 4s (fade-out plays after 3s and lasts 1s) */
+  .splash-fade {
+    animation:
+      splash-fade-in 1s linear forwards,
+      splash-fade-out 1s linear 3s forwards;
+  }
+}
+@keyframes splash-fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+@keyframes splash-fade-out {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
 }
