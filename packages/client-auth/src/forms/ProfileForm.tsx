@@ -41,7 +41,12 @@ export const ProfileForm = ({ logoutRedirectPath }: ProfileFormProps) => {
   const [isEmailLoading, setIsEmailLoading] = useState(false);
 
   const [userName, setUserName] = useState(profile?.userName ?? '');
-  const { userNameExists, loading: userNameExistsLoading } = useUserNameExists(userName);
+  const {
+    userNameExists,
+    isTyping: userNameIsTyping,
+    loading: userNameExistsLoading,
+    error: userNameExistsError,
+  } = useUserNameExists(userName);
 
   const [isUpdateUserNameLoading, setIsUpdateUserNameLoading] = useState(false);
   const [updateUserName] = useMutation<Auth_UpdateUserNameMutation, Auth_UpdateUserNameMutationVariables>(
@@ -55,7 +60,6 @@ export const ProfileForm = ({ logoutRedirectPath }: ProfileFormProps) => {
     Auth_DeleteAccountMutationVariables
   >(DELETE_ACCOUNT);
 
-  const isUserNameAvailable = userNameExists === false;
   const isUserNameChanged = userName !== profile?.userName;
   const isEmailChanged = email !== session?.user.email;
   const isEmailConfirmed = Boolean(session?.user.email_confirmed_at) && !isEmailChanged;
@@ -66,13 +70,17 @@ export const ProfileForm = ({ logoutRedirectPath }: ProfileFormProps) => {
 
   const handleUpdateUserName = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!isUserNameChanged) return;
+    if (!isUserNameChanged || userNameIsTyping || userNameExistsLoading) return;
 
     if (!userName) {
       toast.error('Please enter a username');
       return;
     }
-    if (!isUserNameAvailable) {
+    if (userNameExists === undefined || userNameExistsError) {
+      toast.error('Oops, there was an issue checking available usernames');
+      return;
+    }
+    if (userNameExists === true) {
       toast.error('Username is already taken');
       return;
     }
@@ -139,6 +147,10 @@ export const ProfileForm = ({ logoutRedirectPath }: ProfileFormProps) => {
     navigate(logoutRedirectPath);
   };
 
+  const isCheckmarkActive =
+    !isUserNameChanged ||
+    (!userNameIsTyping && !userNameExistsLoading && userName && userNameExists === false);
+
   return (
     <>
       <div className="flex flex-col gap-4 w-full max-w-xs mx-auto">
@@ -149,21 +161,16 @@ export const ProfileForm = ({ logoutRedirectPath }: ProfileFormProps) => {
             <Label className="text-md">Username</Label>
             <div className="flex flex-row items-center gap-4">
               <Input name="userName" value={userName} onChange={({ target }) => setUserName(target.value)} />
-              <CheckMark
-                size={24}
-                className={
-                  !userNameExistsLoading && (isUserNameAvailable || !isUserNameChanged)
-                    ? 'text-green-500'
-                    : 'text-gray-500'
-                }
-              />
+              <CheckMark size={24} className={isCheckmarkActive ? 'text-green-500' : 'text-gray-500'} />
             </div>
 
             <Button
               type="submit"
               className="mt-2"
               loading={isUpdateUserNameLoading}
-              disabled={!isUserNameChanged || deleteAccountLoading}
+              disabled={
+                !isUserNameChanged || deleteAccountLoading || userNameIsTyping || userNameExistsLoading
+              }
             >
               Update Username
             </Button>
