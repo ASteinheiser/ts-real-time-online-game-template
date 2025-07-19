@@ -3,6 +3,6 @@ export const APP_ROUTES = {
 } as const;
 
 export const SEARCH_PARAMS = {
-  OPTIONS: 'options',
+  SETTINGS: 'settings',
   PROFILE: 'editProfile',
 } as const;

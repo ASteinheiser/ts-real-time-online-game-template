@@ -9,7 +9,7 @@ import type { Game as GameScene } from '../game/scenes/Game';
 import { EventBus, EVENT_BUS } from '../game/EventBus';
 import type { Desktop_GetTotalPlayersQuery, Desktop_GetTotalPlayersQueryVariables } from '../graphql';
 import { ProfileModal } from '../modals/ProfileModal';
-import { OptionsModal } from '../modals/OptionsModal';
+import { SettingsModal } from '../modals/SettingsModal';
 import { SEARCH_PARAMS } from '../router/constants';
 
 const GET_TOTAL_PLAYERS = gql`
@@ -29,9 +29,9 @@ export const Game = () => {
   console.log({ totalPlayers: data?.totalPlayers ?? 0 });
 
   const [isProfileModalOpen, setIsProfileModalOpen] = useSearchParamFlag(SEARCH_PARAMS.PROFILE);
-  const [isOptionsModalOpen, setIsOptionsModalOpen] = useSearchParamFlag(SEARCH_PARAMS.OPTIONS);
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useSearchParamFlag(SEARCH_PARAMS.SETTINGS);
 
-  const shouldDisablePhaserInput = isProfileModalOpen || isOptionsModalOpen;
+  const shouldDisablePhaserInput = isProfileModalOpen || isSettingsModalOpen;
 
   const setPhaserInputEnabled = (enabled: boolean) => {
     if (phaserRef?.current?.scene?.input) {
@@ -75,12 +75,12 @@ export const Game = () => {
 
   useEffect(() => {
     EventBus.on(EVENT_BUS.PROFILE_OPEN, () => setIsProfileModalOpen(true));
-    EventBus.on(EVENT_BUS.OPTIONS_OPEN, () => setIsOptionsModalOpen(true));
+    EventBus.on(EVENT_BUS.SETTINGS_OPEN, () => setIsSettingsModalOpen(true));
     EventBus.on(EVENT_BUS.JOIN_ERROR, (error) => toast.error(error.message));
 
     return () => {
       EventBus.off(EVENT_BUS.PROFILE_OPEN);
-      EventBus.off(EVENT_BUS.OPTIONS_OPEN);
+      EventBus.off(EVENT_BUS.SETTINGS_OPEN);
       EventBus.off(EVENT_BUS.JOIN_ERROR);
     };
   }, []);
@@ -89,7 +89,7 @@ export const Game = () => {
     <>
       <PhaserGame ref={phaserRef} currentActiveScene={onCurrentSceneChange} />
 
-      <OptionsModal isOpen={isOptionsModalOpen} onOpenChange={setIsOptionsModalOpen} />
+      <SettingsModal isOpen={isSettingsModalOpen} onOpenChange={setIsSettingsModalOpen} />
       <ProfileModal isOpen={isProfileModalOpen} onOpenChange={setIsProfileModalOpen} />
     </>
   );

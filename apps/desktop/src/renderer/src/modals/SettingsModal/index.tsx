@@ -9,12 +9,12 @@ import {
   DialogTitle,
 } from '@repo/ui';
 
-interface OptionsModalProps {
+interface SettingsModalProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-export const OptionsModal = ({ isOpen, onOpenChange }: OptionsModalProps) => {
+export const SettingsModal = ({ isOpen, onOpenChange }: SettingsModalProps) => {
   // this is how to send IPC messages to the main process
   // const ipcHandle = () => {
   //   window.electron.ipcRenderer.send('ping');
@@ -24,7 +24,7 @@ export const OptionsModal = ({ isOpen, onOpenChange }: OptionsModalProps) => {
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-[425px]" onOpenAutoFocus={(e) => e.preventDefault()}>
         <DialogHeader>
-          <DialogTitle>Options</DialogTitle>
+          <DialogTitle>Settings</DialogTitle>
           <DialogDescription>Adjust settings for audio, video, etc.</DialogDescription>
         </DialogHeader>
         <div className="grid grid-cols-4 items-center gap-4">

@@ -42,14 +42,14 @@ export class MainMenu extends Scene {
       })
       .fadeIn(1000);
 
-    new CustomText(this, 512, 660, 'Options', {
+    new CustomText(this, 512, 660, 'Settings', {
       fontFamily: 'Arial Black',
       fontSize: '38px',
       strokeThickness: 8,
     })
       .setOrigin(0.5)
       .makeButton('#ff00ff', () => {
-        EventBus.emit(EVENT_BUS.OPTIONS_OPEN);
+        EventBus.emit(EVENT_BUS.SETTINGS_OPEN);
       })
       .fadeIn(1000);
 

@@ -11,5 +11,5 @@ export const EVENT_BUS = {
   GAME_START: 'game-start',
   JOIN_ERROR: 'join-error',
   PROFILE_OPEN: 'menu-open__profile',
-  OPTIONS_OPEN: 'menu-open__options',
+  SETTINGS_OPEN: 'menu-open__settings',
 } as const;
