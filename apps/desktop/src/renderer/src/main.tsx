@@ -6,6 +6,7 @@ import { SessionProvider } from '@repo/client-auth/provider';
 import { ApolloProvider } from '@apollo/client';
 import { client } from './graphql/client';
 import { router } from './router';
+import { SplashProvider } from './SplashProvider';
 import './theme.css';
 
 /** this is required by the content security policy defined in index.html */
@@ -15,9 +16,11 @@ if (!API_URL) throw new Error('VITE_API_URL is not set');
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ApolloProvider client={client}>
-      <SessionProvider healthCheckEnabled>
-        <RouterProvider router={router} />
-      </SessionProvider>
+      <SplashProvider>
+        <SessionProvider healthCheckEnabled>
+          <RouterProvider router={router} />
+        </SessionProvider>
+      </SplashProvider>
     </ApolloProvider>
 
     <Toaster />
