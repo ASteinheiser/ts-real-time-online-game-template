@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import type { ColyseusTestServer } from '@colyseus/testing';
 import type { GraphQLResponse } from '@apollo/server';
 import { WS_ROOM, WS_EVENT } from '@repo/core-game';
-import type { MyRoomState } from '../../src/rooms/schema/MyRoomState';
+import type { GameRoomState } from '../../src/rooms/GameRoom/roomState';
 import { PrismaClient } from '../../src/prisma-client';
 import type { DecodedToken, User } from '../../src/auth/jwt';
 
@@ -67,7 +67,7 @@ interface JoinTestRoomArgs {
 /** join or create a room on a test server */
 export const joinTestRoom = async ({ server, token }: JoinTestRoomArgs) => {
   server.sdk.auth.token = token;
-  const client = await server.sdk.joinOrCreate<MyRoomState>(WS_ROOM.GAME_ROOM);
+  const client = await server.sdk.joinOrCreate<GameRoomState>(WS_ROOM.GAME_ROOM);
 
   // register onMessage handler otherwise colyseus throws a warning
   client.onMessage(WS_EVENT.PLAYGROUND_MESSAGE_TYPES, () => {});

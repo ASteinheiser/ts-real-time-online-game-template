@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { Client } from 'colyseus.js';
 import { cli, type Options } from '@colyseus/loadtest';
 import { WS_ROOM, WS_EVENT, type InputPayload } from '@repo/core-game';
-import type { MyRoomState } from '../../src/rooms/schema/MyRoomState';
+import type { GameRoomState } from '../../src/rooms/GameRoom/roomState';
 import {
   generateTestJWT,
   createTestPrismaClient,
@@ -31,7 +31,7 @@ export async function main(options: Options) {
     expiresInMs: TEST_USER_EXPIRES_IN_MS,
   });
 
-  const room = await client.joinOrCreate<MyRoomState>(WS_ROOM.GAME_ROOM);
+  const room = await client.joinOrCreate<GameRoomState>(WS_ROOM.GAME_ROOM);
   console.log('joined room successfully!');
 
   // add this listener otherwise colyseus will show a warning

@@ -7,7 +7,7 @@ import cors from 'cors';
 import type { GoTrueAdminApi } from '@supabase/supabase-js';
 import { WS_ROOM, API_ROUTES } from '@repo/core-game';
 import { server as GQLServer } from './graphql';
-import { MyRoom } from './rooms/MyRoom';
+import { GameRoom } from './rooms/GameRoom';
 import { createContext } from './graphql/context';
 import type { PrismaClient } from './prisma-client';
 
@@ -24,7 +24,7 @@ export const makeApp = ({ authClient, prisma }: MakeAppArgs) => {
       /**
        * Define your room handlers:
        */
-      gameServer.define(WS_ROOM.GAME_ROOM, MyRoom, { prisma });
+      gameServer.define(WS_ROOM.GAME_ROOM, GameRoom, { prisma });
     },
 
     initializeExpress: async (app) => {

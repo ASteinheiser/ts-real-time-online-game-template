@@ -25,7 +25,7 @@ export class Enemy extends Schema {
   @type('number') y: number;
 }
 
-export class MyRoomState extends Schema {
+export class GameRoomState extends Schema {
   @type({ map: Player }) players = new MapSchema<Player>();
   @type({ array: Enemy }) enemies = new ArraySchema<Enemy>();
 }

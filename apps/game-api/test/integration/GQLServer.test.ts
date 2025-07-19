@@ -2,7 +2,7 @@ import assert from 'assert';
 import { gql } from 'graphql-tag';
 import { server } from '../../src/graphql';
 import { ProfilesRepository } from '../../src/repo/Profiles';
-import type { RESULTS } from '../../src/rooms/MyRoom';
+import type { RESULTS } from '../../src/rooms/GameRoom';
 import type { GoTrueAdminApi } from '@supabase/supabase-js';
 import type { User } from '../../src/auth/jwt';
 import {

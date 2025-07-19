@@ -19,11 +19,11 @@ import {
   type AuthPayload,
   type InputPayload,
 } from '@repo/core-game';
-import { MyRoomState, Player, Enemy } from './schema/MyRoomState';
-import type { PrismaClient, Profile } from '../prisma-client';
-import { validateJwt } from '../auth/jwt';
-import { ROOM_ERROR } from './error';
-import { logger } from '../logger';
+import type { PrismaClient, Profile } from '../../prisma-client';
+import { validateJwt } from '../../auth/jwt';
+import { logger } from '../../logger';
+import { ROOM_ERROR } from '../error';
+import { GameRoomState, Player, Enemy } from './roomState';
 
 const MAX_PLAYERS_PER_ROOM = 4;
 
@@ -44,18 +44,18 @@ interface AuthResult {
   tokenExpiresAt: number;
 }
 
-interface MyRoomArgs {
+interface GameRoomArgs {
   prisma: PrismaClient;
 }
 
-export class MyRoom extends Room<MyRoomState> {
+export class GameRoom extends Room<GameRoomState> {
   maxClients = MAX_PLAYERS_PER_ROOM;
-  state = new MyRoomState();
+  state = new GameRoomState();
   elapsedTime = 0;
   lastEnemySpawnTime = 0;
   prisma: PrismaClient;
 
-  onCreate({ prisma }: MyRoomArgs) {
+  onCreate({ prisma }: GameRoomArgs) {
     logger.info({ message: `room ${this.roomId} created!` });
 
     this.prisma = prisma;

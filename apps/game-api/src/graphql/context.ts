@@ -3,7 +3,7 @@ import { type GoTrueAdminApi } from '@supabase/supabase-js';
 import { ProfilesRepository } from '../repo/Profiles';
 import type { PrismaClient } from '../prisma-client';
 import { validateJwt, type User } from '../auth/jwt';
-import { RESULTS } from '../rooms/MyRoom';
+import { RESULTS } from '../rooms/GameRoom';
 
 interface CreateContextArgs {
   authHeader?: string;
