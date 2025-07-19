@@ -101,8 +101,6 @@ export class Game extends Scene {
           this.sendToMainMenu(new Error('You are not authorized'));
           break;
         case WS_CODE.FORBIDDEN:
-          this.sendToMainMenu(new Error('You are not allowed'));
-          break;
         case WS_CODE.TIMEOUT:
           this.sendToMainMenu(new Error('You were removed from the game'));
           break;
