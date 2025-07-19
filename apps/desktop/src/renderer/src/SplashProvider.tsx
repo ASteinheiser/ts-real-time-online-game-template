@@ -18,15 +18,12 @@ export const SplashProvider = ({ children }: SplashProviderProps) => {
     return () => clearTimeout(timeout);
   }, []);
 
+  if (!isSplashVisible) return children;
+
   return (
-    <>
-      {isSplashVisible && (
-        <div className="fullscreen-center">
-          <img src={logo} className="h-40 w-auto mb-15" />
-          <h1 className="text-5xl font-pixel text-primary">iamandrew.io games</h1>
-        </div>
-      )}
-      {children}
-    </>
+    <div className="fullscreen-center">
+      <img src={logo} className="h-40 w-auto mb-15" />
+      <h1 className="text-5xl font-pixel text-primary">iamandrew.io games</h1>
+    </div>
   );
 };
