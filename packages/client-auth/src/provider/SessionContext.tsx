@@ -128,7 +128,17 @@ export const SessionProvider = ({ children, healthCheckEnabled = false }: Sessio
       });
       if (error) throw error;
 
-      setProfile(data?.profile ?? null);
+      const newProfile = data?.profile ?? null;
+      // handle case where account is deleted from another client, ensure auth user still exists
+      if (!newProfile) {
+        const userRes = await supabase.auth.getUser();
+        if (!userRes?.data?.user) {
+          await logout();
+          return;
+        }
+      }
+
+      setProfile(newProfile);
       setProfileError(false);
     } catch (error) {
       console.error(error);
