@@ -19,9 +19,9 @@ export const ConfirmationModal = ({ isOpen, onClose, onConfirm }: ConfirmationMo
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      <DialogContent>
-        <DialogTitle>
-          <h1 className="text-4xl font-bold font-pixel text-center text-muted-foreground">Are you sure?</h1>
+      <DialogContent aria-describedby={undefined}>
+        <DialogTitle className="text-4xl font-bold font-pixel text-center text-muted-foreground">
+          Are you sure?
         </DialogTitle>
         <DialogFooter>
           <div className="flex flex-col sm:flex-row gap-4 mt-2 w-full">
