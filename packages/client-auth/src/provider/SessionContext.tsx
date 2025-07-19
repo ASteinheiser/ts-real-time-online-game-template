@@ -84,16 +84,16 @@ export const SessionProvider = ({ children, healthCheckEnabled = false }: Sessio
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const authStateListener = supabase.auth.onAuthStateChange((event, session) => {
-      setSession((previous) => {
+    const authStateListener = supabase.auth.onAuthStateChange((event, newSession) => {
+      setSession((prevSession) => {
         // only set loading state on initial load -- prevents showing create profile when logging in
-        if (session && previous === null) setIsLoading(true);
-        return session;
+        if (newSession && prevSession === null) setIsLoading(true);
+        return newSession;
       });
-      setIsPasswordRecovery((previous) => {
+      setIsPasswordRecovery((_isPasswordRecovery) => {
         if (event === 'PASSWORD_RECOVERY') return true;
-        if (previous && event === 'USER_UPDATED') return false;
-        return previous;
+        if (_isPasswordRecovery && event === 'USER_UPDATED') return false;
+        return _isPasswordRecovery;
       });
     });
 
