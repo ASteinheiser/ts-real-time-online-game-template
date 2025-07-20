@@ -333,9 +333,7 @@ export class GameRoom extends Room<GameRoomState> {
     if (this.connectionCheckInterval) clearInterval(this.connectionCheckInterval);
 
     // delete results after 10 seconds -- stop gap for in-memory management
-    setTimeout(() => {
-      Object.keys(RESULTS).forEach((roomId) => delete RESULTS[roomId]);
-    }, 10000);
+    setTimeout(() => delete RESULTS[this.roomId], 10 * 1000);
   }
 
   onUncaughtException(error: Error, methodName: string) {
