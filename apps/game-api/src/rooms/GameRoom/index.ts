@@ -16,6 +16,8 @@ import {
   ENEMY_SIZE,
   WS_EVENT,
   WS_CODE,
+  PLAYER_INACTIVITY_TIMEOUT,
+  CONNECTION_CHECK_INTERVAL,
   type AuthPayload,
   type InputPayload,
 } from '@repo/core-game';
@@ -54,16 +56,24 @@ export class GameRoom extends Room<GameRoomState> {
   elapsedTime = 0;
   lastEnemySpawnTime = 0;
   prisma: PrismaClient;
+  connectionCheckInterval: NodeJS.Timeout;
 
   onCreate({ prisma }: GameRoomArgs) {
-    logger.info({ message: `room ${this.roomId} created!` });
+    logger.info({
+      message: `New room created!`,
+      data: { roomId: this.roomId },
+    });
 
     this.prisma = prisma;
 
+    this.connectionCheckInterval = setInterval(() => this.checkPlayerConnection(), CONNECTION_CHECK_INTERVAL);
+
     this.onMessage(WS_EVENT.PLAYER_INPUT, (client, payload: InputPayload) => {
       const player = this.state.players.get(client.sessionId);
+      if (!player) throwError(WS_CODE.NOT_FOUND, ROOM_ERROR.CONNECTION_NOT_FOUND, client);
 
-      player?.inputQueue?.push(payload);
+      player.lastActivityTime = Date.now();
+      player.inputQueue.push(payload);
     });
 
     this.onMessage(WS_EVENT.REFRESH_TOKEN, (client, payload: AuthPayload) => {
@@ -77,8 +87,13 @@ export class GameRoom extends Room<GameRoomState> {
         throwError(WS_CODE.FORBIDDEN, ROOM_ERROR.USER_ID_CHANGED, client);
       }
 
+      player.lastActivityTime = Date.now();
       player.tokenExpiresAt = authUser.expiresAt;
-      logger.info({ message: `Token refreshed for ${player.username}` });
+
+      logger.info({
+        message: `Token refreshed`,
+        data: { roomId: this.roomId, clientId: client.sessionId, userName: player.username },
+      });
     });
 
     this.onMessage(WS_EVENT.LEAVE_ROOM, (client) => {
@@ -193,6 +208,50 @@ export class GameRoom extends Room<GameRoomState> {
     });
   }
 
+  checkPlayerConnection() {
+    const clientsToRemove: Client[] = [];
+
+    this.state.players.forEach((player, sessionId) => {
+      const client = this.clients.find((c) => c.sessionId === sessionId);
+      if (!client) {
+        logger.info({
+          message: `Removing orphaned player...`,
+          data: { roomId: this.roomId, clientId: sessionId, userName: player.username },
+        });
+
+        this.state.players.delete(sessionId);
+        return;
+      }
+
+      const timeSinceLastActivity = Date.now() - player.lastActivityTime;
+      if (timeSinceLastActivity > PLAYER_INACTIVITY_TIMEOUT) {
+        logger.info({
+          message: `Removing inactive client...`,
+          data: {
+            roomId: this.roomId,
+            clientId: sessionId,
+            userName: player.username,
+            timeSinceLastActivity,
+          },
+        });
+
+        clientsToRemove.push(client);
+      }
+    });
+
+    clientsToRemove.forEach((client) => {
+      try {
+        client.leave(WS_CODE.TIMEOUT, ROOM_ERROR.PLAYER_INACTIVITY);
+      } catch (error) {
+        logger.error({
+          message: `Error removing inactive client`,
+          data: { roomId: this.roomId, clientId: client.sessionId, error },
+        });
+        this.onLeave(client);
+      }
+    });
+  }
+
   async onAuth(client: Client, __: unknown, context: AuthContext): Promise<AuthResult> {
     const authUser = validateJwt(context.token);
     if (!authUser) throwError(WS_CODE.UNAUTHORIZED, ROOM_ERROR.INVALID_TOKEN, client);
@@ -204,18 +263,40 @@ export class GameRoom extends Room<GameRoomState> {
   }
 
   onJoin(client: Client, _: unknown, { user, tokenExpiresAt }: AuthResult) {
-    this.state.players.forEach((player) => {
-      if (player.userId === user.userId) {
-        throwError(WS_CODE.FORBIDDEN, ROOM_ERROR.PLAYER_ALREADY_JOINED, client);
-      }
+    let existingSessionId: string | undefined;
+
+    this.state.players.forEach((player, sessionId) => {
+      if (player.userId === user.userId) existingSessionId = sessionId;
     });
 
-    logger.info({ message: `${user.userName} (${client.sessionId}) joined!` });
+    if (existingSessionId) {
+      const existingClient = this.clients.find((c) => c.sessionId === existingSessionId);
+      if (existingClient) {
+        logger.info({
+          message: `Replacing existing connection`,
+          data: {
+            roomId: this.roomId,
+            existingClientId: existingSessionId,
+            newClientId: client.sessionId,
+            userName: user.userName,
+          },
+        });
+
+        existingClient.leave(WS_CODE.FORBIDDEN, ROOM_ERROR.NEW_CONNECTION_FOUND);
+      }
+      this.state.players.delete(existingSessionId);
+    }
+
+    logger.info({
+      message: `New player joined!`,
+      data: { roomId: this.roomId, clientId: client.sessionId, userName: user.userName },
+    });
 
     const player = new Player();
 
     player.userId = user.userId;
     player.tokenExpiresAt = tokenExpiresAt;
+    player.lastActivityTime = Date.now();
     player.username = user.userName;
     player.x = Math.random() * MAP_SIZE.width;
     player.y = Math.random() * MAP_SIZE.height;
@@ -230,18 +311,26 @@ export class GameRoom extends Room<GameRoomState> {
     };
   }
 
-  onLeave(client: Client) {
-    const player = this.state.players.get(client.sessionId);
+  onLeave({ sessionId }: Client) {
+    const player = this.state.players.get(sessionId);
 
     if (player) {
-      logger.info({ message: `${player.username} (${client.sessionId}) left...` });
+      logger.info({
+        message: `Player left...`,
+        data: { roomId: this.roomId, clientId: sessionId, userName: player.username },
+      });
 
-      this.state.players.delete(client.sessionId);
+      this.state.players.delete(sessionId);
     }
   }
 
   onDispose() {
-    logger.info({ message: `room ${this.roomId} disposing...` });
+    logger.info({
+      message: `Room disposing...`,
+      data: { roomId: this.roomId },
+    });
+
+    if (this.connectionCheckInterval) clearInterval(this.connectionCheckInterval);
 
     // delete results after 10 seconds -- stop gap for in-memory management
     setTimeout(() => {
@@ -252,11 +341,17 @@ export class GameRoom extends Room<GameRoomState> {
   onUncaughtException(error: Error, methodName: string) {
     // simply log the error message for "expected" errors
     if (Object.values(ROOM_ERROR as Record<string, string>).includes(error.message)) {
-      logger.info({ message: error.message });
+      logger.info({
+        message: error.message,
+        data: { roomId: this.roomId, methodName },
+      });
       return;
     }
     // log any uncaught errors for debugging purposes
-    logger.error({ message: `uncaught exception in ${methodName}`, data: { error } });
+    logger.error({
+      message: `Uncaught exception`,
+      data: { roomId: this.roomId, methodName, error },
+    });
 
     // possibly handle saving game state
     // possibly handle disconnecting all clients if needed

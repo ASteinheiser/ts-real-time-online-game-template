@@ -71,7 +71,10 @@ export const WS_CODE = {
   TIMEOUT: 3008,
   NOT_FOUND: 4004,
 } as const;
-
+/** The timeout for the connection to the server */
+export const PLAYER_INACTIVITY_TIMEOUT = 5 * 1000; // 5 seconds
+/** The interval at which the server will check for inactive players */
+export const CONNECTION_CHECK_INTERVAL = 2 * 1000; // 2 seconds
 /** The payload for joining a room or refreshing a token */
 export interface AuthPayload {
   token: string;
