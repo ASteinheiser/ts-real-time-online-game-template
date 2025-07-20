@@ -2,7 +2,13 @@ import assert from 'assert';
 import type { ServerError } from '@colyseus/core';
 import { type ColyseusTestServer, boot } from '@colyseus/testing';
 import type { GoTrueAdminApi } from '@supabase/supabase-js';
-import { WS_CODE, WS_EVENT, WS_ROOM, CONNECTION_CHECK_INTERVAL } from '@repo/core-game';
+import {
+  WS_CODE,
+  WS_EVENT,
+  WS_ROOM,
+  CONNECTION_CHECK_INTERVAL,
+  PLAYER_INACTIVITY_TIMEOUT,
+} from '@repo/core-game';
 import { Player } from '../../src/rooms/GameRoom/roomState';
 import { makeApp } from '../../src/app.config';
 import { ROOM_ERROR } from '../../src/rooms/error';
@@ -87,26 +93,33 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
 
       const room = server.getRoomById(keepAliveClient.roomId);
       await room.waitForNextPatch();
+      let { players } = room.state.toJSON();
 
       assert.strictEqual(room.clients.length, 3);
       assert.strictEqual(room.clients[0].sessionId, keepAliveClient.sessionId);
       assert.strictEqual(room.clients[1].sessionId, client1.sessionId);
       assert.strictEqual(room.clients[2].sessionId, client2.sessionId);
+      assert.strictEqual(Object.keys(players).length, 3);
+      assert.strictEqual(!!players[keepAliveClient.sessionId], true);
+      assert.strictEqual(!!players[client1.sessionId], true);
+      assert.strictEqual(!!players[client2.sessionId], true);
 
-      // wait some time, then send an event to keep 1 player "active"
-      await new Promise((resolve) => setTimeout(resolve, CONNECTION_CHECK_INTERVAL));
-      await keepAliveClient.send(WS_EVENT.REFRESH_TOKEN, {
-        token: generateTestJWT({ user: KEEP_ALIVE_USER }),
-      });
-      await new Promise((resolve) => setTimeout(resolve, CONNECTION_CHECK_INTERVAL));
+      room.state.players.get(client1.sessionId).lastActivityTime = Date.now() - PLAYER_INACTIVITY_TIMEOUT;
+      room.state.players.get(client2.sessionId).lastActivityTime = Date.now() - PLAYER_INACTIVITY_TIMEOUT;
+
       await new Promise((resolve) => setTimeout(resolve, CONNECTION_CHECK_INTERVAL));
 
       await room.waitForNextPatch();
+      ({ players } = room.state.toJSON());
 
       assert.strictEqual(room.clients.length, 1);
       assert.strictEqual(room.clients[0].sessionId, keepAliveClient.sessionId);
       assert.strictEqual(room.clients[1], undefined);
       assert.strictEqual(room.clients[2], undefined);
+      assert.strictEqual(Object.keys(players).length, 1);
+      assert.strictEqual(!!players[keepAliveClient.sessionId], true);
+      assert.strictEqual(!!players[client1.sessionId], false);
+      assert.strictEqual(!!players[client2.sessionId], false);
     });
 
     it('should kick a client if there is an unhandled exception in fixedTick', async () => {
