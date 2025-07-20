@@ -37,7 +37,7 @@
   "devDependencies": {
     "eslint": "catalog:",
     "prettier": "catalog:",
-    "turbo": "^2.5.4"
+    "turbo": "^2.5.5"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
