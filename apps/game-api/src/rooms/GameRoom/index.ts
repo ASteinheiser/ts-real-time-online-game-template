@@ -60,6 +60,7 @@ export class GameRoom extends Room<GameRoomState> {
   connectionCheckTimeout: NodeJS.Timeout;
   reconnectionTimeout = RECONNECTION_TIMEOUT;
   expectingReconnections = new Set<string>();
+  forcedDisconnects = new Set<string>();
 
   onCreate({ prisma, connectionCheckInterval }: GameRoomArgs) {
     logger.info({
@@ -292,6 +293,7 @@ export class GameRoom extends Room<GameRoomState> {
 
       const existingClient = this.clients.find((c) => c.sessionId === existingSessionId);
       if (existingClient) {
+        this.forcedDisconnects.add(existingClient.sessionId);
         existingClient.leave(WS_CODE.FORBIDDEN, ROOM_ERROR.NEW_CONNECTION_FOUND);
       } else {
         this.cleanupPlayer(existingSessionId);
@@ -336,7 +338,8 @@ export class GameRoom extends Room<GameRoomState> {
       data: { roomId: this.roomId, clientId: sessionId, consented },
     });
 
-    if (consented) {
+    if (consented || this.forcedDisconnects.has(sessionId)) {
+      this.forcedDisconnects.delete(sessionId);
       this.cleanupPlayer(sessionId);
       return;
     }

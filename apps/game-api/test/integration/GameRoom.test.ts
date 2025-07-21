@@ -189,11 +189,9 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       assertBasicPlayerState({ room, clientIds: [keepAliveClient.sessionId] });
     });
 
-    it('should kick the old client and take over the player if a new client joins with the same token userId', async () => {
+    it('should kick the old client forcefully and take over the player if a new client joins with the same token userId', async () => {
       const client = await joinTestRoom({ server, token: generateTestJWT({}) });
-
       const room = getRoom(client.roomId);
-      room.reconnectionTimeout = 0;
 
       let { players } = room.state.toJSON();
       const oldPlayerPosition = {
@@ -204,6 +202,8 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       assertBasicPlayerState({ room, clientIds: [client.sessionId] });
 
       const newClient = await joinTestRoom({ server, token: generateTestJWT({}) });
+
+      assert.strictEqual(room.forcedDisconnects.has(client.sessionId), true);
 
       await room.waitForNextSimulationTick();
       ({ players } = room.state.toJSON());
