@@ -64,8 +64,8 @@ export class GameRoom extends Room<GameRoomState> {
       data: { roomId: this.roomId },
     });
     // this is the speed at which we stream updates to the client
-    // updates should be interpolated to appear smoother
-    this.patchRate = 1000 / 30; // 30fps
+    // updates should be interpolated clientside to appear smoother
+    this.patchRate = 1000 / 20; // 20fps = 50ms
 
     this.prisma = prisma;
 

@@ -1,5 +1,5 @@
-/** The number of ticks per second the game has */
-export const FIXED_TIME_STEP = 1000 / 128;
+/** How long each tick takes in ms (64fps = 15.625ms) */
+export const FIXED_TIME_STEP = 1000 / 64;
 
 /** The size of the map in pixels */
 export const MAP_SIZE = {
@@ -10,7 +10,7 @@ export const MAP_SIZE = {
 /** The number of frames per second the player animates at (8fps) */
 export const PLAYER_FRAME_RATE = 8;
 /** The speed of the player in pixels per tick */
-export const PLAYER_MOVE_SPEED = 2;
+export const PLAYER_MOVE_SPEED = 4;
 /** The size of the player in pixels */
 export const PLAYER_SIZE = {
   width: 47,
