@@ -76,7 +76,7 @@ export const CONNECTION_CHECK_INTERVAL = 2 * 1000; // 2 seconds
 /** The timeout for the connection to the server */
 export const INACTIVITY_TIMEOUT = 1 * 60 * 1000; // 1 minute
 /** The timeout allowed for an unexpected disconnect to reconnect (in seconds) */
-export const RECONNECTION_TIMEOUT = 10; // 10 seconds
+export const RECONNECTION_TIMEOUT = 20; // 20 seconds
 /** The payload for joining a room or refreshing a token */
 export interface AuthPayload {
   token: string;
