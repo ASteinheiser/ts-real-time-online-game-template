@@ -16,7 +16,7 @@ import {
   ENEMY_SIZE,
   WS_EVENT,
   WS_CODE,
-  PLAYER_INACTIVITY_TIMEOUT,
+  INACTIVITY_TIMEOUT,
   CONNECTION_CHECK_INTERVAL,
   type AuthPayload,
   type InputPayload,
@@ -224,7 +224,7 @@ export class GameRoom extends Room<GameRoomState> {
       }
 
       const timeSinceLastActivity = Date.now() - player.lastActivityTime;
-      if (timeSinceLastActivity > PLAYER_INACTIVITY_TIMEOUT) {
+      if (timeSinceLastActivity > INACTIVITY_TIMEOUT) {
         logger.info({
           message: `Removing inactive client...`,
           data: {

@@ -2,13 +2,7 @@ import assert from 'assert';
 import type { ServerError } from '@colyseus/core';
 import { type ColyseusTestServer, boot } from '@colyseus/testing';
 import type { GoTrueAdminApi } from '@supabase/supabase-js';
-import {
-  WS_CODE,
-  WS_EVENT,
-  WS_ROOM,
-  CONNECTION_CHECK_INTERVAL,
-  PLAYER_INACTIVITY_TIMEOUT,
-} from '@repo/core-game';
+import { WS_CODE, WS_EVENT, WS_ROOM, CONNECTION_CHECK_INTERVAL, INACTIVITY_TIMEOUT } from '@repo/core-game';
 import { Player } from '../../src/rooms/GameRoom/roomState';
 import { makeApp } from '../../src/app.config';
 import { ROOM_ERROR } from '../../src/rooms/error';
@@ -104,8 +98,8 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       assert.strictEqual(!!players[client1.sessionId], true);
       assert.strictEqual(!!players[client2.sessionId], true);
 
-      room.state.players.get(client1.sessionId).lastActivityTime = Date.now() - PLAYER_INACTIVITY_TIMEOUT;
-      room.state.players.get(client2.sessionId).lastActivityTime = Date.now() - PLAYER_INACTIVITY_TIMEOUT;
+      room.state.players.get(client1.sessionId).lastActivityTime = Date.now() - INACTIVITY_TIMEOUT;
+      room.state.players.get(client2.sessionId).lastActivityTime = Date.now() - INACTIVITY_TIMEOUT;
 
       await new Promise((resolve) => setTimeout(resolve, CONNECTION_CHECK_INTERVAL));
 
