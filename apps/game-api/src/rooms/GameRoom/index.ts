@@ -70,7 +70,7 @@ export class GameRoom extends Room<GameRoomState> {
 
     this.onMessage(WS_EVENT.PLAYER_INPUT, (client, payload: InputPayload) => {
       const player = this.state.players.get(client.sessionId);
-      if (!player) throwError(WS_CODE.NOT_FOUND, ROOM_ERROR.CONNECTION_NOT_FOUND, client);
+      if (!player) this.throwError(WS_CODE.NOT_FOUND, ROOM_ERROR.CONNECTION_NOT_FOUND, client);
 
       player.lastActivityTime = Date.now();
       player.inputQueue.push(payload);
@@ -78,14 +78,13 @@ export class GameRoom extends Room<GameRoomState> {
 
     this.onMessage(WS_EVENT.REFRESH_TOKEN, (client, payload: AuthPayload) => {
       const authUser = validateJwt(payload.token);
-      if (!authUser) throwError(WS_CODE.UNAUTHORIZED, ROOM_ERROR.INVALID_TOKEN, client);
+      if (!authUser) this.throwError(WS_CODE.UNAUTHORIZED, ROOM_ERROR.INVALID_TOKEN, client);
 
       const player = this.state.players.get(client.sessionId);
-      if (!player) throwError(WS_CODE.NOT_FOUND, ROOM_ERROR.CONNECTION_NOT_FOUND, client);
+      if (!player) this.throwError(WS_CODE.NOT_FOUND, ROOM_ERROR.CONNECTION_NOT_FOUND, client);
 
-      if (player.userId !== authUser.id) {
-        throwError(WS_CODE.FORBIDDEN, ROOM_ERROR.USER_ID_CHANGED, client);
-      }
+      const hasUserIdChanged = player.userId !== authUser.id;
+      if (hasUserIdChanged) this.throwError(WS_CODE.FORBIDDEN, ROOM_ERROR.USER_ID_CHANGED, client);
 
       player.lastActivityTime = Date.now();
       player.tokenExpiresAt = authUser.expiresAt;
@@ -115,7 +114,7 @@ export class GameRoom extends Room<GameRoomState> {
       const tokenExpiresIn = player.tokenExpiresAt - Date.now();
       if (tokenExpiresIn <= 0) {
         const client = this.clients.find((client) => client.sessionId === sessionId);
-        throwError(WS_CODE.TIMEOUT, ROOM_ERROR.TOKEN_EXPIRED, client);
+        this.throwError(WS_CODE.TIMEOUT, ROOM_ERROR.TOKEN_EXPIRED, client ?? sessionId);
       }
       try {
         let input: undefined | InputPayload;
@@ -175,11 +174,10 @@ export class GameRoom extends Room<GameRoomState> {
           }
         }
       } catch (error) {
-        throwError(
-          WS_CODE.INTERNAL_SERVER_ERROR,
-          (error as Error)?.message || ROOM_ERROR.INTERNAL_SERVER_ERROR,
-          this.clients.find((client) => client.sessionId === sessionId)
-        );
+        const message = (error as Error)?.message || ROOM_ERROR.INTERNAL_SERVER_ERROR;
+        const client = this.clients.find((c) => c.sessionId === sessionId);
+
+        this.throwError(WS_CODE.INTERNAL_SERVER_ERROR, message, client ?? sessionId);
       }
     });
 
@@ -219,7 +217,7 @@ export class GameRoom extends Room<GameRoomState> {
           data: { roomId: this.roomId, clientId: sessionId, userName: player.username },
         });
 
-        this.state.players.delete(sessionId);
+        this.cleanupPlayer(sessionId);
         return;
       }
 
@@ -254,10 +252,10 @@ export class GameRoom extends Room<GameRoomState> {
 
   async onAuth(client: Client, __: unknown, context: AuthContext): Promise<AuthResult> {
     const authUser = validateJwt(context.token);
-    if (!authUser) throwError(WS_CODE.UNAUTHORIZED, ROOM_ERROR.INVALID_TOKEN, client);
+    if (!authUser) this.throwError(WS_CODE.UNAUTHORIZED, ROOM_ERROR.INVALID_TOKEN, client);
 
     const dbUser = await this.prisma.profile.findUnique({ where: { userId: authUser.id } });
-    if (!dbUser) throwError(WS_CODE.NOT_FOUND, ROOM_ERROR.PROFILE_NOT_FOUND, client);
+    if (!dbUser) this.throwError(WS_CODE.NOT_FOUND, ROOM_ERROR.PROFILE_NOT_FOUND, client);
 
     return { user: dbUser, tokenExpiresAt: authUser.expiresAt };
   }
@@ -288,8 +286,7 @@ export class GameRoom extends Room<GameRoomState> {
       if (existingClient) {
         existingClient.leave(WS_CODE.FORBIDDEN, ROOM_ERROR.NEW_CONNECTION_FOUND);
       } else {
-        // cleanup the player from the state if the client is not found
-        this.state.players.delete(existingSessionId);
+        this.cleanupPlayer(existingSessionId);
       }
     }
 
@@ -324,11 +321,19 @@ export class GameRoom extends Room<GameRoomState> {
   }
 
   onLeave({ sessionId }: Client) {
-    const player = this.state.players.get(sessionId);
+    logger.info({
+      message: `Client left...`,
+      data: { roomId: this.roomId, clientId: sessionId },
+    });
 
+    this.cleanupPlayer(sessionId);
+  }
+
+  cleanupPlayer(sessionId: string) {
+    const player = this.state.players.get(sessionId);
     if (player) {
       logger.info({
-        message: `Player left...`,
+        message: `Cleaning up player...`,
         data: { roomId: this.roomId, clientId: sessionId, userName: player.username },
       });
 
@@ -347,6 +352,15 @@ export class GameRoom extends Room<GameRoomState> {
     // delete results after 10 seconds -- stop gap for in-memory management
     setTimeout(() => delete RESULTS[this.roomId], 10 * 1000);
   }
+
+  throwError = (code: number, message: string, client: Client | string) => {
+    if (typeof client === 'string') {
+      this.cleanupPlayer(client);
+    } else {
+      client.leave(code, message);
+    }
+    throw new ServerError(code, message);
+  };
 
   onUncaughtException(error: Error, methodName: string) {
     // simply log the error message for "expected" errors
@@ -367,8 +381,3 @@ export class GameRoom extends Room<GameRoomState> {
     // possibly handle disconnecting all clients if needed
   }
 }
-
-const throwError = (code: number, message: string, client: Client) => {
-  client.leave(code, message);
-  throw new ServerError(code, message);
-};
