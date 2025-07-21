@@ -2,14 +2,7 @@ import assert from 'assert';
 import type { ServerError } from '@colyseus/core';
 import { type ColyseusTestServer, boot } from '@colyseus/testing';
 import type { GoTrueAdminApi } from '@supabase/supabase-js';
-import {
-  WS_CODE,
-  WS_EVENT,
-  WS_ROOM,
-  CONNECTION_CHECK_INTERVAL,
-  INACTIVITY_TIMEOUT,
-  FIXED_TIME_STEP,
-} from '@repo/core-game';
+import { WS_CODE, WS_EVENT, WS_ROOM, CONNECTION_CHECK_INTERVAL, INACTIVITY_TIMEOUT } from '@repo/core-game';
 import { Player } from '../../src/rooms/GameRoom/roomState';
 import { makeApp } from '../../src/app.config';
 import { ROOM_ERROR } from '../../src/rooms/error';
@@ -52,7 +45,7 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       const client = await joinTestRoom({ server, token: generateTestJWT({}) });
 
       const room = server.getRoomById(client.roomId);
-      await room.waitForNextPatch();
+      await room.waitForNextSimulationTick();
       let { players } = room.state.toJSON();
 
       assert.strictEqual(room.clients.length, 1);
@@ -63,7 +56,7 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       const badSessionId = 'bad-session-id';
       room.state.players.set(badSessionId, new Player());
 
-      await room.waitForNextPatch();
+      await room.waitForNextSimulationTick();
       ({ players } = room.state.toJSON());
 
       assert.strictEqual(room.clients.length, 1);
@@ -74,7 +67,7 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
 
       await new Promise((resolve) => setTimeout(resolve, CONNECTION_CHECK_INTERVAL));
 
-      await room.waitForNextPatch();
+      await room.waitForNextSimulationTick();
       ({ players } = room.state.toJSON());
 
       assert.strictEqual(room.clients.length, 1);
@@ -93,7 +86,7 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       const client2 = await joinTestRoom({ server, token: generateTestJWT({ user: TEST_USERS[1] }) });
 
       const room = server.getRoomById(keepAliveClient.roomId);
-      await room.waitForNextPatch();
+      await room.waitForNextSimulationTick();
       let { players } = room.state.toJSON();
 
       assert.strictEqual(room.clients.length, 3);
@@ -110,7 +103,7 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
 
       await new Promise((resolve) => setTimeout(resolve, CONNECTION_CHECK_INTERVAL));
 
-      await room.waitForNextPatch();
+      await room.waitForNextSimulationTick();
       ({ players } = room.state.toJSON());
 
       assert.strictEqual(room.clients.length, 1);
@@ -132,7 +125,7 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       const client = await joinTestRoom({ server, token: generateTestJWT({}) });
 
       const room = server.getRoomById(keepAliveClient.roomId);
-      await room.waitForNextPatch();
+      await room.waitForNextSimulationTick();
 
       assert.strictEqual(room.clients.length, 2);
       assert.strictEqual(room.clients[0].sessionId, keepAliveClient.sessionId);
@@ -140,8 +133,9 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
 
       room.state.players.get(client.sessionId).inputQueue = null;
 
-      await new Promise((resolve) => setTimeout(resolve, FIXED_TIME_STEP * 2));
-      await room.waitForNextPatch();
+      // takes 1-2 ticks to kick the client
+      await room.waitForNextSimulationTick();
+      await room.waitForNextSimulationTick();
 
       assert.strictEqual(room.clients.length, 1);
       assert.strictEqual(room.clients[0].sessionId, keepAliveClient.sessionId);
@@ -187,7 +181,7 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       const client = await joinTestRoom({ server, token: generateTestJWT({}) });
 
       const room = server.getRoomById(client.roomId);
-      await room.waitForNextPatch();
+      await room.waitForNextSimulationTick();
       let { players } = room.state.toJSON();
 
       assert.strictEqual(room.clients.length, 1);
@@ -203,7 +197,7 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       assert.notStrictEqual(client.sessionId, newClient.sessionId);
 
       const newRoomConnection = server.getRoomById(newClient.roomId);
-      await newRoomConnection.waitForNextPatch();
+      await newRoomConnection.waitForNextSimulationTick();
       ({ players } = newRoomConnection.state.toJSON());
 
       assert.strictEqual(newRoomConnection.clients.length, 1);
@@ -227,14 +221,14 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       const client = await joinTestRoom({ server, token: generateTestJWT({ expiresInMs }) });
 
       const room = server.getRoomById(keepAliveClient.roomId);
-      await room.waitForNextPatch();
+      await room.waitForNextSimulationTick();
 
       assert.strictEqual(room.clients.length, 2);
       assert.strictEqual(room.clients[0].sessionId, keepAliveClient.sessionId);
       assert.strictEqual(room.clients[1].sessionId, client.sessionId);
 
       await new Promise((resolve) => setTimeout(resolve, CONNECTION_CHECK_INTERVAL));
-      await room.waitForNextPatch();
+      await room.waitForNextSimulationTick();
 
       assert.strictEqual(room.clients.length, 1);
       assert.strictEqual(room.clients[0].sessionId, keepAliveClient.sessionId);
@@ -249,7 +243,7 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       const client = await joinTestRoom({ server, token: generateTestJWT({}) });
 
       const room = server.getRoomById(keepAliveClient.roomId);
-      await room.waitForNextPatch();
+      await room.waitForNextSimulationTick();
 
       assert.strictEqual(room.clients.length, 2);
       assert.strictEqual(room.clients[0].sessionId, keepAliveClient.sessionId);
@@ -264,7 +258,7 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
         down: false,
         attack: false,
       });
-      await room.waitForNextPatch();
+      await room.waitForNextSimulationTick();
 
       assert.strictEqual(room.clients.length, 1);
       assert.strictEqual(room.clients[0].sessionId, keepAliveClient.sessionId);
@@ -280,7 +274,7 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       const client = await joinTestRoom({ server, token: generateTestJWT({}) });
 
       const room = server.getRoomById(keepAliveClient.roomId);
-      await room.waitForNextPatch();
+      await room.waitForNextSimulationTick();
 
       assert.strictEqual(room.clients.length, 2);
       assert.strictEqual(room.clients[0].sessionId, keepAliveClient.sessionId);
@@ -288,7 +282,7 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
 
       await client.send(WS_EVENT.REFRESH_TOKEN, { token: 'invalid-token' });
 
-      await room.waitForNextPatch();
+      await room.waitForNextSimulationTick();
 
       assert.strictEqual(room.clients.length, 1);
       assert.strictEqual(room.clients[0].sessionId, keepAliveClient.sessionId);
@@ -304,7 +298,7 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       const client = await joinTestRoom({ server, token: generateTestJWT({}) });
 
       const room = server.getRoomById(keepAliveClient.roomId);
-      await room.waitForNextPatch();
+      await room.waitForNextSimulationTick();
 
       assert.strictEqual(room.clients.length, 2);
       assert.strictEqual(room.clients[0].sessionId, keepAliveClient.sessionId);
@@ -312,7 +306,7 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
 
       await client.send(WS_EVENT.REFRESH_TOKEN, { token: generateTestJWT({ expiresInMs: 0 }) });
 
-      await room.waitForNextPatch();
+      await room.waitForNextSimulationTick();
 
       assert.strictEqual(room.clients.length, 1);
       assert.strictEqual(room.clients[0].sessionId, keepAliveClient.sessionId);
@@ -328,7 +322,7 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       const client = await joinTestRoom({ server, token: generateTestJWT({}) });
 
       const room = server.getRoomById(keepAliveClient.roomId);
-      await room.waitForNextPatch();
+      await room.waitForNextSimulationTick();
 
       assert.strictEqual(room.clients.length, 2);
       assert.strictEqual(room.clients[0].sessionId, keepAliveClient.sessionId);
@@ -336,7 +330,7 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
 
       await client.send(WS_EVENT.REFRESH_TOKEN, { token: generateTestJWT({ user: TEST_USERS[1] }) });
 
-      await room.waitForNextPatch();
+      await room.waitForNextSimulationTick();
 
       assert.strictEqual(room.clients.length, 1);
       assert.strictEqual(room.clients[0].sessionId, keepAliveClient.sessionId);
@@ -352,7 +346,7 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       const client = await joinTestRoom({ server, token: generateTestJWT({}) });
 
       const room = server.getRoomById(keepAliveClient.roomId);
-      await room.waitForNextPatch();
+      await room.waitForNextSimulationTick();
 
       assert.strictEqual(room.clients.length, 2);
       assert.strictEqual(room.clients[0].sessionId, keepAliveClient.sessionId);
@@ -362,7 +356,7 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
 
       await client.send(WS_EVENT.REFRESH_TOKEN, { token: generateTestJWT({}) });
 
-      await room.waitForNextPatch();
+      await room.waitForNextSimulationTick();
 
       assert.strictEqual(room.clients.length, 1);
       assert.strictEqual(room.clients[0].sessionId, keepAliveClient.sessionId);
@@ -388,7 +382,7 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       const client = await joinTestRoom({ server, token: generateTestJWT({}) });
 
       const room = server.getRoomById(keepAliveClient.roomId);
-      await room.waitForNextPatch();
+      await room.waitForNextSimulationTick();
       let { players } = room.state.toJSON();
 
       assert.strictEqual(room.clients.length, 2);
@@ -399,7 +393,7 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
 
       await client.send(WS_EVENT.LEAVE_ROOM);
 
-      await room.waitForNextPatch();
+      await room.waitForNextSimulationTick();
       ({ players } = room.state.toJSON());
 
       assert.strictEqual(room.clients.length, 1);
@@ -415,15 +409,15 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       const client = await joinTestRoom({ server, token: generateTestJWT({ expiresInMs }) });
 
       const room = server.getRoomById(client.roomId);
-      await room.waitForNextPatch();
+      await room.waitForNextSimulationTick();
 
       assert.strictEqual(room.clients.length, 1);
       assert.strictEqual(room.clients[0].sessionId, client.sessionId);
 
       await client.send(WS_EVENT.REFRESH_TOKEN, { token: generateTestJWT({}) });
 
-      await new Promise((resolve) => setTimeout(resolve, expiresInMs));
-      await room.waitForNextPatch();
+      await new Promise((resolve) => setTimeout(resolve, CONNECTION_CHECK_INTERVAL));
+      await room.waitForNextSimulationTick();
 
       assert.strictEqual(room.clients.length, 1);
       assert.strictEqual(room.clients[0].sessionId, client.sessionId);
@@ -433,7 +427,7 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       const client = await joinTestRoom({ server, token: generateTestJWT({}) });
       const room = server.getRoomById(client.roomId);
 
-      await room.waitForNextPatch();
+      await room.waitForNextSimulationTick();
       const { players } = room.state.toJSON();
 
       assert.strictEqual(Object.keys(players).length, 1);
@@ -447,8 +441,7 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       const client = await joinTestRoom({ server, token: generateTestJWT({}) });
       const room = server.getRoomById(client.roomId);
 
-      await new Promise((resolve) => setTimeout(resolve, FIXED_TIME_STEP * 2));
-      await room.waitForNextPatch();
+      await room.waitForNextSimulationTick();
       const { enemies } = room.state.toJSON();
 
       assert.strictEqual(Object.keys(enemies).length, 1);
@@ -464,7 +457,7 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       const client4 = await joinTestRoom({ server, token: generateTestJWT({ user: TEST_USERS[3] }) });
 
       const room = server.getRoomById(client1.roomId);
-      await room.waitForNextPatch();
+      await room.waitForNextSimulationTick();
       const { players } = room.state.toJSON();
 
       assert.strictEqual(players[client1.sessionId].userId, TEST_USERS[0].id);
@@ -481,11 +474,11 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       const client5 = await joinTestRoom({ server, token: generateTestJWT({ user: TEST_USERS[4] }) });
 
       const room1 = server.getRoomById(client1.roomId);
-      await room1.waitForNextPatch();
+      await room1.waitForNextSimulationTick();
       const players1 = room1.state.toJSON().players;
 
       const room2 = server.getRoomById(client5.roomId);
-      await room2.waitForNextPatch();
+      await room2.waitForNextSimulationTick();
       const players2 = room2.state.toJSON().players;
 
       assert.strictEqual(Object.keys(players1).length, 4);
