@@ -111,11 +111,6 @@ export class GameRoom extends Room<GameRoomState> {
 
   fixedTick() {
     this.state.players.forEach((player, sessionId) => {
-      const tokenExpiresIn = player.tokenExpiresAt - Date.now();
-      if (tokenExpiresIn <= 0) {
-        const client = this.clients.find((client) => client.sessionId === sessionId);
-        this.throwError(WS_CODE.TIMEOUT, ROOM_ERROR.TOKEN_EXPIRED, client ?? sessionId);
-      }
       try {
         let input: undefined | InputPayload;
         // dequeue player inputs
@@ -207,43 +202,40 @@ export class GameRoom extends Room<GameRoomState> {
   }
 
   checkPlayerConnection() {
-    const clientsToRemove: Client[] = [];
+    const clientsToRemove: Array<{ client: Client; reason: string }> = [];
 
     this.state.players.forEach((player, sessionId) => {
       const client = this.clients.find((c) => c.sessionId === sessionId);
       if (!client) {
-        logger.info({
-          message: `Removing orphaned player...`,
-          data: { roomId: this.roomId, clientId: sessionId, userName: player.username },
-        });
-
         this.cleanupPlayer(sessionId);
+        return;
+      }
+
+      const tokenExpiresIn = player.tokenExpiresAt - Date.now();
+      if (tokenExpiresIn <= 0) {
+        clientsToRemove.push({ client, reason: ROOM_ERROR.TOKEN_EXPIRED });
         return;
       }
 
       const timeSinceLastActivity = Date.now() - player.lastActivityTime;
       if (timeSinceLastActivity > INACTIVITY_TIMEOUT) {
-        logger.info({
-          message: `Removing inactive client...`,
-          data: {
-            roomId: this.roomId,
-            clientId: sessionId,
-            userName: player.username,
-            timeSinceLastActivity,
-          },
-        });
-
-        clientsToRemove.push(client);
+        clientsToRemove.push({ client, reason: ROOM_ERROR.PLAYER_INACTIVITY });
+        return;
       }
     });
 
-    clientsToRemove.forEach((client) => {
+    clientsToRemove.forEach(({ client, reason }) => {
+      logger.info({
+        message: `Removing client...`,
+        data: { roomId: this.roomId, clientId: client.sessionId, reason },
+      });
+
       try {
-        client.leave(WS_CODE.TIMEOUT, ROOM_ERROR.PLAYER_INACTIVITY);
+        client.leave(WS_CODE.TIMEOUT, reason);
       } catch (error) {
         logger.error({
-          message: `Error removing inactive client`,
-          data: { roomId: this.roomId, clientId: client.sessionId, error },
+          message: `Error removing client`,
+          data: { roomId: this.roomId, clientId: client.sessionId, reason, error },
         });
         this.onLeave(client);
       }
@@ -315,8 +307,8 @@ export class GameRoom extends Room<GameRoomState> {
     if (!RESULTS[this.roomId]) RESULTS[this.roomId] = {};
     RESULTS[this.roomId][player.userId] = {
       username: user.userName,
-      attackCount: 0,
-      killCount: 0,
+      attackCount: player.attackCount,
+      killCount: player.killCount,
     };
   }
 

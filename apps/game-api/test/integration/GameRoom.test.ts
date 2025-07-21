@@ -225,7 +225,7 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       assert.strictEqual(room.clients[0].sessionId, keepAliveClient.sessionId);
       assert.strictEqual(room.clients[1].sessionId, client.sessionId);
 
-      await new Promise((resolve) => setTimeout(resolve, expiresInMs));
+      await new Promise((resolve) => setTimeout(resolve, CONNECTION_CHECK_INTERVAL));
       await room.waitForNextPatch();
 
       assert.strictEqual(room.clients.length, 1);
