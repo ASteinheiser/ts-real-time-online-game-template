@@ -103,6 +103,7 @@ export class GameRoom extends Room<GameRoomState> {
     });
 
     this.onMessage(WS_EVENT.LEAVE_ROOM, (client) => {
+      this.forcedDisconnects.add(client.sessionId);
       client.leave(WS_CODE.SUCCESS);
     });
 

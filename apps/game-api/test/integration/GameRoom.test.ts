@@ -363,6 +363,23 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       assertBasicPlayerState({ room, clientIds: [keepAliveClient.sessionId] });
     });
 
+    it('should return WS_CODE.SUCCESS when a client leaves the room via the leaveRoom event', async () => {
+      const client = await joinTestRoom({ server, token: generateTestJWT({}) });
+      const room = getRoom(client.roomId);
+
+      const leaveCodePromise = new Promise((resolve) => {
+        client.onLeave((code) => resolve(code));
+      });
+
+      assertBasicPlayerState({ room, clientIds: [client.sessionId] });
+
+      await client.send(WS_EVENT.LEAVE_ROOM);
+      await room.waitForNextSimulationTick();
+
+      assertBasicPlayerState({ room, clientIds: [] });
+      assert.strictEqual(await leaveCodePromise, WS_CODE.SUCCESS);
+    });
+
     it('should allow a client to reconnect to a room', async () => {
       const client = await joinTestRoom({ server, token: generateTestJWT({}) });
       const reconnectToken = client.reconnectionToken;
