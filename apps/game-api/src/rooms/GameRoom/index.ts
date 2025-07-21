@@ -63,8 +63,9 @@ export class GameRoom extends Room<GameRoomState> {
       message: `New room created!`,
       data: { roomId: this.roomId },
     });
-
-    this.patchRate = FIXED_TIME_STEP;
+    // this is the speed at which we stream updates to the client
+    // updates should be interpolated to appear smoother
+    this.patchRate = 1000 / 30; // 30fps
 
     this.prisma = prisma;
 
