@@ -22,7 +22,7 @@ export const SplashProvider = ({ children }: SplashProviderProps) => {
   if (!isSplashVisible) return children;
 
   return (
-    <div className="fullscreen-center splash-fade">
+    <div className="fullscreen-center splash-fade" style={{ userSelect: 'none' }}>
       <img src={logo} className="h-40 w-auto mb-15" />
       <h1 className="text-5xl font-pixel text-primary">iamandrew.io games</h1>
     </div>
