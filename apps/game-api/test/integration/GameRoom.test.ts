@@ -180,19 +180,32 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
 
       const room = server.getRoomById(client.roomId);
       await room.waitForNextPatch();
+      let { players } = room.state.toJSON();
 
       assert.strictEqual(room.clients.length, 1);
       assert.strictEqual(room.clients[0].sessionId, client.sessionId);
+      assert.strictEqual(Object.keys(players).length, 1);
 
+      const oldPlayerPosition = {
+        x: players[client.sessionId].x,
+        y: players[client.sessionId].y,
+      };
       const newClient = await joinTestRoom({ server, token: generateTestJWT({}) });
+
+      assert.notStrictEqual(client.sessionId, newClient.sessionId);
 
       const newRoomConnection = server.getRoomById(newClient.roomId);
       await newRoomConnection.waitForNextPatch();
+      ({ players } = newRoomConnection.state.toJSON());
 
       assert.strictEqual(newRoomConnection.clients.length, 1);
       assert.strictEqual(newRoomConnection.clients[0].sessionId, newClient.sessionId);
       assert.strictEqual(room.clients.length, 1);
       assert.strictEqual(room.clients[0].sessionId, newClient.sessionId);
+      assert.strictEqual(Object.keys(players).length, 1);
+      assert.strictEqual(players[client.sessionId], undefined);
+      assert.strictEqual(players[newClient.sessionId].x, oldPlayerPosition.x);
+      assert.strictEqual(players[newClient.sessionId].y, oldPlayerPosition.y);
     });
 
     it('should kick a client if their token expires', async () => {

@@ -264,27 +264,33 @@ export class GameRoom extends Room<GameRoomState> {
 
   onJoin(client: Client, _: unknown, { user, tokenExpiresAt }: AuthResult) {
     let existingSessionId: string | undefined;
+    let existingPlayer: Player | undefined;
 
     this.state.players.forEach((player, sessionId) => {
-      if (player.userId === user.userId) existingSessionId = sessionId;
+      if (player.userId === user.userId) {
+        existingSessionId = sessionId;
+        existingPlayer = player;
+      }
     });
 
     if (existingSessionId) {
+      logger.info({
+        message: `Replacing existing connection`,
+        data: {
+          roomId: this.roomId,
+          existingClientId: existingSessionId,
+          newClientId: client.sessionId,
+          userName: user.userName,
+        },
+      });
+
       const existingClient = this.clients.find((c) => c.sessionId === existingSessionId);
       if (existingClient) {
-        logger.info({
-          message: `Replacing existing connection`,
-          data: {
-            roomId: this.roomId,
-            existingClientId: existingSessionId,
-            newClientId: client.sessionId,
-            userName: user.userName,
-          },
-        });
-
         existingClient.leave(WS_CODE.FORBIDDEN, ROOM_ERROR.NEW_CONNECTION_FOUND);
+      } else {
+        // cleanup the player from the state if the client is not found
+        this.state.players.delete(existingSessionId);
       }
-      this.state.players.delete(existingSessionId);
     }
 
     logger.info({
@@ -292,14 +298,20 @@ export class GameRoom extends Room<GameRoomState> {
       data: { roomId: this.roomId, clientId: client.sessionId, userName: user.userName },
     });
 
-    const player = new Player();
-
-    player.userId = user.userId;
-    player.tokenExpiresAt = tokenExpiresAt;
-    player.lastActivityTime = Date.now();
-    player.username = user.userName;
-    player.x = Math.random() * MAP_SIZE.width;
-    player.y = Math.random() * MAP_SIZE.height;
+    let player: Player;
+    if (existingPlayer) {
+      player = existingPlayer;
+      player.tokenExpiresAt = tokenExpiresAt;
+      player.lastActivityTime = Date.now();
+    } else {
+      player = new Player();
+      player.tokenExpiresAt = tokenExpiresAt;
+      player.lastActivityTime = Date.now();
+      player.userId = user.userId;
+      player.username = user.userName;
+      player.x = Math.random() * MAP_SIZE.width;
+      player.y = Math.random() * MAP_SIZE.height;
+    }
 
     this.state.players.set(client.sessionId, player);
 
