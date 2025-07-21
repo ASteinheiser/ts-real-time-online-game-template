@@ -2,7 +2,14 @@ import assert from 'assert';
 import type { ServerError } from '@colyseus/core';
 import { type ColyseusTestServer, boot } from '@colyseus/testing';
 import type { GoTrueAdminApi } from '@supabase/supabase-js';
-import { WS_CODE, WS_EVENT, WS_ROOM, CONNECTION_CHECK_INTERVAL, INACTIVITY_TIMEOUT } from '@repo/core-game';
+import {
+  WS_CODE,
+  WS_EVENT,
+  WS_ROOM,
+  CONNECTION_CHECK_INTERVAL,
+  INACTIVITY_TIMEOUT,
+  FIXED_TIME_STEP,
+} from '@repo/core-game';
 import { Player } from '../../src/rooms/GameRoom/roomState';
 import { makeApp } from '../../src/app.config';
 import { ROOM_ERROR } from '../../src/rooms/error';
@@ -133,6 +140,7 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
 
       room.state.players.get(client.sessionId).inputQueue = null;
 
+      await new Promise((resolve) => setTimeout(resolve, FIXED_TIME_STEP * 2));
       await room.waitForNextPatch();
 
       assert.strictEqual(room.clients.length, 1);
@@ -426,7 +434,7 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       const room = server.getRoomById(client.roomId);
 
       await room.waitForNextPatch();
-      const { players } = client.state.toJSON();
+      const { players } = room.state.toJSON();
 
       assert.strictEqual(Object.keys(players).length, 1);
       assert.strictEqual(players[client.sessionId].userId, TEST_USERS[0].id);
@@ -439,8 +447,9 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       const client = await joinTestRoom({ server, token: generateTestJWT({}) });
       const room = server.getRoomById(client.roomId);
 
+      await new Promise((resolve) => setTimeout(resolve, FIXED_TIME_STEP * 2));
       await room.waitForNextPatch();
-      const { enemies } = client.state.toJSON();
+      const { enemies } = room.state.toJSON();
 
       assert.strictEqual(Object.keys(enemies).length, 1);
       assert.strictEqual(typeof enemies[0].id, 'string');

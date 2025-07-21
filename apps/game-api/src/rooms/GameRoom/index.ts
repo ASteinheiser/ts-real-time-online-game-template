@@ -64,6 +64,8 @@ export class GameRoom extends Room<GameRoomState> {
       data: { roomId: this.roomId },
     });
 
+    this.patchRate = FIXED_TIME_STEP;
+
     this.prisma = prisma;
 
     this.connectionCheckInterval = setInterval(() => this.checkPlayerConnection(), CONNECTION_CHECK_INTERVAL);
