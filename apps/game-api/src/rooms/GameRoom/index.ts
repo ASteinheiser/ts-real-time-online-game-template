@@ -17,7 +17,7 @@ import {
   WS_EVENT,
   WS_CODE,
   INACTIVITY_TIMEOUT,
-  CONNECTION_CHECK_INTERVAL,
+  RECONNECTION_TIMEOUT,
   type AuthPayload,
   type InputPayload,
 } from '@repo/core-game';
@@ -48,6 +48,7 @@ interface AuthResult {
 
 interface GameRoomArgs {
   prisma: PrismaClient;
+  connectionCheckInterval: number;
 }
 
 export class GameRoom extends Room<GameRoomState> {
@@ -56,9 +57,11 @@ export class GameRoom extends Room<GameRoomState> {
   elapsedTime = 0;
   lastEnemySpawnTime = 0;
   prisma: PrismaClient;
-  connectionCheckInterval: NodeJS.Timeout;
+  connectionCheckTimeout: NodeJS.Timeout;
+  reconnectionTimeout = RECONNECTION_TIMEOUT;
+  expectingReconnections = new Set<string>();
 
-  onCreate({ prisma }: GameRoomArgs) {
+  onCreate({ prisma, connectionCheckInterval }: GameRoomArgs) {
     logger.info({
       message: `New room created!`,
       data: { roomId: this.roomId },
@@ -69,11 +72,11 @@ export class GameRoom extends Room<GameRoomState> {
 
     this.prisma = prisma;
 
-    this.connectionCheckInterval = setInterval(() => this.checkPlayerConnection(), CONNECTION_CHECK_INTERVAL);
+    this.connectionCheckTimeout = setInterval(() => this.checkPlayerConnection(), connectionCheckInterval);
 
     this.onMessage(WS_EVENT.PLAYER_INPUT, (client, payload: InputPayload) => {
       const player = this.state.players.get(client.sessionId);
-      if (!player) this.throwError(WS_CODE.NOT_FOUND, ROOM_ERROR.CONNECTION_NOT_FOUND, client);
+      if (!player) throwError(WS_CODE.NOT_FOUND, ROOM_ERROR.CONNECTION_NOT_FOUND, client);
 
       player.lastActivityTime = Date.now();
       player.inputQueue.push(payload);
@@ -81,13 +84,13 @@ export class GameRoom extends Room<GameRoomState> {
 
     this.onMessage(WS_EVENT.REFRESH_TOKEN, (client, payload: AuthPayload) => {
       const authUser = validateJwt(payload.token);
-      if (!authUser) this.throwError(WS_CODE.UNAUTHORIZED, ROOM_ERROR.INVALID_TOKEN, client);
+      if (!authUser) throwError(WS_CODE.UNAUTHORIZED, ROOM_ERROR.INVALID_TOKEN, client);
 
       const player = this.state.players.get(client.sessionId);
-      if (!player) this.throwError(WS_CODE.NOT_FOUND, ROOM_ERROR.CONNECTION_NOT_FOUND, client);
+      if (!player) throwError(WS_CODE.NOT_FOUND, ROOM_ERROR.CONNECTION_NOT_FOUND, client);
 
       const hasUserIdChanged = player.userId !== authUser.id;
-      if (hasUserIdChanged) this.throwError(WS_CODE.FORBIDDEN, ROOM_ERROR.USER_ID_CHANGED, client);
+      if (hasUserIdChanged) throwError(WS_CODE.FORBIDDEN, ROOM_ERROR.USER_ID_CHANGED, client);
 
       player.lastActivityTime = Date.now();
       player.tokenExpiresAt = authUser.expiresAt;
@@ -174,8 +177,15 @@ export class GameRoom extends Room<GameRoomState> {
       } catch (error) {
         const message = (error as Error)?.message || ROOM_ERROR.INTERNAL_SERVER_ERROR;
         const client = this.clients.find((c) => c.sessionId === sessionId);
+        if (!client) {
+          logger.info({
+            message: `Client not found in fixedTick, skipping...`,
+            data: { roomId: this.roomId, clientId: sessionId, error },
+          });
+          return;
+        }
 
-        this.throwError(WS_CODE.INTERNAL_SERVER_ERROR, message, client ?? sessionId);
+        throwError(WS_CODE.INTERNAL_SERVER_ERROR, message, client);
       }
     });
 
@@ -210,6 +220,9 @@ export class GameRoom extends Room<GameRoomState> {
     this.state.players.forEach((player, sessionId) => {
       const client = this.clients.find((c) => c.sessionId === sessionId);
       if (!client) {
+        // Skip removal if we're still waiting for this client to reconnect
+        if (this.expectingReconnections.has(sessionId)) return;
+
         this.cleanupPlayer(sessionId);
         return;
       }
@@ -247,10 +260,10 @@ export class GameRoom extends Room<GameRoomState> {
 
   async onAuth(client: Client, __: unknown, context: AuthContext): Promise<AuthResult> {
     const authUser = validateJwt(context.token);
-    if (!authUser) this.throwError(WS_CODE.UNAUTHORIZED, ROOM_ERROR.INVALID_TOKEN, client);
+    if (!authUser) throwError(WS_CODE.UNAUTHORIZED, ROOM_ERROR.INVALID_TOKEN, client);
 
     const dbUser = await this.prisma.profile.findUnique({ where: { userId: authUser.id } });
-    if (!dbUser) this.throwError(WS_CODE.NOT_FOUND, ROOM_ERROR.PROFILE_NOT_FOUND, client);
+    if (!dbUser) throwError(WS_CODE.NOT_FOUND, ROOM_ERROR.PROFILE_NOT_FOUND, client);
 
     return { user: dbUser, tokenExpiresAt: authUser.expiresAt };
   }
@@ -315,16 +328,48 @@ export class GameRoom extends Room<GameRoomState> {
     };
   }
 
-  onLeave({ sessionId }: Client) {
+  async onLeave(client: Client, consented?: boolean) {
+    const { sessionId } = client;
+
     logger.info({
       message: `Client left...`,
-      data: { roomId: this.roomId, clientId: sessionId },
+      data: { roomId: this.roomId, clientId: sessionId, consented },
     });
 
-    this.cleanupPlayer(sessionId);
+    if (consented) {
+      this.cleanupPlayer(sessionId);
+      return;
+    }
+
+    try {
+      logger.info({
+        message: `Attempting to reconnect client`,
+        data: { roomId: this.roomId, clientId: sessionId },
+      });
+
+      this.expectingReconnections.add(sessionId);
+
+      await this.allowReconnection(client, this.reconnectionTimeout);
+
+      this.expectingReconnections.delete(sessionId);
+
+      logger.info({
+        message: `Client reconnected`,
+        data: { roomId: this.roomId, clientId: sessionId },
+      });
+    } catch {
+      logger.info({
+        message: `Client failed to reconnect in time`,
+        data: { roomId: this.roomId, clientId: sessionId },
+      });
+
+      this.cleanupPlayer(sessionId);
+    }
   }
 
   cleanupPlayer(sessionId: string) {
+    this.expectingReconnections.delete(sessionId);
+
     const player = this.state.players.get(sessionId);
     if (player) {
       logger.info({
@@ -342,20 +387,11 @@ export class GameRoom extends Room<GameRoomState> {
       data: { roomId: this.roomId },
     });
 
-    if (this.connectionCheckInterval) clearInterval(this.connectionCheckInterval);
+    if (this.connectionCheckTimeout) clearInterval(this.connectionCheckTimeout);
 
     // delete results after 10 seconds -- stop gap for in-memory management
     setTimeout(() => delete RESULTS[this.roomId], 10 * 1000);
   }
-
-  throwError = (code: number, message: string, client: Client | string) => {
-    if (typeof client === 'string') {
-      this.cleanupPlayer(client);
-    } else {
-      client.leave(code, message);
-    }
-    throw new ServerError(code, message);
-  };
 
   onUncaughtException(error: Error, methodName: string) {
     // simply log the error message for "expected" errors
@@ -376,3 +412,8 @@ export class GameRoom extends Room<GameRoomState> {
     // possibly handle disconnecting all clients if needed
   }
 }
+
+const throwError = (code: number, message: string, client: Client) => {
+  client.leave(code, message);
+  throw new ServerError(code, message);
+};

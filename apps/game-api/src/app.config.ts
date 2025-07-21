@@ -5,7 +5,7 @@ import { expressMiddleware } from '@as-integrations/express5';
 import express from 'express';
 import cors from 'cors';
 import type { GoTrueAdminApi } from '@supabase/supabase-js';
-import { WS_ROOM, API_ROUTES } from '@repo/core-game';
+import { WS_ROOM, API_ROUTES, CONNECTION_CHECK_INTERVAL } from '@repo/core-game';
 import { server as GQLServer } from './graphql';
 import { GameRoom } from './rooms/GameRoom';
 import { createContext } from './graphql/context';
@@ -16,15 +16,21 @@ const isProduction = process.env.NODE_ENV === 'production';
 interface MakeAppArgs {
   authClient: GoTrueAdminApi;
   prisma: PrismaClient;
+  /** override the default connection check interval (in ms) */
+  connectionCheckInterval?: number;
 }
 
-export const makeApp = ({ authClient, prisma }: MakeAppArgs) => {
+export const makeApp = ({
+  authClient,
+  prisma,
+  connectionCheckInterval = CONNECTION_CHECK_INTERVAL,
+}: MakeAppArgs) => {
   return makeColyseusApp({
     initializeGameServer: (gameServer) => {
       /**
        * Define your room handlers:
        */
-      gameServer.define(WS_ROOM.GAME_ROOM, GameRoom, { prisma });
+      gameServer.define(WS_ROOM.GAME_ROOM, GameRoom, { prisma, connectionCheckInterval });
     },
 
     initializeExpress: async (app) => {
