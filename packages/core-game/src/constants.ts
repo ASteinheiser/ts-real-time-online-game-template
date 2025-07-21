@@ -71,9 +71,9 @@ export const WS_CODE = {
   TIMEOUT: 3008,
   NOT_FOUND: 4004,
 } as const;
-/** The interval at which the server will check client connections */
+/** The interval at which the server will check client connections (in ms) */
 export const CONNECTION_CHECK_INTERVAL = 2 * 1000; // 2 seconds
-/** The timeout for the connection to the server */
+/** The timeout for the connection to the server (in ms) */
 export const INACTIVITY_TIMEOUT = 1 * 60 * 1000; // 1 minute
 /** The timeout allowed for an unexpected disconnect to reconnect (in seconds) */
 export const RECONNECTION_TIMEOUT = 20; // 20 seconds
