@@ -63,11 +63,24 @@ interface JoinTestRoomArgs {
   server: ColyseusTestServer;
   token: string;
 }
-
 /** join or create a room on a test server */
 export const joinTestRoom = async ({ server, token }: JoinTestRoomArgs) => {
   server.sdk.auth.token = token;
   const client = await server.sdk.joinOrCreate<GameRoomState>(WS_ROOM.GAME_ROOM);
+
+  // register onMessage handler otherwise colyseus throws a warning
+  client.onMessage(WS_EVENT.PLAYGROUND_MESSAGE_TYPES, () => {});
+
+  return client;
+};
+
+interface ReconnectTestRoomArgs {
+  server: ColyseusTestServer;
+  reconnectionToken: string;
+}
+/** reconnect to a room on a test server */
+export const reconnectTestRoom = async ({ server, reconnectionToken }: ReconnectTestRoomArgs) => {
+  const client = await server.sdk.reconnect(reconnectionToken);
 
   // register onMessage handler otherwise colyseus throws a warning
   client.onMessage(WS_EVENT.PLAYGROUND_MESSAGE_TYPES, () => {});
