@@ -8,7 +8,6 @@ import { Player } from '../../src/rooms/GameRoom/roomState';
 import { makeApp } from '../../src/app.config';
 import { ROOM_ERROR } from '../../src/rooms/error';
 import {
-  KEEP_ALIVE_USER,
   TEST_USERS,
   joinTestRoom,
   reconnectTestRoom,
@@ -100,7 +99,7 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       /** We need this client otherwise the room will be disposed when the client leaves */
       const keepAliveClient = await joinTestRoom({
         server,
-        token: generateTestJWT({ user: KEEP_ALIVE_USER }),
+        token: generateTestJWT({ user: TEST_USERS[1] }),
       });
       const client = await joinTestRoom({ server, token: generateTestJWT({}) });
       const room = getRoom(keepAliveClient.roomId);

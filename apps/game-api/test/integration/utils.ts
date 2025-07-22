@@ -19,11 +19,6 @@ interface TestUser {
   userName: string;
   email: string;
 }
-export const KEEP_ALIVE_USER: TestUser = {
-  id: 'keep-alive-user-id',
-  userName: 'keep-alive-user-name',
-  email: 'keep-alive-user@email.com',
-};
 export const TEST_USERS: Array<TestUser> = Array(5)
   .fill(null)
   .map((_, i) => ({
@@ -105,22 +100,16 @@ export const createTestPrismaClient = () => {
 
 /** seeds data into the local test DB */
 export const setupTestDb = async (prisma: PrismaClient) => {
-  await Promise.all([
-    prisma.profile.create({
-      data: {
-        userId: KEEP_ALIVE_USER.id,
-        userName: KEEP_ALIVE_USER.userName,
-      },
-    }),
-    ...TEST_USERS.map(({ id, userName }) =>
+  await Promise.all(
+    TEST_USERS.map(({ id, userName }) =>
       prisma.profile.create({
         data: {
           userId: id,
           userName,
         },
       })
-    ),
-  ]);
+    )
+  );
 };
 
 /** deletes test data from each table */

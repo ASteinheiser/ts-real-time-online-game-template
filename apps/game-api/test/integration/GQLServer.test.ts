@@ -64,8 +64,7 @@ describe('GQLServer', () => {
 
     const { totalPlayers } = parseGQLData(result);
 
-    // add +1 for the keep alive user
-    assert.deepEqual(totalPlayers, TEST_USERS.length + 1);
+    assert.deepEqual(totalPlayers, TEST_USERS.length);
   });
 
   it('should fetch a user profile by the user id', async () => {
