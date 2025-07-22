@@ -311,6 +311,7 @@ export class GameRoom extends Room<GameRoomState> {
       player = existingPlayer;
       player.tokenExpiresAt = tokenExpiresAt;
       player.lastActivityTime = Date.now();
+      player.inputQueue = [];
     } else {
       player = new Player();
       player.tokenExpiresAt = tokenExpiresAt;
@@ -356,6 +357,9 @@ export class GameRoom extends Room<GameRoomState> {
       await this.allowReconnection(client, this.reconnectionTimeout);
 
       this.expectingReconnections.delete(sessionId);
+
+      const reconnectedPlayer = this.state.players.get(client.sessionId);
+      if (reconnectedPlayer) reconnectedPlayer.inputQueue = [];
 
       logger.info({
         message: `Client reconnected`,
