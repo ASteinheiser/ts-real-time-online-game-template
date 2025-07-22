@@ -135,9 +135,10 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       const reconnectionToken = client.reconnectionToken;
 
       const room = getRoom(client.roomId);
-      const oldPlayer = room.state.players.get(client.sessionId);
-      oldPlayer.attackCount = 100;
-      oldPlayer.killCount = 50;
+      room.state.players.get(client.sessionId).attackCount = 100;
+      room.state.players.get(client.sessionId).killCount = 50;
+      // get a snapshot of the player state
+      const oldPlayer = room.state.toJSON().players[client.sessionId];
 
       assert.strictEqual(oldPlayer.attackCount, 100);
       assert.strictEqual(oldPlayer.killCount, 50);
@@ -203,9 +204,10 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       const client5 = await joinTestRoom({ server, token: generateTestJWT({ user: TEST_USERS[4] }) });
 
       const room1 = getRoom(client1.roomId);
-      const { players: players1 } = room1.state.toJSON();
       const room2 = getRoom(client5.roomId);
-      const { players: players2 } = room2.state.toJSON();
+
+      const playersState1 = room1.state.players;
+      const playersState2 = room2.state.players;
 
       assertBasicPlayerState({
         room: room1,
@@ -213,12 +215,12 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       });
       assertBasicPlayerState({ room: room2, clientIds: [client5.sessionId] });
 
-      assert.strictEqual(players1[client1.sessionId].userId, TEST_USERS[0].id);
-      assert.strictEqual(players1[client2.sessionId].userId, TEST_USERS[1].id);
-      assert.strictEqual(players1[client3.sessionId].userId, TEST_USERS[2].id);
-      assert.strictEqual(players1[client4.sessionId].userId, TEST_USERS[3].id);
+      assert.strictEqual(playersState1.get(client1.sessionId).userId, TEST_USERS[0].id);
+      assert.strictEqual(playersState1.get(client2.sessionId).userId, TEST_USERS[1].id);
+      assert.strictEqual(playersState1.get(client3.sessionId).userId, TEST_USERS[2].id);
+      assert.strictEqual(playersState1.get(client4.sessionId).userId, TEST_USERS[3].id);
 
-      assert.strictEqual(players2[client5.sessionId].userId, TEST_USERS[4].id);
+      assert.strictEqual(playersState2.get(client5.sessionId).userId, TEST_USERS[4].id);
     });
   });
 
@@ -228,6 +230,7 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       const room = getRoom(client.roomId);
 
       await room.waitForNextSimulationTick();
+      // get a snapshot of the enemy state
       const { enemies } = room.state.toJSON();
 
       assert.strictEqual(Object.keys(enemies).length, 1);
