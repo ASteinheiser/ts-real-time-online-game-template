@@ -28,6 +28,9 @@ import { ROOM_ERROR } from '../error';
 import { GameRoomState, Player, Enemy } from './roomState';
 
 const MAX_PLAYERS_PER_ROOM = 4;
+// this is the speed at which we stream updates to the client
+// updates should be interpolated clientside to appear smoother
+const SERVER_PATCH_RATE = 1000 / 20; // 20fps = 50ms
 
 /** Basic in-memory storage of results for all players in a room */
 export const RESULTS: ResultStorage = {};
@@ -67,9 +70,8 @@ export class GameRoom extends Room<GameRoomState> {
       message: `New room created!`,
       data: { roomId: this.roomId },
     });
-    // this is the speed at which we stream updates to the client
-    // updates should be interpolated clientside to appear smoother
-    this.patchRate = 1000 / 20; // 20fps = 50ms
+
+    this.patchRate = SERVER_PATCH_RATE;
 
     this.prisma = prisma;
 
