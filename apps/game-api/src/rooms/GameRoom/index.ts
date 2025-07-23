@@ -56,10 +56,14 @@ interface GameRoomArgs {
 
 export class GameRoom extends Room<GameRoomState> {
   maxClients = MAX_PLAYERS_PER_ROOM;
+  patchRate = SERVER_PATCH_RATE;
+
   state = new GameRoomState();
   elapsedTime = 0;
   lastEnemySpawnTime = 0;
+
   prisma: PrismaClient;
+
   connectionCheckTimeout: NodeJS.Timeout;
   reconnectionTimeout = RECONNECTION_TIMEOUT;
   expectingReconnections = new Set<string>();
@@ -70,8 +74,6 @@ export class GameRoom extends Room<GameRoomState> {
       message: `New room created!`,
       data: { roomId: this.roomId },
     });
-
-    this.patchRate = SERVER_PATCH_RATE;
 
     this.prisma = prisma;
 
