@@ -149,7 +149,6 @@ pnpm db:test:start
 pnpm db:test:sync
 ```
 
-
 ## Available Commands
 
 | Command | Description |
