@@ -75,8 +75,10 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
 
     it('should throw an error if a client joins without a db user', async () => {
       try {
-        // pass a unique userId that does not exist in the seed data found in setupTestDb inside ./utils.ts
-        const token = generateTestJWT({ user: { ...TEST_USERS[0], id: 'non-existent-user-id' } });
+        const token = generateTestJWT({
+          // pass a unique userId that does not exist in the seed data found in setupTestDb inside ./utils.ts
+          user: { ...TEST_USERS[0], id: 'non-existent-user-id' },
+        });
         await joinTestRoom({ server, token });
 
         assert.fail('should have thrown an error');
@@ -146,16 +148,16 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       await client.leave(false);
       await room.waitForNextSimulationTick();
 
+      assert.strictEqual(room.forcedDisconnects.size, 0);
+      assert.strictEqual(room.expectingReconnections.size, 1);
       assertExtraPlayerState({ room, clientIds: [], extraPlayerIds: [client.sessionId] });
 
-      const newClient = await reconnectTestRoom({ server, reconnectionToken });
-
-      assert.strictEqual(newClient.sessionId, client.sessionId);
-
+      const sameClient = await reconnectTestRoom({ server, reconnectionToken });
       await room.waitForNextSimulationTick();
 
-      assertBasicPlayerState({ room, clientIds: [newClient.sessionId] });
-      assertPlayerFieldsState({ room, playerId: newClient.sessionId, expectedPlayer: oldPlayer });
+      assert.strictEqual(sameClient.sessionId, client.sessionId);
+      assertBasicPlayerState({ room, clientIds: [sameClient.sessionId] });
+      assertPlayerFieldsState({ room, playerId: sameClient.sessionId, expectedPlayer: oldPlayer });
     });
 
     it('should kick the client if they fail to reconnect in time', async () => {
@@ -172,7 +174,27 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       assertBasicPlayerState({ room, clientIds: [] });
     });
 
-    it('should kick the old client forcefully and take over the player if a new client joins with the same userId', async () => {
+    it('should kick the client if they reconnect but a player is not found', async () => {
+      const client = await joinTestRoom({ server, token: generateTestJWT({}) });
+      const room = getRoom(client.roomId);
+
+      assertBasicPlayerState({ room, clientIds: [client.sessionId] });
+
+      await client.leave(false);
+      await room.waitForNextSimulationTick();
+
+      assert.strictEqual(room.forcedDisconnects.size, 0);
+      assert.strictEqual(room.expectingReconnections.size, 1);
+      assertExtraPlayerState({ room, clientIds: [], extraPlayerIds: [client.sessionId] });
+
+      room.state.players.delete(client.sessionId);
+      await reconnectTestRoom({ server, reconnectionToken: client.reconnectionToken });
+      await room.waitForNextSimulationTick();
+
+      assertBasicPlayerState({ room, clientIds: [] });
+    });
+
+    it('should take over the player (and kick the old client forcefully) if a new client joins with the same userId', async () => {
       const client = await joinTestRoom({ server, token: generateTestJWT({}) });
       const room = getRoom(client.roomId);
 
@@ -195,6 +217,43 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       assertPlayerFieldsState({ room, playerId: newClient.sessionId, expectedPlayer: oldPlayer });
     });
 
+    it('should take over the player (and cleanup old client data) if a new client joins with the same userId and the old client is not found', async () => {
+      /** We need this client to create a room so we can create a player with no client attached */
+      const keepAliveClient = await joinTestRoom({ server, token: generateTestJWT({}) });
+      const room = getRoom(keepAliveClient.roomId);
+
+      assertBasicPlayerState({ room, clientIds: [keepAliveClient.sessionId] });
+
+      const badSessionId = 'bad-client-session-id';
+      const orphanedPlayer = new Player();
+      orphanedPlayer.userId = TEST_USERS[1].id;
+      orphanedPlayer.attackCount = 100;
+      orphanedPlayer.killCount = 50;
+      room.state.players.set(badSessionId, orphanedPlayer);
+      // get a snapshot of the player state
+      const playerSnapshot = room.state.toJSON().players[badSessionId];
+
+      assert.strictEqual(playerSnapshot.attackCount, 100);
+      assert.strictEqual(playerSnapshot.killCount, 50);
+      assertExtraPlayerState({
+        room,
+        clientIds: [keepAliveClient.sessionId],
+        extraPlayerIds: [badSessionId],
+      });
+
+      // ensure that this user matches the userId of the orphaned player above
+      const client = await joinTestRoom({ server, token: generateTestJWT({ user: TEST_USERS[1] }) });
+
+      assert.strictEqual(room.forcedDisconnects.size, 0);
+      assert.strictEqual(room.expectingReconnections.size, 0);
+      assert.notStrictEqual(client.sessionId, badSessionId);
+
+      await room.waitForNextSimulationTick();
+
+      assertBasicPlayerState({ room, clientIds: [keepAliveClient.sessionId, client.sessionId] });
+      assertPlayerFieldsState({ room, playerId: client.sessionId, expectedPlayer: playerSnapshot });
+    });
+
     it('should add the maximum number of players to the room, then create a new room when needed', async () => {
       const client1 = await joinTestRoom({ server, token: generateTestJWT({ user: TEST_USERS[0] }) });
       const client2 = await joinTestRoom({ server, token: generateTestJWT({ user: TEST_USERS[1] }) });
@@ -214,11 +273,12 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       });
       assertBasicPlayerState({ room: room2, clientIds: [client5.sessionId] });
 
+      assert.strictEqual(playersState1.size, 4);
       assert.strictEqual(playersState1.get(client1.sessionId).userId, TEST_USERS[0].id);
       assert.strictEqual(playersState1.get(client2.sessionId).userId, TEST_USERS[1].id);
       assert.strictEqual(playersState1.get(client3.sessionId).userId, TEST_USERS[2].id);
       assert.strictEqual(playersState1.get(client4.sessionId).userId, TEST_USERS[3].id);
-
+      assert.strictEqual(playersState2.size, 1);
       assert.strictEqual(playersState2.get(client5.sessionId).userId, TEST_USERS[4].id);
     });
   });
@@ -277,24 +337,30 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       });
     });
 
-    it('should kick a client if there is an unhandled exception in fixedTick', async () => {
+    it('should kick a client if there is an unhandled exception in fixedTick (allowing reconnection)', async () => {
       const client = await joinTestRoom({ server, token: generateTestJWT({}) });
+      const reconnectionToken = client.reconnectionToken;
       const room = getRoom(client.roomId);
-      room.reconnectionTimeout = 0;
 
       assertBasicPlayerState({ room, clientIds: [client.sessionId] });
 
       room.state.players.get(client.sessionId).inputQueue = null;
-      // this takes some time to handle the exception
-      await waitForConnectionCheck();
+      await room.waitForNextSimulationTick();
 
-      assertBasicPlayerState({ room, clientIds: [] });
+      assert.strictEqual(room.forcedDisconnects.size, 0);
+      assert.strictEqual(room.expectingReconnections.size, 1);
+      assertExtraPlayerState({ room, clientIds: [], extraPlayerIds: [client.sessionId] });
+
+      const sameClient = await reconnectTestRoom({ server, reconnectionToken });
+      await room.waitForNextSimulationTick();
+
+      assert.strictEqual(sameClient.sessionId, client.sessionId);
+      assertBasicPlayerState({ room, clientIds: [sameClient.sessionId] });
     });
 
-    it('should kick a client if they send player input but there is no player for the session', async () => {
+    it('should kick a client if they send player input but there is no player for the session (no reconnection)', async () => {
       const client = await joinTestRoom({ server, token: generateTestJWT({}) });
       const room = getRoom(client.roomId);
-      room.reconnectionTimeout = 0;
 
       assertBasicPlayerState({ room, clientIds: [client.sessionId] });
 
@@ -308,13 +374,14 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       });
       await room.waitForNextSimulationTick();
 
+      assert.strictEqual(room.expectingReconnections.size, 0);
       assertBasicPlayerState({ room, clientIds: [] });
     });
   });
 
   describe('refreshToken behavior', () => {
     it('should allow a client to refresh their auth token', async () => {
-      // should be at least 1 second to account for joining a room and waiting for the next patch
+      // should be ~1s to account for joining a room and waiting for the next patch
       const expiresInMs = 1000;
       const client = await joinTestRoom({ server, token: generateTestJWT({ expiresInMs }) });
       const room = getRoom(client.roomId);
@@ -327,49 +394,48 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       assertBasicPlayerState({ room, clientIds: [client.sessionId] });
     });
 
-    it('should kick a client if they send an invalid refresh token', async () => {
+    it('should kick a client if they send an invalid refresh token (no reconnection)', async () => {
       const client = await joinTestRoom({ server, token: generateTestJWT({}) });
       const room = getRoom(client.roomId);
-      room.reconnectionTimeout = 0;
 
       assertBasicPlayerState({ room, clientIds: [client.sessionId] });
 
       await client.send(WS_EVENT.REFRESH_TOKEN, { token: 'invalid-token' });
       await room.waitForNextSimulationTick();
 
+      assert.strictEqual(room.expectingReconnections.size, 0);
       assertBasicPlayerState({ room, clientIds: [] });
     });
 
-    it('should kick a client if their refresh token is expired', async () => {
+    it('should kick a client if their refresh token is expired (no reconnection)', async () => {
       const client = await joinTestRoom({ server, token: generateTestJWT({}) });
       const room = getRoom(client.roomId);
-      room.reconnectionTimeout = 0;
 
       assertBasicPlayerState({ room, clientIds: [client.sessionId] });
 
       await client.send(WS_EVENT.REFRESH_TOKEN, { token: generateTestJWT({ expiresInMs: 0 }) });
       await room.waitForNextSimulationTick();
 
+      assert.strictEqual(room.expectingReconnections.size, 0);
       assertBasicPlayerState({ room, clientIds: [] });
     });
 
-    it('should kick a client if their refresh token has a different userId', async () => {
+    it('should kick a client if their refresh token has a different userId (no reconnection)', async () => {
       const client = await joinTestRoom({ server, token: generateTestJWT({}) });
       const room = getRoom(client.roomId);
-      room.reconnectionTimeout = 0;
 
       assertBasicPlayerState({ room, clientIds: [client.sessionId] });
 
       await client.send(WS_EVENT.REFRESH_TOKEN, { token: generateTestJWT({ user: TEST_USERS[1] }) });
       await room.waitForNextSimulationTick();
 
+      assert.strictEqual(room.expectingReconnections.size, 0);
       assertBasicPlayerState({ room, clientIds: [] });
     });
 
-    it('should kick a client if they send a refresh token and there is no player for the session', async () => {
+    it('should kick a client if they send a refresh token and there is no player for the session (no reconnection)', async () => {
       const client = await joinTestRoom({ server, token: generateTestJWT({}) });
       const room = getRoom(client.roomId);
-      room.reconnectionTimeout = 0;
 
       assertBasicPlayerState({ room, clientIds: [client.sessionId] });
 
@@ -377,6 +443,7 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       await client.send(WS_EVENT.REFRESH_TOKEN, { token: generateTestJWT({}) });
       await room.waitForNextSimulationTick();
 
+      assert.strictEqual(room.expectingReconnections.size, 0);
       assertBasicPlayerState({ room, clientIds: [] });
     });
   });
@@ -422,27 +489,24 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       assertBasicPlayerState({ room, clientIds: [client.sessionId] });
     });
 
-    it('should kick a client if their token expires', async () => {
+    it('should kick a client if their token expires (no reconnection)', async () => {
       // should be at ~1s to account for joining a room and waiting for the next patch
       const expiresInMs = 1000;
       const client = await joinTestRoom({ server, token: generateTestJWT({ expiresInMs }) });
-
       const room = getRoom(client.roomId);
-      room.reconnectionTimeout = 0;
 
       assertBasicPlayerState({ room, clientIds: [client.sessionId] });
 
       await new Promise((resolve) => setTimeout(resolve, expiresInMs + TEST_CONNECTION_CHECK_INTERVAL));
 
+      assert.strictEqual(room.expectingReconnections.size, 0);
       assertBasicPlayerState({ room, clientIds: [] });
     });
 
-    it('should kick clients that are inactive for too long', async () => {
+    it('should kick clients that are inactive for too long (allowing reconnection)', async () => {
       const client1 = await joinTestRoom({ server, token: generateTestJWT({ user: TEST_USERS[0] }) });
       const client2 = await joinTestRoom({ server, token: generateTestJWT({ user: TEST_USERS[1] }) });
-
       const room = getRoom(client1.roomId);
-      room.reconnectionTimeout = 0;
 
       assertBasicPlayerState({
         room,
@@ -453,7 +517,17 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       room.state.players.get(client2.sessionId).lastActivityTime = Date.now() - INACTIVITY_TIMEOUT;
       await waitForConnectionCheck();
 
-      assertBasicPlayerState({ room, clientIds: [] });
+      assert.strictEqual(room.expectingReconnections.size, 2);
+      assertExtraPlayerState({ room, clientIds: [], extraPlayerIds: [client1.sessionId, client2.sessionId] });
+
+      const sameClient1 = await reconnectTestRoom({ server, reconnectionToken: client1.reconnectionToken });
+      const sameClient2 = await reconnectTestRoom({ server, reconnectionToken: client2.reconnectionToken });
+      await room.waitForNextSimulationTick();
+
+      assert.strictEqual(sameClient1.sessionId, client1.sessionId);
+      assert.strictEqual(sameClient2.sessionId, client2.sessionId);
+      assert.strictEqual(room.expectingReconnections.size, 0);
+      assertBasicPlayerState({ room, clientIds: [sameClient1.sessionId, sameClient2.sessionId] });
     });
   });
 });

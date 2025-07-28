@@ -40,7 +40,7 @@ interface GenerateTestJWTArgs {
   /** Defaults to 10 seconds (10000ms) */
   expiresInMs?: number;
 }
-
+/** Generate a JWT for a test user, defaults to use TEST_USERS[0] */
 export const generateTestJWT = ({
   user = TEST_USERS[0],
   expiresInMs = DEFAULT_EXPIRES_IN_MS,

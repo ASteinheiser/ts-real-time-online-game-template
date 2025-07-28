@@ -28,8 +28,8 @@ import { ROOM_ERROR } from '../error';
 import { GameRoomState, Player, Enemy } from './roomState';
 
 const MAX_PLAYERS_PER_ROOM = 4;
-// this is the speed at which we stream updates to the client
-// updates should be interpolated clientside to appear smoother
+/** This is the speed at which we stream updates to the client.
+ * Updates should be interpolated clientside to appear smoother */
 const SERVER_PATCH_RATE = 1000 / 20; // 20fps = 50ms
 
 /** Basic in-memory storage of results for all players in a room */
@@ -81,21 +81,32 @@ export class GameRoom extends Room<GameRoomState> {
 
     this.onMessage(WS_EVENT.PLAYER_INPUT, (client, payload: InputPayload) => {
       const player = this.state.players.get(client.sessionId);
-      if (!player) throwError(WS_CODE.NOT_FOUND, ROOM_ERROR.CONNECTION_NOT_FOUND, client);
+      if (!player) {
+        // do not allow reconnection, client will need to re-join to get a player
+        return this.kickClient(WS_CODE.NOT_FOUND, ROOM_ERROR.CONNECTION_NOT_FOUND, client, false);
+      }
 
       player.lastActivityTime = Date.now();
       player.inputQueue.push(payload);
     });
 
+    // errors in refreshToken event should not allow reconnection
+    // clients will need to re-authenticate when re-joining
     this.onMessage(WS_EVENT.REFRESH_TOKEN, (client, payload: AuthPayload) => {
       const authUser = validateJwt(payload.token);
-      if (!authUser) throwError(WS_CODE.UNAUTHORIZED, ROOM_ERROR.INVALID_TOKEN, client);
+      if (!authUser) {
+        return this.kickClient(WS_CODE.UNAUTHORIZED, ROOM_ERROR.INVALID_TOKEN, client, false);
+      }
 
       const player = this.state.players.get(client.sessionId);
-      if (!player) throwError(WS_CODE.NOT_FOUND, ROOM_ERROR.CONNECTION_NOT_FOUND, client);
+      if (!player) {
+        return this.kickClient(WS_CODE.NOT_FOUND, ROOM_ERROR.CONNECTION_NOT_FOUND, client, false);
+      }
 
       const hasUserIdChanged = player.userId !== authUser.id;
-      if (hasUserIdChanged) throwError(WS_CODE.FORBIDDEN, ROOM_ERROR.USER_ID_CHANGED, client);
+      if (hasUserIdChanged) {
+        return this.kickClient(WS_CODE.FORBIDDEN, ROOM_ERROR.USER_ID_CHANGED, client, false);
+      }
 
       player.lastActivityTime = Date.now();
       player.tokenExpiresAt = authUser.expiresAt;
@@ -107,8 +118,8 @@ export class GameRoom extends Room<GameRoomState> {
     });
 
     this.onMessage(WS_EVENT.LEAVE_ROOM, (client) => {
-      this.forcedDisconnects.add(client.sessionId);
-      client.leave(WS_CODE.SUCCESS);
+      // we explicitly do not want to allow reconnection here
+      this.kickClient(WS_CODE.SUCCESS, 'Intentional leave', client, false);
     });
 
     this.setSimulationInterval((deltaTime) => {
@@ -181,17 +192,12 @@ export class GameRoom extends Room<GameRoomState> {
           }
         }
       } catch (error) {
-        const message = (error as Error)?.message || ROOM_ERROR.INTERNAL_SERVER_ERROR;
         const client = this.clients.find((c) => c.sessionId === sessionId);
-        if (!client) {
-          logger.info({
-            message: `Client not found in fixedTick, skipping...`,
-            data: { roomId: this.roomId, clientId: sessionId, error },
-          });
-          return;
+        if (client) {
+          const message = (error as Error)?.message || ROOM_ERROR.INTERNAL_SERVER_ERROR;
+          // allow reconnection as player inputs will be cleared, potentially solving issues
+          this.kickClient(WS_CODE.INTERNAL_SERVER_ERROR, message, client);
         }
-
-        throwError(WS_CODE.INTERNAL_SERVER_ERROR, message, client);
       }
     });
 
@@ -252,24 +258,22 @@ export class GameRoom extends Room<GameRoomState> {
         data: { roomId: this.roomId, clientId: client.sessionId, reason },
       });
 
-      try {
-        client.leave(WS_CODE.TIMEOUT, reason);
-      } catch (error) {
-        logger.error({
-          message: `Error removing client`,
-          data: { roomId: this.roomId, clientId: client.sessionId, reason, error },
-        });
-        this.onLeave(client);
+      if (reason === ROOM_ERROR.TOKEN_EXPIRED) {
+        // do not allow reconnection, client will need to re-authenticate
+        this.kickClient(WS_CODE.UNAUTHORIZED, reason, client, false);
+      } else {
+        this.kickClient(WS_CODE.TIMEOUT, reason, client);
       }
     });
   }
 
-  async onAuth(client: Client, __: unknown, context: AuthContext): Promise<AuthResult> {
+  /** errors in onAuth will not allow reconnection */
+  async onAuth(_: Client, __: unknown, context: AuthContext): Promise<AuthResult> {
     const authUser = validateJwt(context.token);
-    if (!authUser) throwError(WS_CODE.UNAUTHORIZED, ROOM_ERROR.INVALID_TOKEN, client);
+    if (!authUser) throw new ServerError(WS_CODE.UNAUTHORIZED, ROOM_ERROR.INVALID_TOKEN);
 
     const dbUser = await this.prisma.profile.findUnique({ where: { userId: authUser.id } });
-    if (!dbUser) throwError(WS_CODE.NOT_FOUND, ROOM_ERROR.PROFILE_NOT_FOUND, client);
+    if (!dbUser) throw new ServerError(WS_CODE.NOT_FOUND, ROOM_ERROR.PROFILE_NOT_FOUND);
 
     return { user: dbUser, tokenExpiresAt: authUser.expiresAt };
   }
@@ -298,8 +302,8 @@ export class GameRoom extends Room<GameRoomState> {
 
       const existingClient = this.clients.find((c) => c.sessionId === existingSessionId);
       if (existingClient) {
-        this.forcedDisconnects.add(existingClient.sessionId);
-        existingClient.leave(WS_CODE.FORBIDDEN, ROOM_ERROR.NEW_CONNECTION_FOUND);
+        // do not allow reconnection, this client/player should be forcefully removed
+        this.kickClient(WS_CODE.FORBIDDEN, ROOM_ERROR.NEW_CONNECTION_FOUND, existingClient, false);
       } else {
         this.cleanupPlayer(existingSessionId);
       }
@@ -315,6 +319,7 @@ export class GameRoom extends Room<GameRoomState> {
       player = existingPlayer;
       player.tokenExpiresAt = tokenExpiresAt;
       player.lastActivityTime = Date.now();
+      // players should have inputs cleared on reconnection
       player.inputQueue = [];
     } else {
       player = new Player();
@@ -336,6 +341,19 @@ export class GameRoom extends Room<GameRoomState> {
     };
   }
 
+  /** Disconnect a client (allowing reconnection by default) */
+  kickClient(code: number, message: string, client: Client, allowReconnection = true) {
+    logger.info({
+      message: `Disconnecting client...`,
+      data: { roomId: this.roomId, clientId: client.sessionId, allowReconnection, code, message },
+    });
+
+    if (!allowReconnection) {
+      this.forcedDisconnects.add(client.sessionId);
+    }
+    client.leave(code, message);
+  }
+
   async onLeave(client: Client, consented?: boolean) {
     const { sessionId } = client;
 
@@ -345,9 +363,7 @@ export class GameRoom extends Room<GameRoomState> {
     });
 
     if (consented || this.forcedDisconnects.has(sessionId)) {
-      this.forcedDisconnects.delete(sessionId);
-      this.cleanupPlayer(sessionId);
-      return;
+      return this.cleanupPlayer(sessionId);
     }
 
     try {
@@ -357,13 +373,16 @@ export class GameRoom extends Room<GameRoomState> {
       });
 
       this.expectingReconnections.add(sessionId);
-
       await this.allowReconnection(client, this.reconnectionTimeout);
-
       this.expectingReconnections.delete(sessionId);
 
-      const reconnectedPlayer = this.state.players.get(client.sessionId);
-      if (reconnectedPlayer) reconnectedPlayer.inputQueue = [];
+      const player = this.state.players.get(sessionId);
+      if (!player) {
+        // do not allow reconnection, client will need to re-join
+        return this.kickClient(WS_CODE.FORBIDDEN, ROOM_ERROR.CONNECTION_NOT_FOUND, client, false);
+      }
+      // players should have inputs cleared on reconnection
+      player.inputQueue = [];
 
       logger.info({
         message: `Client reconnected`,
@@ -380,17 +399,14 @@ export class GameRoom extends Room<GameRoomState> {
   }
 
   cleanupPlayer(sessionId: string) {
+    logger.info({
+      message: `Cleaning up player...`,
+      data: { roomId: this.roomId, clientId: sessionId },
+    });
+
     this.expectingReconnections.delete(sessionId);
-
-    const player = this.state.players.get(sessionId);
-    if (player) {
-      logger.info({
-        message: `Cleaning up player...`,
-        data: { roomId: this.roomId, clientId: sessionId, userName: player.username },
-      });
-
-      this.state.players.delete(sessionId);
-    }
+    this.forcedDisconnects.delete(sessionId);
+    this.state.players.delete(sessionId);
   }
 
   onDispose() {
@@ -406,14 +422,6 @@ export class GameRoom extends Room<GameRoomState> {
   }
 
   onUncaughtException(error: Error, methodName: string) {
-    // simply log the error message for "expected" errors
-    if (Object.values(ROOM_ERROR as Record<string, string>).includes(error.message)) {
-      logger.info({
-        message: error.message,
-        data: { roomId: this.roomId, methodName },
-      });
-      return;
-    }
     // log any uncaught errors for debugging purposes
     logger.error({
       message: `Uncaught exception`,
@@ -424,8 +432,3 @@ export class GameRoom extends Room<GameRoomState> {
     // possibly handle disconnecting all clients if needed
   }
 }
-
-const throwError = (code: number, message: string, client: Client) => {
-  client.leave(code, message);
-  throw new ServerError(code, message);
-};
