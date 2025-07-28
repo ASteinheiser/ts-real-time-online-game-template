@@ -383,6 +383,7 @@ export class GameRoom extends Room<GameRoomState> {
       }
       // players should have inputs cleared on reconnection
       player.inputQueue = [];
+      player.lastActivityTime = Date.now();
 
       logger.info({
         message: `Client reconnected`,
