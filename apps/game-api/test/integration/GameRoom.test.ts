@@ -198,9 +198,10 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       const client = await joinTestRoom({ server, token: generateTestJWT({}) });
       const room = getRoom(client.roomId);
 
-      const oldPlayer = room.state.players.get(client.sessionId);
-      oldPlayer.attackCount = 100;
-      oldPlayer.killCount = 50;
+      room.state.players.get(client.sessionId).attackCount = 100;
+      room.state.players.get(client.sessionId).killCount = 50;
+      // get a snapshot of the player state
+      const oldPlayer = room.state.toJSON().players[client.sessionId];
 
       assert.strictEqual(oldPlayer.attackCount, 100);
       assert.strictEqual(oldPlayer.killCount, 50);
@@ -587,4 +588,7 @@ const assertPlayerFieldsState = ({ room, playerId, expectedPlayer }: AssertPlaye
   assert.strictEqual(actualPlayer.username, expectedPlayer.username);
   assert.strictEqual(actualPlayer.attackCount, expectedPlayer.attackCount);
   assert.strictEqual(actualPlayer.killCount, expectedPlayer.killCount);
+  // ensure that the new player state is not simply a reference to the old player state
+  // by checking that the lastActivityTime is updated, since all joins/reconnects should update this
+  assert.strictEqual(actualPlayer.lastActivityTime > expectedPlayer.lastActivityTime, true);
 };
