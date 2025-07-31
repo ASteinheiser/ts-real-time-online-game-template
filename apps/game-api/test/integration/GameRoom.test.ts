@@ -282,6 +282,20 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       assert.strictEqual(playersState2.size, 1);
       assert.strictEqual(playersState2.get(client5.sessionId).userId, TEST_USERS[4].id);
     });
+
+    it('should connect multiple clients to the same room when joining at the same time', async () => {
+      const [client1, client2, client3, client4] = await Promise.all(
+        TEST_USERS.slice(0, 4).map((user) => joinTestRoom({ server, token: generateTestJWT({ user }) }))
+      );
+      const roomIds = Array.from(new Set([client1.roomId, client2.roomId, client3.roomId, client4.roomId]));
+
+      assert.strictEqual(roomIds.length, 1);
+
+      const room = getRoom(roomIds[0]);
+      const clientIds = room.state.players.keys().toArray();
+
+      assertBasicPlayerState({ room, clientIds });
+    });
   });
 
   describe('basic game logic', () => {
