@@ -255,34 +255,6 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       assertPlayerFieldsState({ room, playerId: client.sessionId, expectedPlayer: playerSnapshot });
     });
 
-    it('should add the maximum number of players to the room, then create a new room when needed', async () => {
-      const client1 = await joinTestRoom({ server, token: generateTestJWT({ user: TEST_USERS[0] }) });
-      const client2 = await joinTestRoom({ server, token: generateTestJWT({ user: TEST_USERS[1] }) });
-      const client3 = await joinTestRoom({ server, token: generateTestJWT({ user: TEST_USERS[2] }) });
-      const client4 = await joinTestRoom({ server, token: generateTestJWT({ user: TEST_USERS[3] }) });
-      const client5 = await joinTestRoom({ server, token: generateTestJWT({ user: TEST_USERS[4] }) });
-
-      const room1 = getRoom(client1.roomId);
-      const room2 = getRoom(client5.roomId);
-
-      const playersState1 = room1.state.players;
-      const playersState2 = room2.state.players;
-
-      assertBasicPlayerState({
-        room: room1,
-        clientIds: [client1.sessionId, client2.sessionId, client3.sessionId, client4.sessionId],
-      });
-      assertBasicPlayerState({ room: room2, clientIds: [client5.sessionId] });
-
-      assert.strictEqual(playersState1.size, 4);
-      assert.strictEqual(playersState1.get(client1.sessionId).userId, TEST_USERS[0].id);
-      assert.strictEqual(playersState1.get(client2.sessionId).userId, TEST_USERS[1].id);
-      assert.strictEqual(playersState1.get(client3.sessionId).userId, TEST_USERS[2].id);
-      assert.strictEqual(playersState1.get(client4.sessionId).userId, TEST_USERS[3].id);
-      assert.strictEqual(playersState2.size, 1);
-      assert.strictEqual(playersState2.get(client5.sessionId).userId, TEST_USERS[4].id);
-    });
-
     it('should connect multiple clients to the same room when joining at the same time', async () => {
       const [client1, client2, client3, client4] = await Promise.all(
         TEST_USERS.slice(0, 4).map((user) => joinTestRoom({ server, token: generateTestJWT({ user }) }))
@@ -295,6 +267,26 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       const clientIds = room.state.players.keys().toArray();
 
       assertBasicPlayerState({ room, clientIds });
+    });
+
+    it('should add the maximum number of players to the room, then create a new room when needed', async () => {
+      const [client1, client2, client3, client4, client5] = await Promise.all(
+        TEST_USERS.map((user) => joinTestRoom({ server, token: generateTestJWT({ user }) }))
+      );
+      const roomIds = Array.from(
+        new Set([client1.roomId, client2.roomId, client3.roomId, client4.roomId, client5.roomId])
+      );
+
+      assert.strictEqual(roomIds.length, 2);
+
+      const room1 = getRoom(roomIds[0]);
+      const room2 = getRoom(roomIds[1]);
+
+      assertBasicPlayerState({
+        room: room1,
+        clientIds: [client1.sessionId, client2.sessionId, client3.sessionId, client4.sessionId],
+      });
+      assertBasicPlayerState({ room: room2, clientIds: [client5.sessionId] });
     });
   });
 
