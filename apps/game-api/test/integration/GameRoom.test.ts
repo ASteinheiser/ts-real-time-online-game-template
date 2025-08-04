@@ -388,15 +388,14 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
 
   describe('refreshToken behavior', () => {
     it('should allow a client to refresh their auth token', async () => {
-      // should be ~1s to account for joining a room and waiting for the next patch
-      const expiresInMs = 1000;
-      const client = await joinTestRoom({ server, token: generateTestJWT({ expiresInMs }) });
+      const client = await joinTestRoom({ server, token: generateTestJWT({}) });
       const room = getRoom(client.roomId);
 
       assertBasicPlayerState({ room, clientIds: [client.sessionId] });
 
+      room.state.players.get(client.sessionId).tokenExpiresAt = Date.now();
       await client.send(WS_EVENT.REFRESH_TOKEN, { token: generateTestJWT({}) });
-      await new Promise((resolve) => setTimeout(resolve, expiresInMs + TEST_CONNECTION_CHECK_INTERVAL));
+      await waitForConnectionCheck();
 
       assertBasicPlayerState({ room, clientIds: [client.sessionId] });
     });
@@ -497,14 +496,13 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
     });
 
     it('should kick a client if their token expires (no reconnection)', async () => {
-      // should be at ~1s to account for joining a room and waiting for the next patch
-      const expiresInMs = 1000;
-      const client = await joinTestRoom({ server, token: generateTestJWT({ expiresInMs }) });
+      const client = await joinTestRoom({ server, token: generateTestJWT({}) });
       const room = getRoom(client.roomId);
 
       assertBasicPlayerState({ room, clientIds: [client.sessionId] });
 
-      await new Promise((resolve) => setTimeout(resolve, expiresInMs + TEST_CONNECTION_CHECK_INTERVAL));
+      room.state.players.get(client.sessionId).tokenExpiresAt = Date.now();
+      await waitForConnectionCheck();
 
       assert.strictEqual(room.expectingReconnections.size, 0);
       assertBasicPlayerState({ room, clientIds: [] });
