@@ -6,5 +6,6 @@ export const ROOM_ERROR = {
   PROFILE_NOT_FOUND: 'Profile not found',
   TOKEN_EXPIRED: 'Token has expired',
   PLAYER_INACTIVITY: 'Player kicked for inactivity',
+  INVALID_PAYLOAD: 'Invalid message payload',
   INTERNAL_SERVER_ERROR: 'Internal server error',
 } as const;

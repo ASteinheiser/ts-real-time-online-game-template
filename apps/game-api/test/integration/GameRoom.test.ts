@@ -344,6 +344,30 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       });
     });
 
+    it('should kick a client if they send invalid player input (allowing reconnection)', async () => {
+      const client = await joinTestRoom({ server, token: generateTestJWT({}) });
+      const room = getRoom(client.roomId);
+
+      assertBasicPlayerState({ room, clientIds: [client.sessionId] });
+
+      // get a snapshot of the player state
+      const oldPlayer = room.state.toJSON().players[client.sessionId];
+
+      await client.send(WS_EVENT.PLAYER_INPUT, {
+        somePayload: { someKey: NaN },
+      });
+      await room.waitForNextSimulationTick();
+
+      assert.strictEqual(room.expectingReconnections.size, 1);
+      assertExtraPlayerState({ room, clientIds: [], extraPlayerIds: [client.sessionId] });
+
+      const sameClient = await reconnectTestRoom({ server, reconnectionToken: client.reconnectionToken });
+
+      assert.strictEqual(sameClient.sessionId, client.sessionId);
+      assertBasicPlayerState({ room, clientIds: [sameClient.sessionId] });
+      assertPlayerFieldsState({ room, playerId: sameClient.sessionId, expectedPlayer: oldPlayer });
+    });
+
     it('should kick a client if there is an unhandled exception in fixedTick (allowing reconnection)', async () => {
       const client = await joinTestRoom({ server, token: generateTestJWT({}) });
       const reconnectionToken = client.reconnectionToken;

@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 /** How long each tick takes in ms (64fps = 15.625ms) */
 export const FIXED_TIME_STEP = 1000 / 64;
 
@@ -68,6 +70,7 @@ export const WS_CODE = {
   INTERNAL_SERVER_ERROR: 1011,
   UNAUTHORIZED: 3000,
   FORBIDDEN: 3003,
+  BAD_REQUEST: 3004,
   TIMEOUT: 3008,
   NOT_FOUND: 4004,
 } as const;
@@ -81,11 +84,13 @@ export const RECONNECTION_TIMEOUT = 20; // 20 seconds
 export interface AuthPayload {
   token: string;
 }
+/** The zod schema for player input */
+export const InputSchema = z.object({
+  left: z.boolean(),
+  right: z.boolean(),
+  up: z.boolean(),
+  down: z.boolean(),
+  attack: z.boolean(),
+});
 /** The payload for player input */
-export interface InputPayload {
-  left: boolean;
-  right: boolean;
-  up: boolean;
-  down: boolean;
-  attack: boolean;
-}
+export type InputPayload = z.infer<typeof InputSchema>;

@@ -34,5 +34,8 @@
     "vite": "catalog:",
     "vite-plugin-dts": "catalog:",
     "vitest": "catalog:"
+  },
+  "dependencies": {
+    "zod": "catalog:"
   }
 }

@@ -18,6 +18,7 @@ import {
   WS_CODE,
   INACTIVITY_TIMEOUT,
   RECONNECTION_TIMEOUT,
+  InputSchema,
   type AuthPayload,
   type InputPayload,
 } from '@repo/core-game';
@@ -84,6 +85,10 @@ export class GameRoom extends Room<GameRoomState> {
       if (!player) {
         // do not allow reconnection, client will need to re-join to get a player
         return this.kickClient(WS_CODE.NOT_FOUND, ROOM_ERROR.CONNECTION_NOT_FOUND, client, false);
+      }
+
+      if (!InputSchema.safeParse(payload).success) {
+        return this.kickClient(WS_CODE.BAD_REQUEST, ROOM_ERROR.INVALID_PAYLOAD, client);
       }
 
       player.lastActivityTime = Date.now();
