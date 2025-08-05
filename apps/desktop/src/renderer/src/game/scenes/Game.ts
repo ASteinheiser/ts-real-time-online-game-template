@@ -349,7 +349,6 @@ export class Game extends Scene {
         await new Promise((resolve) => setTimeout(resolve, backoffMs));
       }
     }
-    this.clearStoredReconnectionToken();
     return false;
   }
 }
