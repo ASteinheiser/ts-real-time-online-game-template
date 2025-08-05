@@ -344,17 +344,12 @@ export class Game extends Scene {
         return true;
       } catch (error) {
         console.warn(`Reconnection attempt ${attemptDisplay} failed:`, error);
-
-        if (attempt < MAX_RECONNECT_ATTEMPTS) {
-          // exponential backoff => 1s, 2s, 4s...
-          const backoffMs = RECONNECT_BACKOFF_MS * Math.pow(2, attempt);
-          await new Promise((resolve) => setTimeout(resolve, backoffMs));
-        } else {
-          this.clearStoredReconnectionToken();
-          return false;
-        }
+        // exponential backoff => 1s, 2s, 4s...
+        const backoffMs = RECONNECT_BACKOFF_MS * Math.pow(2, attempt);
+        await new Promise((resolve) => setTimeout(resolve, backoffMs));
       }
     }
+    this.clearStoredReconnectionToken();
     return false;
   }
 }
