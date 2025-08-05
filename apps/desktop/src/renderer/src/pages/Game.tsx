@@ -77,11 +77,13 @@ export const Game = () => {
     EventBus.on(EVENT_BUS.PROFILE_OPEN, () => setIsProfileModalOpen(true));
     EventBus.on(EVENT_BUS.SETTINGS_OPEN, () => setIsSettingsModalOpen(true));
     EventBus.on(EVENT_BUS.JOIN_ERROR, (error) => toast.error(error.message));
+    EventBus.on(EVENT_BUS.RECONNECTION_ATTEMPT, (attempt) => toast.info(`Reconnecting... (${attempt})`));
 
     return () => {
       EventBus.off(EVENT_BUS.PROFILE_OPEN);
       EventBus.off(EVENT_BUS.SETTINGS_OPEN);
       EventBus.off(EVENT_BUS.JOIN_ERROR);
+      EventBus.off(EVENT_BUS.RECONNECTION_ATTEMPT);
     };
   }, []);
 

@@ -23,6 +23,10 @@ import { ASSET, SCENE } from '../constants';
 const WEBSOCKET_URL = import.meta.env.VITE_WEBSOCKET_URL;
 if (!WEBSOCKET_URL) throw new Error('VITE_WEBSOCKET_URL is not set');
 
+const RECONNECTION_STORAGE_KEY = 'game_reconnection_token';
+const MAX_RECONNECT_ATTEMPTS = 3;
+const RECONNECT_BACKOFF_MS = 1000;
+
 export class Game extends Scene {
   client: Client;
   room?: Room;
@@ -69,17 +73,39 @@ export class Game extends Scene {
 
     new CustomText(this, 340, 10, 'Press Shift to leave the game', { fontSize: 20 });
 
+    this.client.auth.token = token;
+
+    const reconnectToken = this.getStoredReconnectionToken();
+    if (reconnectToken) {
+      try {
+        this.room = await this.client.reconnect(reconnectToken);
+      } catch (reconnectError) {
+        console.warn('Reconnection failed, falling back to joinOrCreate:', reconnectError);
+      }
+    }
     try {
-      this.client.auth.token = token;
-      this.room = await this.client.joinOrCreate(WS_ROOM.GAME_ROOM);
+      if (!this.room) {
+        this.room = await this.client.joinOrCreate(WS_ROOM.GAME_ROOM);
+      }
     } catch (error) {
-      await this.sendToMainMenu(error);
-      return;
+      console.error('Failed to join room:', error);
     }
     if (!this.room) {
-      await this.sendToMainMenu(new Error('Failed to join'));
+      this.sendToMainMenu(new Error('Failed to join room'));
       return;
     }
+    // store the reconnection token for future reconnection
+    this.storeReconnectionToken(this.room.reconnectionToken);
+
+    this.setupRoomEventListeners();
+
+    EventBus.emit(EVENT_BUS.CURRENT_SCENE_READY, this);
+  }
+
+  setupRoomEventListeners() {
+    if (!this.room) return;
+    // cleanup any old entities
+    this.cleanup();
 
     this.room.onError((code, message) => {
       const errorMessage = `Room error: ${code} - ${message}`;
@@ -88,24 +114,26 @@ export class Game extends Scene {
       this.sendToMainMenu(new Error(errorMessage));
     });
 
-    this.room.onLeave((code) => {
+    this.room.onLeave(async (code) => {
       switch (code) {
         case WS_CODE.SUCCESS:
-          this.sendToGameOver();
+          await this.sendToGameOver();
           break;
-        case WS_CODE.NOT_FOUND:
         case WS_CODE.INTERNAL_SERVER_ERROR:
-          this.sendToMainMenu(new Error('Oops, something went wrong'));
+        case WS_CODE.BAD_REQUEST:
+        case WS_CODE.TIMEOUT:
+          if (!(await this.handleReconnection())) {
+            this.sendToMainMenu(new Error('Failed to reconnect'));
+          }
           break;
         case WS_CODE.UNAUTHORIZED:
-          this.sendToMainMenu(new Error('You are not authorized'));
-          break;
         case WS_CODE.FORBIDDEN:
-        case WS_CODE.TIMEOUT:
+        case WS_CODE.NOT_FOUND:
+          this.clearStoredReconnectionToken();
           this.sendToMainMenu(new Error('You were removed from the game'));
           break;
         default:
-          this.sendToMainMenu(new Error(`Disconnected with code: ${code}`));
+          this.sendToMainMenu(new Error(`Oops, something went wrong. Please try to reconnect.`));
       }
     });
 
@@ -185,8 +213,6 @@ export class Game extends Scene {
         delete this.enemyEntities[enemy.id];
       }
     });
-
-    EventBus.emit(EVENT_BUS.CURRENT_SCENE_READY, this);
   }
 
   update(_: number, delta: number): void {
@@ -201,8 +227,9 @@ export class Game extends Scene {
   }
 
   fixedTick() {
-    if (!this.room || !this.currentPlayer || !this.cursorKeys) return;
-
+    if (!this.room || !this.room.connection.isOpen || !this.currentPlayer || !this.cursorKeys) {
+      return;
+    }
     // press shift to leave the game
     if (this.cursorKeys.shift.isDown) {
       this.room.send(WS_EVENT.LEAVE_ROOM);
@@ -244,22 +271,31 @@ export class Game extends Scene {
     }
   }
 
-  async cleanup() {
+  cleanup() {
     this.currentPlayer?.destroy();
     delete this.currentPlayer;
+
     this.remoteRef?.destroy();
     delete this.remoteRef;
+
     Object.values(this.playerEntities).forEach((player) => player.destroy());
     this.playerEntities = {};
+
     Object.values(this.enemyEntities).forEach((enemy) => enemy.destroy());
     this.enemyEntities = {};
   }
 
-  async sendToMainMenu(error: unknown) {
+  cleanupRoom() {
+    this.room?.removeAllListeners();
+    delete this.room;
+  }
+
+  sendToMainMenu(error: unknown) {
     console.error(error);
     EventBus.emit(EVENT_BUS.JOIN_ERROR, error);
 
-    await this.cleanup();
+    this.cleanup();
+    this.cleanupRoom();
     this.scene.start(SCENE.MAIN_MENU);
   }
 
@@ -269,8 +305,57 @@ export class Game extends Scene {
 
     const gameResults = await getGameResults(roomId);
 
-    await this.cleanup();
+    this.cleanup();
+    this.cleanupRoom();
+    this.clearStoredReconnectionToken();
     this.scene.start(SCENE.GAME_OVER, { gameResults });
+  }
+
+  private storeReconnectionToken(token: string) {
+    localStorage.setItem(RECONNECTION_STORAGE_KEY, token);
+  }
+
+  private getStoredReconnectionToken() {
+    return localStorage.getItem(RECONNECTION_STORAGE_KEY);
+  }
+
+  private clearStoredReconnectionToken() {
+    localStorage.removeItem(RECONNECTION_STORAGE_KEY);
+  }
+
+  async handleReconnection() {
+    const reconnectToken = this.getStoredReconnectionToken();
+    if (!reconnectToken) return false;
+
+    for (let attempt = 0; attempt < MAX_RECONNECT_ATTEMPTS; attempt++) {
+      const attemptDisplay = attempt + 1;
+      EventBus.emit(EVENT_BUS.RECONNECTION_ATTEMPT, attemptDisplay);
+
+      try {
+        const newRoom = await this.client.reconnect(reconnectToken);
+        // clear the old reconnection token and room listeners
+        this.clearStoredReconnectionToken();
+        this.cleanupRoom();
+        // set the new room state and listeners
+        this.room = newRoom;
+        this.setupRoomEventListeners();
+        // store the new reconnection token for future reconnection
+        this.storeReconnectionToken(newRoom.reconnectionToken);
+        return true;
+      } catch (error) {
+        console.warn(`Reconnection attempt ${attemptDisplay} failed:`, error);
+
+        if (attempt < MAX_RECONNECT_ATTEMPTS) {
+          // exponential backoff => 1s, 2s, 4s...
+          const backoffMs = RECONNECT_BACKOFF_MS * Math.pow(2, attempt);
+          await new Promise((resolve) => setTimeout(resolve, backoffMs));
+        } else {
+          this.clearStoredReconnectionToken();
+          return false;
+        }
+      }
+    }
+    return false;
   }
 }
 
