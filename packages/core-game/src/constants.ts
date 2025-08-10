@@ -58,6 +58,8 @@ export const WS_ROOM = {
 } as const;
 /** The websocket message events available */
 export const WS_EVENT = {
+  PING: 'ping',
+  PONG: 'pong',
   LEAVE_ROOM: 'leaveRoom',
   PLAYER_INPUT: 'playerInput',
   REFRESH_TOKEN: 'refreshToken',

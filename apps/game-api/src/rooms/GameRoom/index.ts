@@ -80,6 +80,11 @@ export class GameRoom extends Room<GameRoomState> {
 
     this.connectionCheckTimeout = setInterval(() => this.checkPlayerConnection(), connectionCheckInterval);
 
+    // Ping/Pong for client RTT measurement
+    this.onMessage(WS_EVENT.PING, (client) => {
+      client.send(WS_EVENT.PONG);
+    });
+
     this.onMessage(WS_EVENT.PLAYER_INPUT, (client, payload: InputPayload) => {
       const player = this.state.players.get(client.sessionId);
       if (!player) {
