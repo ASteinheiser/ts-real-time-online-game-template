@@ -18,6 +18,7 @@ import { Player } from '../objects/Player';
 import { PunchBox } from '../objects/PunchBox';
 import { Enemy } from '../objects/Enemy';
 import { CustomText } from '../objects/CustomText';
+import { PingDisplay } from '../objects/PingDisplay';
 import { ASSET, SCENE } from '../constants';
 
 const WEBSOCKET_URL = import.meta.env.VITE_WEBSOCKET_URL;
@@ -30,6 +31,8 @@ const RECONNECT_BACKOFF_MS = 1000;
 export class Game extends Scene {
   client: Client;
   room?: Room;
+  pingDisplay?: PingDisplay;
+
   playerEntities: Record<string, Player> = {};
   currentPlayer?: Player;
   /** This is used to track the player according to the server */
@@ -106,6 +109,9 @@ export class Game extends Scene {
     if (!this.room) return;
     // cleanup any old entities
     this.cleanup();
+
+    this.pingDisplay = new PingDisplay(this);
+    this.pingDisplay.start(this.room);
 
     this.room.onError((code, message) => {
       const errorMessage = `Room error: ${code} - ${message}`;
@@ -272,6 +278,9 @@ export class Game extends Scene {
   }
 
   cleanup() {
+    this.pingDisplay?.destroy();
+    delete this.pingDisplay;
+
     this.currentPlayer?.destroy();
     delete this.currentPlayer;
 
