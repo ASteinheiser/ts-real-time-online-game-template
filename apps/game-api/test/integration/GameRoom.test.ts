@@ -114,6 +114,19 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       assertBasicPlayerState({ room, clientIds: [keepAliveClient.sessionId] });
     });
 
+    it('should emit a PONG event when a client sends a PING event', async () => {
+      const client = await joinTestRoom({ server, token: generateTestJWT({}) });
+
+      const pongPromise = new Promise((resolve) => {
+        client.onMessage(WS_EVENT.PONG, () => resolve(true));
+      });
+
+      await client.send(WS_EVENT.PING);
+      const pong = await pongPromise;
+
+      assert.strictEqual(pong, true);
+    });
+
     it('should return WS_CODE.SUCCESS when a client leaves the room via the LEAVE_ROOM event', async () => {
       const client = await joinTestRoom({ server, token: generateTestJWT({}) });
       const room = getRoom(client.roomId);
