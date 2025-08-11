@@ -36,7 +36,7 @@ export class Game extends Scene {
   playerEntities: Record<string, Player> = {};
   currentPlayer?: Player;
   /** This is used to track the player according to the server */
-  remoteRef?: Phaser.GameObjects.Rectangle;
+  currentPlayerServer?: Phaser.GameObjects.Rectangle;
   enemyEntities: Record<string, Enemy> = {};
 
   cursorKeys?: Phaser.Types.Input.Keyboard.CursorKeys;
@@ -161,13 +161,13 @@ export class Game extends Scene {
         this.currentPlayer = newPlayer;
 
         // #region FOR DEBUGGING PURPOSES
-        this.remoteRef = this.add.rectangle(0, 0, entity.width, entity.height).setDepth(100);
-        this.remoteRef.setStrokeStyle(1, 0xff0000);
+        this.currentPlayerServer = this.add.rectangle(0, 0, entity.width, entity.height).setDepth(100);
+        this.currentPlayerServer.setStrokeStyle(1, 0xff0000);
 
         $(player).onChange(() => {
-          if (this.remoteRef) {
-            this.remoteRef.x = player.x;
-            this.remoteRef.y = player.y;
+          if (this.currentPlayerServer) {
+            this.currentPlayerServer.x = player.x;
+            this.currentPlayerServer.y = player.y;
 
             if (player.attackDamageFrameX !== undefined && player.attackDamageFrameY !== undefined) {
               new PunchBox(this, player.attackDamageFrameX, player.attackDamageFrameY, 0x0000ff);
@@ -284,8 +284,8 @@ export class Game extends Scene {
     this.currentPlayer?.destroy();
     delete this.currentPlayer;
 
-    this.remoteRef?.destroy();
-    delete this.remoteRef;
+    this.currentPlayerServer?.destroy();
+    delete this.currentPlayerServer;
 
     Object.values(this.playerEntities).forEach((player) => player.destroy());
     this.playerEntities = {};
