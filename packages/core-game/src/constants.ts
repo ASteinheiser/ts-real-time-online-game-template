@@ -88,6 +88,7 @@ export interface AuthPayload {
 }
 /** The zod schema for player input */
 export const InputSchema = z.object({
+  seq: z.number().int().nonnegative(),
   left: z.boolean(),
   right: z.boolean(),
   up: z.boolean(),

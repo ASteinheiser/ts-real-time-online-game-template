@@ -148,6 +148,9 @@ export class GameRoom extends Room<GameRoomState> {
         let input: undefined | InputPayload;
         // dequeue player inputs
         while ((input = player.inputQueue.shift())) {
+          // acknowledge the input to the client (updates will be batched, so we can call this first)
+          player.lastProcessedInputSeq = input.seq;
+
           if (input.left) player.isFacingRight = false;
           else if (input.right) player.isFacingRight = true;
 

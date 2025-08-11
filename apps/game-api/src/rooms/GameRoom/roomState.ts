@@ -13,6 +13,8 @@ export class Player extends Schema {
   @type('number') lastAttackTime: number = 0;
   @type('number') killCount: number = 0;
   inputQueue: Array<InputPayload> = [];
+  /** Latest input sequence processed by the server for this player */
+  @type('number') lastProcessedInputSeq: number = 0;
   /** This is used for networking checks */
   @type('number') lastActivityTime: number = Date.now();
   /** This is stored for debugging purposes */

@@ -16,6 +16,14 @@ export class Player {
     this.nameText = nameText;
   }
 
+  /** Force the player to move to a specific position, skips animations, interpolation, etc. */
+  forceMove({ x, y }: { x: number; y: number }) {
+    this.entity.x = x;
+    this.entity.y = y;
+    this.nameText.x = x;
+    this.nameText.y = y;
+  }
+
   move({ x, y }: { x: number; y: number }) {
     const isMovingX = Math.abs(this.entity.x - x) > MOVEMENT_THRESHOLD;
     const isMovingY = Math.abs(this.entity.y - y) > MOVEMENT_THRESHOLD;

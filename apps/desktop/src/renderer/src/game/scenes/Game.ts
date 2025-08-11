@@ -32,6 +32,7 @@ export class Game extends Scene {
   client: Client;
   room?: Room;
   pingDisplay?: PingDisplay;
+  elapsedTime = 0;
 
   playerEntities: Record<string, Player> = {};
   currentPlayer?: Player;
@@ -40,14 +41,9 @@ export class Game extends Scene {
   enemyEntities: Record<string, Enemy> = {};
 
   cursorKeys?: Phaser.Types.Input.Keyboard.CursorKeys;
-  inputPayload: InputPayload = {
-    left: false,
-    right: false,
-    up: false,
-    down: false,
-    attack: false,
-  };
-  elapsedTime = 0;
+  pendingInputs: Array<InputPayload> = [];
+  inputSeq = 0;
+  serverAckSeq = 0;
 
   constructor() {
     super(SCENE.GAME);
@@ -173,6 +169,42 @@ export class Game extends Scene {
               new PunchBox(this, player.attackDamageFrameX, player.attackDamageFrameY, 0x0000ff);
             }
           }
+
+          // Server-side reconciliation (ensure CSP is in sync with server authority)
+          if (this.currentPlayer) {
+            const nextServerAckSeq = player.lastProcessedInputSeq ?? 0;
+            // Ignore out-of-order acks
+            if (nextServerAckSeq < this.serverAckSeq) return;
+
+            // Update ack and drop acknowledged inputs
+            this.serverAckSeq = nextServerAckSeq;
+            while (this.pendingInputs.length && this.pendingInputs[0].seq <= nextServerAckSeq) {
+              this.pendingInputs.shift();
+            }
+
+            // Determine the target position we expect given remaining inputs
+            // Start from authoritative server position
+            let targetPosition = { x: player.x, y: player.y };
+            for (const { left, right, up, down } of this.pendingInputs) {
+              targetPosition = calculateMovement({
+                x: targetPosition.x,
+                y: targetPosition.y,
+                ...PLAYER_SIZE,
+                left,
+                right,
+                up,
+                down,
+              });
+            }
+
+            // if our CSP is out of sync with the server state, sync client state with server state
+            if (
+              this.currentPlayer.entity.x !== targetPosition.x ||
+              this.currentPlayer.entity.y !== targetPosition.y
+            ) {
+              this.currentPlayer.forceMove(targetPosition);
+            }
+          }
         });
         // #endregion FOR DEBUGGING PURPOSES
       } else {
@@ -242,19 +274,22 @@ export class Game extends Scene {
       return;
     }
 
-    this.inputPayload.left = this.cursorKeys.left.isDown;
-    this.inputPayload.right = this.cursorKeys.right.isDown;
-    this.inputPayload.up = this.cursorKeys.up.isDown;
-    this.inputPayload.down = this.cursorKeys.down.isDown;
-    this.inputPayload.attack = this.cursorKeys.space.isDown;
+    const inputPayload: InputPayload = {
+      seq: this.inputSeq++,
+      left: this.cursorKeys.left.isDown,
+      right: this.cursorKeys.right.isDown,
+      up: this.cursorKeys.up.isDown,
+      down: this.cursorKeys.down.isDown,
+      attack: this.cursorKeys.space.isDown,
+    };
+    this.pendingInputs.push(inputPayload);
+    this.room.send(WS_EVENT.PLAYER_INPUT, inputPayload);
 
-    this.room.send(WS_EVENT.PLAYER_INPUT, this.inputPayload);
+    const { attack, left, right, up, down } = inputPayload;
 
-    if (this.inputPayload.attack) this.currentPlayer.punch();
+    if (attack) this.currentPlayer.punch();
 
     const { x, y } = this.currentPlayer.entity;
-    const { left, right, up, down } = this.inputPayload;
-
     const newPosition = calculateMovement({ x, y, ...PLAYER_SIZE, left, right, up, down });
     this.currentPlayer.move(newPosition);
 
