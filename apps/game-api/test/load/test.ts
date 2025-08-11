@@ -62,6 +62,7 @@ export async function main(options: Options) {
     const closestEnemy = state.enemies.find((enemy) => enemiesTracked[player.userId] === enemy.id);
     if (closestEnemy) {
       const input: InputPayload = {
+        seq: 0,
         left: closestEnemy.x < player.x,
         right: closestEnemy.x > player.x,
         up: closestEnemy.y < player.y,

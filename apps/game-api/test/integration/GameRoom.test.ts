@@ -2,7 +2,14 @@ import assert from 'assert';
 import type { ServerError } from '@colyseus/core';
 import { type ColyseusTestServer, boot } from '@colyseus/testing';
 import type { GoTrueAdminApi } from '@supabase/supabase-js';
-import { WS_CODE, WS_EVENT, WS_ROOM, INACTIVITY_TIMEOUT, PLAYER_MOVE_SPEED } from '@repo/core-game';
+import {
+  WS_CODE,
+  WS_EVENT,
+  WS_ROOM,
+  INACTIVITY_TIMEOUT,
+  PLAYER_MOVE_SPEED,
+  type InputPayload,
+} from '@repo/core-game';
 import type { GameRoom } from '../../src/rooms/GameRoom';
 import { Player } from '../../src/rooms/GameRoom/roomState';
 import { makeApp } from '../../src/app.config';
@@ -336,12 +343,13 @@ describe(`Colyseus WebSocket Server - ${WS_ROOM.GAME_ROOM}`, () => {
       assert.strictEqual(oldPlayer.killCount, 50);
 
       await client.send(WS_EVENT.PLAYER_INPUT, {
+        seq: 0,
         left: false,
         right: true,
         up: false,
         down: true,
         attack: false,
-      });
+      } satisfies InputPayload);
       // ensure the input is processed
       await waitForConnectionCheck();
 
