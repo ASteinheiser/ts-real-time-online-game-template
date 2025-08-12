@@ -1,4 +1,4 @@
-# Real-time Online Game Template (TypeScript)
+# TypeScript Online Game Template
 
 A _highly opinionated_ template for creating real-time, online games using [TypeScript](https://www.typescriptlang.org/)! Quickly create mmo-style games using [React](https://react.dev/) + [Phaser](https://phaser.io/) for rendering, [Colyseus](https://colyseus.io/) for websockets, [Electron](https://www.electronjs.org/) for native builds, and [SST](https://sst.dev/) ([IaC](https://en.wikipedia.org/wiki/Infrastructure_as_code)) for deployment! Also has support for [Progressive Web Apps](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps) (PWA). Oh, and lots and lots of [Vite](https://vite.dev/) for builds and testing!
 

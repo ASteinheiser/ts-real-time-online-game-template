@@ -29,7 +29,8 @@ export const Home = () => {
 
         <div className="flex flex-col gap-4 text-center md:text-left">
           <h1 className="text-5xl font-label text-muted">TypeScript</h1>
-          <h1 className="text-5xl font-pixel text-primary">Game Template</h1>
+          <h1 className="text-5xl font-pixel text-primary">Online Game</h1>
+          <h1 className="text-4xl font-isometric text-muted">Template</h1>
         </div>
 
         <button
