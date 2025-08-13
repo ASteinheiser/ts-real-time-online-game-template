@@ -39,6 +39,10 @@ You can also quickly customize the auth emails using the templates under `packag
 
 `https://supabase.com/dashboard/project/<PROJECT_ID>/auth/templates`
 
+**NOTE:** If you're using a custom domain, you'll need to update `Site URL` by navigating to:
+
+`https://supabase.com/dashboard/project/<PROJECT_ID>/auth/url-configuration`
+
 ## Developer Quickstart
 
 If you are familiar with `pnpm` and `docker-compose`, you can skip to [Useful Commands](#useful-commands) or quickly start development with:
