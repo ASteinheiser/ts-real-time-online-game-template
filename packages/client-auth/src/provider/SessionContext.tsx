@@ -10,6 +10,7 @@ import type {
 import { Button, LoadingSpinner, toast } from '@repo/ui';
 import { supabase } from './supabase-client';
 import type { Auth_GetProfileQuery, Auth_GetProfileQueryVariables } from '../graphql';
+import { buildAuthRedirect } from '../router/buildAuthRedirect';
 import { AUTH_ROUTES } from '../router/constants';
 import { useHealthCheck } from '../hooks/useHealthCheck';
 
@@ -64,9 +65,16 @@ export const useSession = () => {
 interface SessionProviderProps {
   children: React.ReactNode;
   healthCheckEnabled?: boolean;
+  isDesktop?: boolean;
+  profilePathOverride?: string;
 }
 
-export const SessionProvider = ({ children, healthCheckEnabled = false }: SessionProviderProps) => {
+export const SessionProvider = ({
+  children,
+  healthCheckEnabled = false,
+  isDesktop = false,
+  profilePathOverride,
+}: SessionProviderProps) => {
   const client = useApolloClient();
 
   const {
@@ -155,7 +163,12 @@ export const SessionProvider = ({ children, healthCheckEnabled = false }: Sessio
   };
 
   const signup = async (email: string, password: string) => {
-    return await supabase.auth.signUp({ email, password });
+    const emailRedirectTo = buildAuthRedirect(AUTH_ROUTES.CREATE_PROFILE, isDesktop);
+    return await supabase.auth.signUp({
+      email,
+      password,
+      options: { emailRedirectTo },
+    });
   };
 
   const logout = async () => {
@@ -170,8 +183,7 @@ export const SessionProvider = ({ children, healthCheckEnabled = false }: Sessio
   };
 
   const forgotPassword = async (email: string) => {
-    const redirectTo = `${window.location.origin}${AUTH_ROUTES.NEW_PASSWORD}`;
-
+    const redirectTo = buildAuthRedirect(AUTH_ROUTES.NEW_PASSWORD, isDesktop);
     return await supabase.auth.resetPasswordForEmail(email, { redirectTo });
   };
 
@@ -180,8 +192,7 @@ export const SessionProvider = ({ children, healthCheckEnabled = false }: Sessio
   };
 
   const changeEmail = async (email: string) => {
-    const emailRedirectTo = `${window.location.origin}${AUTH_ROUTES.PROFILE}`;
-
+    const emailRedirectTo = buildAuthRedirect(profilePathOverride ?? AUTH_ROUTES.PROFILE, isDesktop);
     return await supabase.auth.updateUser({ email }, { emailRedirectTo });
   };
 

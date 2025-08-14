@@ -7,4 +7,8 @@ export const AUTH_ROUTES = {
   NEW_PASSWORD: `${AUTH_PATH_PREFIX}new-password`,
   CREATE_PROFILE: '/create-profile',
   PROFILE: '/profile',
+  /** used for native app deep linking */
+  REDIRECT: `${AUTH_PATH_PREFIX}redirect`,
 } as const;
+
+export const AUTH_REDIRECT_SEARCH_PARAM = 'redirect';

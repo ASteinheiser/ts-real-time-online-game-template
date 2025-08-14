@@ -5,10 +5,15 @@ import { AUTH_ROUTES, AUTH_PATH_PREFIX } from './constants';
 
 interface UseForcedAuthFlowProps {
   alreadyLoggedInRedirectPath: string;
+  /** allows the deep link redirect page to be used, which will skip any redirects so the webpage can open the native app */
+  allowDeepLinkRedirectPage?: boolean;
 }
 
 /** Handles app forced navigation flows, primarily used for routing based on certain auth states */
-export const useForcedAuthFlow = ({ alreadyLoggedInRedirectPath }: UseForcedAuthFlowProps) => {
+export const useForcedAuthFlow = ({
+  alreadyLoggedInRedirectPath,
+  allowDeepLinkRedirectPage = false,
+}: UseForcedAuthFlowProps) => {
   const { session, profile, isPasswordRecovery } = useSession();
   const navigate = useNavigate();
   const location = useLocation();
@@ -18,7 +23,9 @@ export const useForcedAuthFlow = ({ alreadyLoggedInRedirectPath }: UseForcedAuth
       if (location.pathname !== path) navigate(path);
     };
 
-    if (session && isPasswordRecovery) {
+    if (allowDeepLinkRedirectPage && location.pathname === AUTH_ROUTES.REDIRECT) {
+      return;
+    } else if (session && isPasswordRecovery) {
       navigateTo(AUTH_ROUTES.NEW_PASSWORD);
     } else if (session && !isPasswordRecovery && location.pathname === AUTH_ROUTES.NEW_PASSWORD) {
       navigateTo(alreadyLoggedInRedirectPath);

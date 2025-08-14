@@ -13,6 +13,7 @@ import { NotFound } from '../pages/NotFound';
 import { Home } from '../pages/Home';
 import { DevLog } from '../pages/DevLog';
 import { Download } from '../pages/Download';
+import { AuthRedirect } from '../pages/AuthRedirect';
 import { APP_ROUTES } from './constants';
 
 export const router = createBrowserRouter([
@@ -27,6 +28,10 @@ export const router = createBrowserRouter([
       {
         path: APP_ROUTES.DEV_LOG,
         element: <DevLog />,
+      },
+      {
+        path: AUTH_ROUTES.REDIRECT,
+        element: <AuthRedirect />,
       },
       {
         path: AUTH_ROUTES.LOGIN,

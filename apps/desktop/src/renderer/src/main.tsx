@@ -6,6 +6,7 @@ import { SessionProvider } from '@repo/client-auth/provider';
 import { ApolloProvider } from '@apollo/client';
 import { client } from './graphql/client';
 import { router } from './router';
+import { SEARCH_PARAMS } from './router/constants';
 import { SplashProvider } from './SplashProvider';
 import './theme.css';
 
@@ -17,7 +18,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ApolloProvider client={client}>
       <SplashProvider>
-        <SessionProvider healthCheckEnabled>
+        <SessionProvider healthCheckEnabled isDesktop profilePathOverride={`?${SEARCH_PARAMS.PROFILE}=true`}>
           <RouterProvider router={router} />
         </SessionProvider>
       </SplashProvider>

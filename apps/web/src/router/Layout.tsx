@@ -9,6 +9,7 @@ export const Layout = () => {
 
   useForcedAuthFlow({
     alreadyLoggedInRedirectPath: AUTH_ROUTES.PROFILE,
+    allowDeepLinkRedirectPage: true,
   });
   useNotifyOnURLHash();
   useStartAtTopOfPage();

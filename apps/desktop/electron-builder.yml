@@ -43,3 +43,7 @@ npmRebuild: false
 publish:
   provider: generic
   url: https://iamandrew.io
+protocols:
+  - name: Demo Game
+    schemes:
+      - demogame

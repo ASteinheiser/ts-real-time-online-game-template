@@ -3,14 +3,16 @@ import { Outlet } from 'react-router-dom';
 import { useForcedAuthFlow, useNotifyOnURLHash, useIsAuthRoute } from '@repo/client-auth/router';
 import { Settings } from '@repo/ui/icons';
 import { MAP_SIZE } from '@repo/core-game';
-import { APP_ROUTES } from './constants';
 import logo from '../assets/logo.png';
 import { SettingsModal } from '../modals/SettingsModal';
+import { useDeepLinks } from './useDeepLinks';
+import { APP_ROUTES } from './constants';
 
 export const Layout = () => {
   const isAuthRoute = useIsAuthRoute();
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
 
+  useDeepLinks();
   useForcedAuthFlow({
     alreadyLoggedInRedirectPath: APP_ROUTES.GAME,
   });

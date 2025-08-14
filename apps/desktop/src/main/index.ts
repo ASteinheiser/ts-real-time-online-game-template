@@ -6,8 +6,14 @@ import icon from '../../resources/icon.png?asset';
 
 const WIN_APP_USER_MODEL_ID = 'iamandrew.demo-game';
 
+const DEEP_LINK_PROTOCOL = import.meta.env.VITE_DEEP_LINK_PROTOCOL;
+if (!DEEP_LINK_PROTOCOL) throw new Error('VITE_DEEP_LINK_PROTOCOL is not set');
+
+let mainWindow: BrowserWindow | null = null;
+let pendingDeepLink: string | null = null;
+
 function createWindow(): void {
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: MAP_SIZE.width,
     height: MAP_SIZE.height,
     useContentSize: true,
@@ -22,7 +28,11 @@ function createWindow(): void {
   });
 
   mainWindow.on('ready-to-show', () => {
-    mainWindow.show();
+    mainWindow?.show();
+    if (pendingDeepLink) {
+      mainWindow?.webContents.send('deep-link', pendingDeepLink);
+      pendingDeepLink = null;
+    }
   });
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
@@ -46,6 +56,15 @@ app.whenReady().then(() => {
   // Set app user model id for windows
   electronApp.setAppUserModelId(WIN_APP_USER_MODEL_ID);
 
+  // Register protocol for deep links
+  if (process.defaultApp) {
+    app.setAsDefaultProtocolClient(DEEP_LINK_PROTOCOL, process.execPath, [
+      join(process.cwd(), process.argv[1] ?? ''),
+    ]);
+  } else {
+    app.setAsDefaultProtocolClient(DEEP_LINK_PROTOCOL);
+  }
+
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.
   // see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils
@@ -64,6 +83,35 @@ app.whenReady().then(() => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
 });
+
+// Enforce single instance
+const gotLock = app.requestSingleInstanceLock();
+if (!gotLock) {
+  app.quit();
+} else {
+  // Deep link handling
+  app.on('second-instance', (_event, argv) => {
+    const urlArg = argv.find((a) => a.startsWith(`${DEEP_LINK_PROTOCOL}://`));
+    if (urlArg) {
+      if (mainWindow) {
+        if (mainWindow.isMinimized()) mainWindow.restore();
+        mainWindow.focus();
+        mainWindow.webContents.send('deep-link', urlArg);
+      } else {
+        pendingDeepLink = urlArg;
+      }
+    }
+  });
+
+  app.on('open-url', (event, url) => {
+    event.preventDefault();
+    if (mainWindow) {
+      mainWindow.webContents.send('deep-link', url);
+    } else {
+      pendingDeepLink = url;
+    }
+  });
+}
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits

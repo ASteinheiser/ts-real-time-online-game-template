@@ -1,8 +1,13 @@
-import { contextBridge } from 'electron';
+import { contextBridge, ipcRenderer } from 'electron';
 import { electronAPI } from '@electron-toolkit/preload';
 
 // Custom APIs for renderer
-const api = {};
+const api = {
+  onDeepLink: (cb: (url: string) => void) => {
+    ipcRenderer.removeAllListeners('deep-link');
+    ipcRenderer.on('deep-link', (_e, url: string) => cb(url));
+  },
+};
 
 // Use `contextBridge` APIs to expose Electron APIs to
 // renderer only if context isolation is enabled, otherwise
