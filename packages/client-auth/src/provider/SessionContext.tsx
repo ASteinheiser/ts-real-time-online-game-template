@@ -66,14 +66,12 @@ interface SessionProviderProps {
   children: React.ReactNode;
   healthCheckEnabled?: boolean;
   isDesktop?: boolean;
-  profilePathOverride?: string;
 }
 
 export const SessionProvider = ({
   children,
   healthCheckEnabled = false,
   isDesktop = false,
-  profilePathOverride,
 }: SessionProviderProps) => {
   const client = useApolloClient();
 
@@ -192,7 +190,7 @@ export const SessionProvider = ({
   };
 
   const changeEmail = async (email: string) => {
-    const emailRedirectTo = buildAuthRedirect(profilePathOverride ?? AUTH_ROUTES.PROFILE, isDesktop);
+    const emailRedirectTo = buildAuthRedirect(AUTH_ROUTES.PROFILE, isDesktop);
     return await supabase.auth.updateUser({ email }, { emailRedirectTo });
   };
 

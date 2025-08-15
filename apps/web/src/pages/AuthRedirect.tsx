@@ -1,61 +1,74 @@
 import { useEffect, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { AUTH_REDIRECT_SEARCH_PARAM } from '@repo/client-auth/router';
-import { Button } from '@repo/ui';
+import { AUTH_SEARCH_PARAMS, AUTH_ROUTES } from '@repo/client-auth/router';
+import { supabase } from '@repo/client-auth/provider';
+import { Button, toast } from '@repo/ui';
 
-const DEEP_LINK_DELAY_MS = 100;
+const DEEP_LINK_DELAY_MS = 250;
+const WEB_PATH_FALLBACK: string = AUTH_ROUTES.LOGIN;
 
 export const AuthRedirect = () => {
   const { search, hash } = useLocation();
   const navigate = useNavigate();
 
-  const { redirect, extraQuery } = useMemo(() => {
+  const { code, webUrl, deepLinkUrl } = useMemo(() => {
     const params = new URLSearchParams(search);
-    const _redirect = params.get(AUTH_REDIRECT_SEARCH_PARAM);
-    const _extraQuery = new URLSearchParams(
-      Array.from(params.entries()).filter(([k]) => k !== AUTH_REDIRECT_SEARCH_PARAM)
+    // allows the web redirect to persist arbitrary query params (supports magic links)
+    const extraQuery = new URLSearchParams(
+      Array.from(params.entries()).filter(
+        ([key]) => !(Object.values(AUTH_SEARCH_PARAMS) as string[]).includes(key)
+      )
     ).toString();
 
-    return { redirect: _redirect, extraQuery: _extraQuery };
-  }, [search]);
+    const webPathParam = params.get(AUTH_SEARCH_PARAMS.REDIRECT);
+    const deepLinkPathParam = params.get(AUTH_SEARCH_PARAMS.DEEP_LINK);
+    const codeParam = params.get(AUTH_SEARCH_PARAMS.CODE);
 
-  const deepLink = useMemo(() => {
-    if (!redirect) return '';
-    const glue = extraQuery ? (redirect.includes('?') ? '&' : '?') : '';
-
-    return `${redirect}${glue}${extraQuery}${hash}`;
-  }, [redirect, extraQuery, hash]);
-
-  const webPathFallback = useMemo(() => {
-    try {
-      if (!redirect) return '/';
-      const { pathname } = new URL(redirect);
-      const query = extraQuery ? `?${extraQuery}` : '';
-
-      return `${pathname}${query}${hash}`;
-    } catch {
-      return '/';
+    let webRedirectUrl = WEB_PATH_FALLBACK;
+    if (webPathParam) {
+      const formattedExtraQuery = extraQuery ? `?${extraQuery}` : '';
+      webRedirectUrl = `${webPathParam}${formattedExtraQuery}${hash}`;
     }
-  }, [redirect, extraQuery, hash]);
+    let deepLinkRedirectUrl: string | null = null;
+    if (deepLinkPathParam) {
+      const codeQuery = codeParam ? `?${AUTH_SEARCH_PARAMS.CODE}=${codeParam}` : '';
+      deepLinkRedirectUrl = `${deepLinkPathParam}${codeQuery}${hash}`;
+    }
+
+    return { code: codeParam, webUrl: webRedirectUrl, deepLinkUrl: deepLinkRedirectUrl };
+  }, [search, hash]);
 
   useEffect(() => {
-    if (!deepLink) {
-      handleContinueOnWeb();
+    if (!deepLinkUrl) {
+      handleOpenInWeb();
       return;
     }
-    const timeout = setTimeout(() => {}, DEEP_LINK_DELAY_MS);
-    handleOpenInApp();
-
+    const timeout = setTimeout(() => handleOpenInApp(), DEEP_LINK_DELAY_MS);
     return () => clearTimeout(timeout);
-  }, [deepLink, webPathFallback, navigate]);
+  }, [deepLinkUrl, webUrl]);
 
   const handleContinueOnWeb = () => {
-    navigate(webPathFallback, { replace: true });
+    navigate(WEB_PATH_FALLBACK, { replace: true });
+  };
+
+  const handleOpenInWeb = async () => {
+    try {
+      if (code) {
+        const { error } = await supabase.auth.exchangeCodeForSession(code);
+        if (error) throw new Error('Failed to exchange code for session');
+      }
+      // TODO: remove code after exchange
+      navigate(webUrl, { replace: true });
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      toast.error(`Error: ${errorMessage}`);
+      navigate(WEB_PATH_FALLBACK, { replace: true });
+    }
   };
 
   const handleOpenInApp = () => {
-    if (!deepLink) return;
-    window.location.assign(deepLink);
+    if (!deepLinkUrl) return;
+    window.location.assign(deepLinkUrl);
   };
 
   return (
@@ -67,7 +80,7 @@ export const AuthRedirect = () => {
         Otherwise, you can try to:
       </p>
       <div className="flex gap-4 justify-center">
-        <Button size="lg" disabled={!deepLink} onClick={handleOpenInApp}>
+        <Button size="lg" disabled={!deepLinkUrl} onClick={handleOpenInApp}>
           Open in app
         </Button>
         <Button size="lg" variant="secondary" onClick={handleContinueOnWeb}>

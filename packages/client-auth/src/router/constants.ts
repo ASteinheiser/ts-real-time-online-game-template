@@ -11,4 +11,11 @@ export const AUTH_ROUTES = {
   REDIRECT: `${AUTH_PATH_PREFIX}redirect`,
 } as const;
 
-export const AUTH_REDIRECT_SEARCH_PARAM = 'redirect';
+export const AUTH_SEARCH_PARAMS = {
+  /** used for web auth redirects */
+  REDIRECT: 'redirect',
+  /** used for native app deep linking */
+  DEEP_LINK: 'deepLink',
+  /** used for PKCE flow (supabase automatically appends this to the URL, we just consume it) */
+  CODE: 'code',
+} as const;

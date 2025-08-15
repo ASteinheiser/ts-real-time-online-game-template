@@ -5,22 +5,22 @@ import { SUPABASE_AUTH } from '../provider/constants';
 
 /** Handles showing a toast to the user when they click on a supabase email link */
 export const useNotifyOnURLHash = () => {
-  const location = useLocation();
+  const { hash } = useLocation();
   const hashToastRef = useRef('');
 
   useEffect(() => {
     // supabase will add this hash to the url when a user clicks
     // the first of two emails while updating their email address
-    if (location.hash.includes(SUPABASE_AUTH.HASH.EMAIL_CHANGE) && hashToastRef.current !== location.hash) {
-      hashToastRef.current = location.hash;
+    if (hash.includes(SUPABASE_AUTH.HASH.EMAIL_CHANGE) && hashToastRef.current !== hash) {
+      hashToastRef.current = hash;
       toast.success('Please click the confirmation link sent to the other email', {
         duration: 10000,
       });
     }
     // supabase will add this hash when a user clicks an expired email link
-    if (location.hash.includes(SUPABASE_AUTH.HASH.LINK_EXPIRED) && hashToastRef.current !== location.hash) {
-      hashToastRef.current = location.hash;
+    if (hash.includes(SUPABASE_AUTH.HASH.LINK_EXPIRED) && hashToastRef.current !== hash) {
+      hashToastRef.current = hash;
       toast.error('Email link is invalid or has expired', { duration: 10000 });
     }
-  }, [location.hash]);
+  }, [hash]);
 };
