@@ -214,6 +214,15 @@ export const ProfileForm = ({
 
         <div className="flex flex-row gap-4">
           <Button
+            onClick={() => setIsDeleteModalShowing(true)}
+            loading={deleteAccountLoading}
+            variant="destructive"
+            className="w-full"
+          >
+            Delete Account
+          </Button>
+
+          <Button
             onClick={() => navigate(newPasswordRedirectPath)}
             disabled={deleteAccountLoading}
             variant="secondary"
@@ -221,23 +230,10 @@ export const ProfileForm = ({
           >
             Change Password
           </Button>
-
-          <Button
-            onClick={handleLogout}
-            disabled={deleteAccountLoading}
-            variant="secondary"
-            className="w-full"
-          >
-            Log Out
-          </Button>
         </div>
 
-        <Button
-          onClick={() => setIsDeleteModalShowing(true)}
-          loading={deleteAccountLoading}
-          variant="destructive"
-        >
-          Delete Account
+        <Button onClick={handleLogout} disabled={deleteAccountLoading} variant="outline">
+          Log Out
         </Button>
       </div>
 
