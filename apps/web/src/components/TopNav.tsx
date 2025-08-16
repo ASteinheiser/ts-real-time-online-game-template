@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useLocation, Link, type LinkProps } from 'react-router-dom';
 import { useSession } from '@repo/client-auth/provider';
-import { AUTH_ROUTES, AUTH_PATH_PREFIX } from '@repo/client-auth/router';
+import { AUTH_ROUTES, AUTH_PATH_PREFIX, PROFILE_PATH_PREFIX } from '@repo/client-auth/router';
 import { Sheet, SheetContent, SheetTrigger } from '@repo/ui';
 import { Menu } from '@repo/ui/icons';
 import { cn } from '@repo/ui/utils';
@@ -13,7 +13,7 @@ const MENU_CLOSE_DELAY = 100;
 type NavLinks = Array<{ href: string; label: string }>;
 
 export const TopNav = () => {
-  const { profile } = useSession();
+  const { session } = useSession();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -22,7 +22,7 @@ export const TopNav = () => {
       { href: APP_ROUTES.DEV_LOG, label: 'DevLog' },
       { href: APP_ROUTES.DOWNLOAD, label: 'Download' },
     ];
-    if (profile) {
+    if (session) {
       navLinks.push({ href: AUTH_ROUTES.PROFILE, label: 'Profile' });
     } else {
       navLinks.push({ href: AUTH_ROUTES.LOGIN, label: 'Login' });
@@ -64,11 +64,14 @@ interface NavLinkProps extends LinkProps {
 }
 
 const NavLink = ({ children, ...props }: NavLinkProps) => {
-  const location = useLocation();
+  const { pathname } = useLocation();
 
   const active =
-    location.pathname === props.to ||
-    (props.to === AUTH_ROUTES.LOGIN && location.pathname.includes(AUTH_PATH_PREFIX));
+    pathname === props.to ||
+    // shim to ensure "Login" top nav link is active when on any auth page
+    (props.to === AUTH_ROUTES.LOGIN && pathname.includes(AUTH_PATH_PREFIX)) ||
+    // shim to ensure "Profile" top nav link is active when on any profile page
+    (props.to === AUTH_ROUTES.PROFILE && pathname.includes(PROFILE_PATH_PREFIX));
 
   return (
     <Link
