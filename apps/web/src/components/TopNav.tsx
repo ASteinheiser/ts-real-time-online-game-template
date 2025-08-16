@@ -18,9 +18,11 @@ export const TopNav = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const renderNavLinks = () => {
-    const navLinks: NavLinks = [{ href: APP_ROUTES.DEV_LOG, label: 'DevLog' }];
+    const navLinks: NavLinks = [
+      { href: APP_ROUTES.DEV_LOG, label: 'DevLog' },
+      { href: APP_ROUTES.DOWNLOAD, label: 'Download' },
+    ];
     if (profile) {
-      navLinks.push({ href: APP_ROUTES.DOWNLOAD, label: 'Download' });
       navLinks.push({ href: AUTH_ROUTES.PROFILE, label: 'Profile' });
     } else {
       navLinks.push({ href: AUTH_ROUTES.LOGIN, label: 'Login' });

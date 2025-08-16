@@ -30,6 +30,10 @@ export const router = createBrowserRouter([
         element: <DevLog />,
       },
       {
+        path: APP_ROUTES.DOWNLOAD,
+        element: <Download />,
+      },
+      {
         path: AUTH_ROUTES.REDIRECT,
         element: <AuthRedirect />,
       },
@@ -60,10 +64,6 @@ export const router = createBrowserRouter([
           {
             path: AUTH_ROUTES.PROFILE,
             element: <ProfileForm logoutRedirectPath={APP_ROUTES.HOME} />,
-          },
-          {
-            path: APP_ROUTES.DOWNLOAD,
-            element: <Download />,
           },
         ],
       },
