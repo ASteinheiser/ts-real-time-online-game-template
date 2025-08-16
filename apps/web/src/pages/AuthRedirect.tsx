@@ -47,6 +47,11 @@ export const AuthRedirect = () => {
     return () => clearTimeout(timeout);
   }, [deepLinkUrl, webUrl]);
 
+  const handleOpenInApp = () => {
+    if (!deepLinkUrl) return;
+    window.location.assign(deepLinkUrl);
+  };
+
   const handleContinueOnWeb = () => {
     navigate(WEB_PATH_FALLBACK, { replace: true });
   };
@@ -57,18 +62,12 @@ export const AuthRedirect = () => {
         const { error } = await supabase.auth.exchangeCodeForSession(code);
         if (error) throw new Error('Failed to exchange code for session');
       }
-      // TODO: remove code after exchange
       navigate(webUrl, { replace: true });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       toast.error(`Error: ${errorMessage}`);
       navigate(WEB_PATH_FALLBACK, { replace: true });
     }
-  };
-
-  const handleOpenInApp = () => {
-    if (!deepLinkUrl) return;
-    window.location.assign(deepLinkUrl);
   };
 
   return (
