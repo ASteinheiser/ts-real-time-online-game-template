@@ -14,27 +14,23 @@ export const useForcedAuthFlow = ({
   alreadyLoggedInRedirectPath,
   allowDeepLinkRedirectPage = false,
 }: UseForcedAuthFlowProps) => {
-  const { session, profile, isPasswordRecovery } = useSession();
+  const { session, profile } = useSession();
   const navigate = useNavigate();
-  const location = useLocation();
+  const { pathname } = useLocation();
 
   useEffect(() => {
-    const navigateTo = (path: string) => {
-      if (location.pathname !== path) navigate(path);
+    const navigateTo = (newPath: string) => {
+      if (pathname !== newPath) navigate(newPath);
     };
 
-    if (allowDeepLinkRedirectPage && location.pathname === AUTH_ROUTES.REDIRECT) {
+    if (allowDeepLinkRedirectPage && pathname === AUTH_ROUTES.REDIRECT) {
       return;
-    } else if (session && isPasswordRecovery) {
-      navigateTo(AUTH_ROUTES.NEW_PASSWORD);
-    } else if (session && !isPasswordRecovery && location.pathname === AUTH_ROUTES.NEW_PASSWORD) {
-      navigateTo(alreadyLoggedInRedirectPath);
     } else if (session && !profile) {
       navigateTo(AUTH_ROUTES.CREATE_PROFILE);
-    } else if (session && profile && location.pathname === AUTH_ROUTES.CREATE_PROFILE) {
+    } else if (session && profile && pathname === AUTH_ROUTES.CREATE_PROFILE) {
       navigateTo(alreadyLoggedInRedirectPath);
-    } else if (session && location.pathname.includes(AUTH_PATH_PREFIX)) {
+    } else if (session && pathname.includes(AUTH_PATH_PREFIX)) {
       navigateTo(alreadyLoggedInRedirectPath);
     }
-  }, [session, profile, isPasswordRecovery, location.pathname]);
+  }, [session, profile, pathname]);
 };

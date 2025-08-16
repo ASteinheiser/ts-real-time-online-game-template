@@ -13,6 +13,7 @@ import type {
 import { useSession } from '../provider/SessionContext';
 import { SUPABASE_AUTH } from '../provider/constants';
 import { useUserNameExists } from '../hooks/useUserNameExists';
+import { AUTH_ROUTES } from '../router';
 
 const UPDATE_USER_NAME = gql`
   mutation Auth_UpdateUserName($userName: String!) {
@@ -30,9 +31,14 @@ const DELETE_ACCOUNT = gql`
 
 interface ProfileFormProps {
   logoutRedirectPath: string;
+  /** This will default to use `AUTH_ROUTES.NEW_PASSWORD` */
+  newPasswordRedirectPath?: string;
 }
 
-export const ProfileForm = ({ logoutRedirectPath }: ProfileFormProps) => {
+export const ProfileForm = ({
+  logoutRedirectPath,
+  newPasswordRedirectPath = AUTH_ROUTES.NEW_PASSWORD,
+}: ProfileFormProps) => {
   const navigate = useNavigate();
   const { session, profile, logout, changeEmail, refetchProfile } = useSession();
   const sessionEmail = session?.user.email;
@@ -206,9 +212,25 @@ export const ProfileForm = ({ logoutRedirectPath }: ProfileFormProps) => {
 
         <div className="w-20 h-[2px] bg-secondary mx-auto" />
 
-        <Button onClick={handleLogout} disabled={deleteAccountLoading} variant="secondary">
-          Log Out
-        </Button>
+        <div className="flex flex-row gap-4">
+          <Button
+            onClick={() => navigate(newPasswordRedirectPath)}
+            disabled={deleteAccountLoading}
+            variant="secondary"
+            className="w-full"
+          >
+            Change Password
+          </Button>
+
+          <Button
+            onClick={handleLogout}
+            disabled={deleteAccountLoading}
+            variant="secondary"
+            className="w-full"
+          >
+            Log Out
+          </Button>
+        </div>
 
         <Button
           onClick={() => setIsDeleteModalShowing(true)}

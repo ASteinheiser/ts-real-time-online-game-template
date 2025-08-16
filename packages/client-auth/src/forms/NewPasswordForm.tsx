@@ -1,8 +1,16 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button, Input, Label, toast } from '@repo/ui';
 import { useSession } from '../provider/SessionContext';
+import { AUTH_ROUTES } from '../router';
 
-export const NewPasswordForm = () => {
+interface NewPasswordFormProps {
+  /** This will default to use `AUTH_ROUTES.PROFILE` */
+  profileRedirectPath?: string;
+}
+
+export const NewPasswordForm = ({ profileRedirectPath = AUTH_ROUTES.PROFILE }: NewPasswordFormProps) => {
+  const navigate = useNavigate();
   const { newPassword } = useSession();
 
   const [password, setPassword] = useState('');
@@ -62,6 +70,15 @@ export const NewPasswordForm = () => {
 
         <Button type="submit" loading={loading} className="w-full mt-6">
           Update Password
+        </Button>
+
+        <Button
+          type="button"
+          variant="secondary"
+          className="w-full mt-4"
+          onClick={() => navigate(profileRedirectPath)}
+        >
+          Back to Profile
         </Button>
       </form>
     </div>

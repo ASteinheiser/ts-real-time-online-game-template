@@ -4,7 +4,7 @@ export const AUTH_ROUTES = {
   LOGIN: `${AUTH_PATH_PREFIX}login`,
   SIGNUP: `${AUTH_PATH_PREFIX}signup`,
   FORGOT_PASSWORD: `${AUTH_PATH_PREFIX}forgot-password`,
-  NEW_PASSWORD: `${AUTH_PATH_PREFIX}new-password`,
+  NEW_PASSWORD: `/new-password`,
   CREATE_PROFILE: '/create-profile',
   PROFILE: '/profile',
   /** used for native app deep linking */

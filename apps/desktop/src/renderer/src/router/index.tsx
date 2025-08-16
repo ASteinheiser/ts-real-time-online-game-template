@@ -1,12 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { PrivateRoute, AUTH_ROUTES } from '@repo/client-auth/router';
-import {
-  ForgotPasswordForm,
-  LoginForm,
-  NewPasswordForm,
-  ProfileCreateForm,
-  SignupForm,
-} from '@repo/client-auth/forms';
+import { ForgotPasswordForm, LoginForm, ProfileCreateForm, SignupForm } from '@repo/client-auth/forms';
 import { Layout } from './Layout';
 import { NotFound } from '../pages/NotFound';
 import { Game } from '../pages/Game';
@@ -33,10 +27,6 @@ export const router = createBrowserRouter([
         path: '/',
         element: <PrivateRoute userNotAuthenticated={<NotFound />} />,
         children: [
-          {
-            path: AUTH_ROUTES.NEW_PASSWORD,
-            element: <NewPasswordForm />,
-          },
           {
             path: AUTH_ROUTES.CREATE_PROFILE,
             element: <ProfileCreateForm />,

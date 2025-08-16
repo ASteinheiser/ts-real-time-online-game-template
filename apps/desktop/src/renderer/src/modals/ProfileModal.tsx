@@ -1,6 +1,7 @@
 import { Dialog, DialogContent, DialogTitle } from '@repo/ui';
 import { ProfileForm } from '@repo/client-auth/forms';
 import { AUTH_ROUTES } from '@repo/client-auth/router';
+import { APP_ROUTES } from '../router/constants';
 
 interface ProfileModalProps {
   isOpen: boolean;
@@ -14,7 +15,10 @@ export const ProfileModal = ({ isOpen, onOpenChange }: ProfileModalProps) => {
         <DialogTitle className="hidden">Profile</DialogTitle>
 
         <div className="py-6">
-          <ProfileForm logoutRedirectPath={AUTH_ROUTES.LOGIN} />
+          <ProfileForm
+            logoutRedirectPath={AUTH_ROUTES.LOGIN}
+            newPasswordRedirectPath={APP_ROUTES.NEW_PASSWORD}
+          />
         </div>
       </DialogContent>
     </Dialog>

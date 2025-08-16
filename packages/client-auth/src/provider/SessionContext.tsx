@@ -27,7 +27,6 @@ export type Profile = NonNullable<Auth_GetProfileQuery['profile']>;
 interface SessionContextType {
   session: Session | null;
   profile: Profile | null;
-  isPasswordRecovery: boolean;
   login: (email: string, password: string) => Promise<AuthTokenResponsePassword>;
   signup: (email: string, password: string) => Promise<AuthResponse>;
   logout: () => Promise<{ error: AuthError | null }>;
@@ -44,7 +43,6 @@ const dummyAsyncFunc = async () => {
 const SessionContext = createContext<SessionContextType>({
   session: null,
   profile: null,
-  isPasswordRecovery: false,
   login: dummyAsyncFunc,
   signup: dummyAsyncFunc,
   logout: dummyAsyncFunc,
@@ -86,20 +84,14 @@ export const SessionProvider = ({
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [profileError, setProfileError] = useState(false);
-  const [isPasswordRecovery, setIsPasswordRecovery] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const authStateListener = supabase.auth.onAuthStateChange((event, newSession) => {
+    const authStateListener = supabase.auth.onAuthStateChange((_, newSession) => {
       setSession((prevSession) => {
         // only set loading state on initial load -- prevents showing create profile when logging in
         if (newSession && prevSession === null) setIsLoading(true);
         return newSession;
-      });
-      setIsPasswordRecovery((_isPasswordRecovery) => {
-        if (event === 'PASSWORD_RECOVERY') return true;
-        if (_isPasswordRecovery && event === 'USER_UPDATED') return false;
-        return _isPasswordRecovery;
       });
     });
 
@@ -236,7 +228,6 @@ export const SessionProvider = ({
       value={{
         session,
         profile,
-        isPasswordRecovery,
         login,
         signup,
         logout,

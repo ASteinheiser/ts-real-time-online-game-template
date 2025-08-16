@@ -9,6 +9,7 @@ import type { Game as GameScene } from '../game/scenes/Game';
 import { EventBus, EVENT_BUS } from '../game/EventBus';
 import type { Desktop_GetTotalPlayersQuery, Desktop_GetTotalPlayersQueryVariables } from '../graphql';
 import { ProfileModal } from '../modals/ProfileModal';
+import { NewPasswordModal } from '../modals/NewPasswordModal';
 import { SettingsModal } from '../modals/SettingsModal';
 import { SEARCH_PARAMS } from '../router/constants';
 
@@ -29,6 +30,7 @@ export const Game = () => {
   console.log({ totalPlayers: data?.totalPlayers ?? 0 });
 
   const [isProfileModalOpen, setIsProfileModalOpen] = useSearchParamFlag(SEARCH_PARAMS.PROFILE);
+  const [isNewPasswordModalOpen, setIsNewPasswordModalOpen] = useSearchParamFlag(SEARCH_PARAMS.NEW_PASSWORD);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useSearchParamFlag(SEARCH_PARAMS.SETTINGS);
 
   const shouldDisablePhaserInput = isProfileModalOpen || isSettingsModalOpen;
@@ -93,6 +95,7 @@ export const Game = () => {
 
       <SettingsModal isOpen={isSettingsModalOpen} onOpenChange={setIsSettingsModalOpen} />
       <ProfileModal isOpen={isProfileModalOpen} onOpenChange={setIsProfileModalOpen} />
+      <NewPasswordModal isOpen={isNewPasswordModalOpen} onOpenChange={setIsNewPasswordModalOpen} />
     </>
   );
 };
