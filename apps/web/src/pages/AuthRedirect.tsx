@@ -7,6 +7,8 @@ import { Button, toast } from '@repo/ui';
 const DEEP_LINK_DELAY_MS = 250;
 const WEB_PATH_FALLBACK: string = AUTH_ROUTES.LOGIN;
 
+const AUTH_SEARCH_PARAMS_ARRAY = Object.values(AUTH_SEARCH_PARAMS) as string[];
+
 export const AuthRedirect = () => {
   const { search, hash } = useLocation();
   const navigate = useNavigate();
@@ -15,9 +17,7 @@ export const AuthRedirect = () => {
     const params = new URLSearchParams(search);
     // allows the web redirect to persist arbitrary query params (supports magic links)
     const extraQuery = new URLSearchParams(
-      Array.from(params.entries()).filter(
-        ([key]) => !(Object.values(AUTH_SEARCH_PARAMS) as string[]).includes(key)
-      )
+      Array.from(params.entries()).filter(([key]) => !AUTH_SEARCH_PARAMS_ARRAY.includes(key))
     ).toString();
 
     const webPathParam = params.get(AUTH_SEARCH_PARAMS.REDIRECT);
