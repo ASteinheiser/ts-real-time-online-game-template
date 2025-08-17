@@ -1,15 +1,22 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { toast } from '@repo/ui';
 import { SUPABASE_AUTH } from '../provider/constants';
+import { AUTH_SEARCH_PARAMS } from './constants';
 
 const TOAST_DURATION = 10000;
 
 /** Handles showing a toast to the user when they click on a supabase email link */
 export const useNotifyOnURLHash = () => {
-  const { hash } = useLocation();
+  const { search, hash } = useLocation();
+
+  const isDeepLink = useMemo(() => {
+    const searchParams = new URLSearchParams(search);
+    return searchParams.get(AUTH_SEARCH_PARAMS.DEEP_LINK);
+  }, [search]);
 
   useEffect(() => {
+    if (isDeepLink) return;
     // supabase will add this hash to the url when a user clicks
     // the first of two emails while updating their email address
     if (hash.includes(SUPABASE_AUTH.HASH.EMAIL_CHANGE)) {
@@ -23,5 +30,5 @@ export const useNotifyOnURLHash = () => {
         duration: TOAST_DURATION,
       });
     }
-  }, [hash]);
+  }, [hash, isDeepLink]);
 };
