@@ -17,8 +17,8 @@ export const useNotifyOnURLHash = () => {
 
   useEffect(() => {
     if (isDeepLink) return;
-    // supabase will add this hash to the url when a user clicks
-    // the first of two emails while updating their email address
+    // supabase will add this hash to the url when a user clicks the first of two emails while updating their email address
+    // ONLY IF `Secure email change` is set to `true`; see `README.md` for more info
     if (hash.includes(SUPABASE_AUTH.HASH.EMAIL_CHANGE)) {
       toast.success('Please click the confirmation link sent to the other email', {
         duration: TOAST_DURATION,

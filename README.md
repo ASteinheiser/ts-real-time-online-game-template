@@ -29,6 +29,8 @@ You'll need to create a free tier [project](https://supabase.com/dashboard/) and
 
 `https://supabase.com/dashboard/project/<PROJECT_ID>/auth/url-configuration`
 
+I recommend also updating the `Secure email change` setting to `false` (under `Authentication` > `Providers` > `Email`). By default, Supabase sets this to `true`, which will require users to click a link in both the old and new emails. While this is a good security measure, it can be annoying if users can't access their old email for some reason.
+
 ### Env Considerations
 - [Turborepo recommends](https://turborepo.com/docs/crafting-your-repository/using-environment-variables#best-practices) that you define environment variables for each "app" instead of trying to define them globally. This helps prevent sensitive env values from leaking across apps.
   - Although vite has built-in mechanisms for ensuring certain env doesn't get exposed on the frontend, I find it messy to have env from the web app loaded on the backend, for example.
