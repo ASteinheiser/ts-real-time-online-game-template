@@ -2,6 +2,8 @@
 
 import { Toaster as Sonner, toast } from 'sonner';
 
+const DEFAULT_TOAST_DURATION = 10 * 1000; // 10s
+
 type ToasterProps = React.ComponentProps<typeof Sonner>;
 
 const Toaster = ({ ...props }: ToasterProps) => {
@@ -9,6 +11,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
     <Sonner
       theme="dark"
       className="toaster group"
+      duration={DEFAULT_TOAST_DURATION}
       toastOptions={{
         classNames: {
           toast:

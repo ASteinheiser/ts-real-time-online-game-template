@@ -29,11 +29,11 @@ export const ForgotPasswordForm = () => {
       const { error } = await forgotPassword(email);
       // supabase auth will throw an error if the email was already sent
       if (error?.message.includes(SUPABASE_AUTH.ERROR.EMAIL_ALREADY_SENT)) {
-        toast.success('Please check your email for a password reset link', { duration: 10000 });
+        toast.success('Please check your email for a password reset link');
       } else if (error) {
         toast.error(error.message);
       } else {
-        toast.success('Password reset email sent! Please check your inbox', { duration: 10000 });
+        toast.success('Password reset email sent! Please check your inbox');
       }
     } catch (error) {
       console.error(error);
