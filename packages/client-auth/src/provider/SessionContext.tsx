@@ -102,6 +102,28 @@ export const SessionProvider = ({
   }, [supabase]);
 
   useEffect(() => {
+    const refresh = async () => {
+      try {
+        const { error } = await supabase.auth.refreshSession();
+        // swallow error if session is missing -- this is expected when user is logged out
+        if (error && error.name !== 'AuthSessionMissingError') throw error;
+      } catch (err) {
+        console.error(err);
+        toast.error('Something went wrong refreshing your session...');
+      }
+    };
+
+    window.addEventListener('focus', refresh);
+    // handles when user regains network connection after being offline
+    window.addEventListener('online', refresh);
+
+    return () => {
+      window.removeEventListener('focus', refresh);
+      window.removeEventListener('online', refresh);
+    };
+  }, []);
+
+  useEffect(() => {
     if (healthCheckEnabled && !isHealthy) {
       // if still loading, wait for server to be healthy before fetching profile
       if (isHealthCheckLoading) return;
