@@ -1,4 +1,5 @@
 import { useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { useQuery, gql } from '@apollo/client';
 import { ChevronDown } from '@repo/ui/icons';
 import { cn } from '@repo/ui/utils';
@@ -42,6 +43,19 @@ export const Home = () => {
       </div>
 
       <div className="flex flex-col items-center gap-20 px-6 py-8" ref={homeContentRef}>
+        <div className="text-center max-w-lg px-4 pt-14">
+          <p className="text-xl text-muted pb-2">
+            {`Welcome! This is the template's "marketing site", which comes with a sample landing page, developer log, download page, and user login. To get started,`}
+          </p>
+          <Link
+            to="https://github.com/asteinheiser/ts-online-game-template"
+            target="_blank"
+            className="font-pixel text-primary text-3xl underline"
+          >
+            clone it on GitHub
+          </Link>
+        </div>
+
         <HomeSection
           isFlipped
           image="/logo.svg"
