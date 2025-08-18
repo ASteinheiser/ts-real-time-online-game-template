@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { useQuery, gql } from '@apollo/client';
 import { useSession } from '@repo/client-auth/provider';
 import { useSearchParamFlag } from '@repo/ui/hooks';
@@ -33,22 +33,22 @@ export const Game = () => {
   const [isNewPasswordModalOpen, setIsNewPasswordModalOpen] = useSearchParamFlag(SEARCH_PARAMS.NEW_PASSWORD);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useSearchParamFlag(SEARCH_PARAMS.SETTINGS);
 
-  const shouldDisablePhaserInput = isProfileModalOpen || isSettingsModalOpen;
+  const setPhaserInputEnabled = useCallback(() => {
+    const disabled = isProfileModalOpen || isNewPasswordModalOpen || isSettingsModalOpen;
 
-  const setPhaserInputEnabled = (enabled: boolean) => {
     if (phaserRef?.current?.scene?.input) {
-      phaserRef.current.scene.input.enabled = enabled;
+      phaserRef.current.scene.input.enabled = !disabled;
     }
-  };
+  }, [isProfileModalOpen, isNewPasswordModalOpen, isSettingsModalOpen, phaserRef?.current]);
 
   useEffect(() => {
-    setPhaserInputEnabled(!shouldDisablePhaserInput);
-  }, [shouldDisablePhaserInput]);
+    setPhaserInputEnabled();
+  }, [setPhaserInputEnabled]);
 
   const onCurrentSceneChange = (scene: Phaser.Scene) => {
     // ensure that new scenes have the correct "input enabled" setting
     // for example, handles the case where the scene changes with a modal open
-    setPhaserInputEnabled(!shouldDisablePhaserInput);
+    setPhaserInputEnabled();
 
     console.log(scene);
   };
