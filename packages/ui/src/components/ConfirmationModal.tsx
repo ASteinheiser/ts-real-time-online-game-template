@@ -24,12 +24,12 @@ export const ConfirmationModal = ({ isOpen, onClose, onConfirm }: ConfirmationMo
           Are you sure?
         </DialogTitle>
         <DialogFooter>
-          <div className="flex flex-col sm:flex-row gap-4 mt-2 w-full">
-            <Button onClick={onClose} variant="secondary" size="lg" className="w-full">
-              Cancel
-            </Button>
+          <div className="flex flex-row gap-4 mt-2 w-full">
             <Button onClick={handleConfirm} size="lg" className="w-full">
               Confirm
+            </Button>
+            <Button onClick={onClose} variant="secondary" size="lg" className="w-full">
+              Cancel
             </Button>
           </div>
         </DialogFooter>
