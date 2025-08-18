@@ -9,7 +9,7 @@ export const useDeepLinks = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    window.api?.onDeepLink?.(async (url: string) => {
+    window.api.onDeepLink(async (url) => {
       try {
         const { pathname, searchParams, hash } = new URL(url);
 

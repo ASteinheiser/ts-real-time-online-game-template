@@ -1,11 +1,34 @@
 import { contextBridge, ipcRenderer } from 'electron';
 import { electronAPI } from '@electron-toolkit/preload';
+import type { DeepLinkCallback } from './index.d';
 
-// Custom APIs for renderer
+/** stores the deep-link listener callback (preload -> renderer) */
+let deepLinkListener: DeepLinkCallback | null = null;
+/** stores a deep-link that was received before a listener attaches (cold start) */
+let pendingDeepLink: string | null = null;
+
+const deliverDeepLink = (url: string) => {
+  if (deepLinkListener) deepLinkListener(url);
+  // handle deep links when the app is not open/ready (cold start)
+  else pendingDeepLink = url;
+};
+
+// Always-on listener from main process → preload
+ipcRenderer.on('deep-link', (_event, url: string) => {
+  deliverDeepLink(url);
+});
+
+// Custom API for renderer
 const api = {
-  onDeepLink: (cb: (url: string) => void) => {
-    ipcRenderer.removeAllListeners('deep-link');
-    ipcRenderer.on('deep-link', (_e, url: string) => cb(url));
+  onDeepLink: (callback: DeepLinkCallback) => {
+    // setup the deep-link listener (preload -> renderer)
+    deepLinkListener = callback;
+    // Replay cold start deep-links (if any) once
+    if (pendingDeepLink) {
+      const url = pendingDeepLink;
+      pendingDeepLink = null;
+      deliverDeepLink(url);
+    }
   },
 };
 
@@ -20,8 +43,6 @@ if (process.contextIsolated) {
     console.error(error);
   }
 } else {
-  // @ts-expect-error (define in dts)
   window.electron = electronAPI;
-  // @ts-expect-error (define in dts)
   window.api = api;
 }
