@@ -4,7 +4,8 @@ import { AUTH_SEARCH_PARAMS, AUTH_ROUTES } from '@repo/client-auth/router';
 import { supabase } from '@repo/client-auth/provider';
 import { Button, toast } from '@repo/ui';
 
-const DEEP_LINK_DELAY_MS = 250;
+/** enables smoother UX when redirecting and opening deep links */
+const REDIRECT_DELAY_MS = 100;
 const WEB_PATH_FALLBACK: string = AUTH_ROUTES.LOGIN;
 
 export const AuthRedirect = () => {
@@ -30,11 +31,11 @@ export const AuthRedirect = () => {
   }, [search, hash]);
 
   useEffect(() => {
-    if (!deepLinkUrl) {
-      handleOpenInWeb();
-      return;
-    }
-    const timeout = setTimeout(() => handleOpenInApp(), DEEP_LINK_DELAY_MS);
+    const timeout = setTimeout(() => {
+      if (deepLinkUrl) handleOpenInApp();
+      else handleOpenInWeb();
+    }, REDIRECT_DELAY_MS);
+
     return () => clearTimeout(timeout);
   }, [deepLinkUrl, webUrl]);
 
