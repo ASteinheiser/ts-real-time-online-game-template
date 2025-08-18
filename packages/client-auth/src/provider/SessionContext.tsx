@@ -13,6 +13,7 @@ import type { Auth_GetProfileQuery, Auth_GetProfileQueryVariables } from '../gra
 import { buildAuthRedirect } from '../router/buildAuthRedirect';
 import { AUTH_ROUTES } from '../router/constants';
 import { useHealthCheck } from '../hooks/useHealthCheck';
+import { SUPABASE_AUTH } from './constants';
 
 const GET_PROFILE = gql`
   query Auth_GetProfile {
@@ -182,7 +183,10 @@ export const SessionProvider = ({
   };
 
   const changeEmail = async (email: string) => {
-    const emailRedirectTo = buildAuthRedirect(AUTH_ROUTES.PROFILE, isDesktop);
+    const emailRedirectTo = buildAuthRedirect(
+      `${AUTH_ROUTES.PROFILE}${SUPABASE_AUTH.HASH.EMAIL_CHANGE_SUCCESS}`,
+      isDesktop
+    );
     return await supabase.auth.updateUser({ email }, { emailRedirectTo });
   };
 
