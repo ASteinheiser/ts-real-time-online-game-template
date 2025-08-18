@@ -66,7 +66,7 @@ export const AuthRedirect = () => {
     <div className="fullscreen-center gap-6 text-center">
       <p className="text-3xl font-label text-muted max-w-sm">
         You should be redirected to the native app. If so, you can
-        <span className="font-pixel text-primary"> close this page</span>
+        <span className="font-pixel text-primary text-4xl"> close this page</span>
         <br />
         Otherwise, you can try to:
       </p>
