@@ -36,8 +36,8 @@ export const Game = () => {
   const setPhaserInputEnabled = useCallback(() => {
     const disabled = isProfileModalOpen || isNewPasswordModalOpen || isSettingsModalOpen;
 
-    if (phaserRef?.current?.scene?.input) {
-      phaserRef.current.scene.input.enabled = !disabled;
+    if (phaserRef?.current?.game?.input) {
+      phaserRef.current.game.input.enabled = !disabled;
     }
   }, [isProfileModalOpen, isNewPasswordModalOpen, isSettingsModalOpen, phaserRef?.current]);
 
