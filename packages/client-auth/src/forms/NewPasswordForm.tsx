@@ -17,6 +17,10 @@ export const NewPasswordForm = ({ profileRedirectPath = AUTH_ROUTES.PROFILE }: N
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const handleBackToProfile = () => {
+    navigate(profileRedirectPath);
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -37,6 +41,7 @@ export const NewPasswordForm = ({ profileRedirectPath = AUTH_ROUTES.PROFILE }: N
         return;
       }
       toast.success('Password updated successfully');
+      handleBackToProfile();
     } catch (error) {
       console.error(error);
       toast.error('Failed to update password, please try again');
@@ -72,12 +77,7 @@ export const NewPasswordForm = ({ profileRedirectPath = AUTH_ROUTES.PROFILE }: N
           Update Password
         </Button>
 
-        <Button
-          type="button"
-          variant="secondary"
-          className="w-full mt-4"
-          onClick={() => navigate(profileRedirectPath)}
-        >
+        <Button type="button" variant="secondary" className="w-full mt-4" onClick={handleBackToProfile}>
           Back to Profile
         </Button>
       </form>
