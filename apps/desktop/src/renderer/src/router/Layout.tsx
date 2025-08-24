@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { useForcedAuthFlow, useNotifyOnURLHash, useIsAuthRoute } from '@repo/client-auth/router';
 import { Settings } from '@repo/ui/icons';
-import { MAP_SIZE } from '@repo/core-game';
 import logo from '../assets/logo.png';
 import { SettingsModal } from '../modals/SettingsModal';
 import { useDeepLinks } from './useDeepLinks';
@@ -19,7 +18,7 @@ export const Layout = () => {
   useNotifyOnURLHash();
 
   return (
-    <div className="fullscreen-center" style={{ width: MAP_SIZE.width, height: MAP_SIZE.height }}>
+    <div className="fullscreen-center">
       {isAuthRoute && (
         <>
           <div
