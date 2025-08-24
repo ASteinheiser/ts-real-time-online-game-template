@@ -1,7 +1,7 @@
 // -----------------------------------------------------------------------------
 // Video settings helpers (fullscreen + fixed resolutions)
 // -----------------------------------------------------------------------------
-import { app, type BrowserWindow, type Display } from 'electron';
+import { app, screen, type BrowserWindow } from 'electron';
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { join } from 'path';
 
@@ -25,8 +25,14 @@ const DEFAULT_VIDEO_SETTINGS: VideoSettings = {
 };
 
 /** Returns an array of supported resolutions filtered by current display size */
-export const getAvailableResolutions = ({ size }: Display) => {
-  return COMMON_RESOLUTIONS.filter((r) => r.width <= size.width && r.height <= size.height);
+export const getAvailableResolutions = (window: BrowserWindow | null) => {
+  if (!window) return [COMMON_RESOLUTIONS[0]];
+
+  const { x, y } = window.getBounds();
+  const currentDisplay = screen.getDisplayNearestPoint({ x, y });
+  const { width, height } = currentDisplay.size;
+
+  return COMMON_RESOLUTIONS.filter((res) => res.width <= width && res.height <= height);
 };
 
 /** Location of the JSON settings file in the user data directory (varies by OS) */
@@ -63,7 +69,9 @@ export const loadVideoSettings = (): VideoSettings => {
 };
 
 /** Applies the video settings to the window and persists them */
-export const applyVideoSettings = (window: BrowserWindow, newSettings: Partial<VideoSettings>) => {
+export const applyVideoSettings = (window: BrowserWindow | null, newSettings: Partial<VideoSettings>) => {
+  if (!window) return;
+
   const existingSettings = loadVideoSettings();
   const mergedSettings = {
     fullscreen: newSettings.fullscreen ?? existingSettings.fullscreen,

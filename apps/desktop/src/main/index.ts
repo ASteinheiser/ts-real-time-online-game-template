@@ -1,7 +1,12 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron';
 import { join } from 'path';
 import { electronApp, optimizer, is } from '@electron-toolkit/utils';
-import { MAP_SIZE } from '@repo/core-game';
+import {
+  getAvailableResolutions,
+  loadVideoSettings,
+  applyVideoSettings,
+  type VideoSettings,
+} from './video-settings';
 import icon from '../../resources/icon.png?asset';
 
 const WIN_APP_USER_MODEL_ID = 'iamandrew.demo-game';
@@ -13,14 +18,19 @@ let mainWindow: BrowserWindow | null = null;
 let pendingDeepLink: string | null = null;
 
 function createWindow(): void {
+  const videoSettings = loadVideoSettings();
+
   mainWindow = new BrowserWindow({
-    width: MAP_SIZE.width,
-    height: MAP_SIZE.height,
-    useContentSize: true,
+    // configurable video settings
+    fullscreen: videoSettings.fullscreen,
+    width: videoSettings.width,
+    height: videoSettings.height,
+    // settings to create an OS-agnostic experience
     resizable: false,
-    show: false,
     autoHideMenuBar: true,
+    // icon for linux
     ...(process.platform === 'linux' ? { icon } : {}),
+    // preload script for renderer process
     webPreferences: {
       preload: join(__dirname, '../preload/index.mjs'),
       sandbox: false,
@@ -72,9 +82,14 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window);
   });
 
-  // IPC test
-  ipcMain.on('ping', () => console.log('pong'));
+  // IPC handlers for video settings
+  ipcMain.handle('get-available-resolutions', () => getAvailableResolutions(mainWindow));
+  ipcMain.handle('get-video-settings', () => loadVideoSettings());
+  ipcMain.handle('set-video-settings', (_, newSettings: Partial<VideoSettings>) =>
+    applyVideoSettings(mainWindow, newSettings)
+  );
 
+  // Create the desktop window
   createWindow();
 
   app.on('activate', function () {
@@ -91,14 +106,14 @@ if (!gotLock) {
 } else {
   // Deep link handling
   app.on('second-instance', (_event, argv) => {
-    const urlArg = argv.find((a) => a.startsWith(`${DEEP_LINK_PROTOCOL}://`));
-    if (urlArg) {
+    const url = argv.find((a) => a.startsWith(`${DEEP_LINK_PROTOCOL}://`));
+    if (url) {
       if (mainWindow) {
         if (mainWindow.isMinimized()) mainWindow.restore();
         mainWindow.focus();
-        mainWindow.webContents.send('deep-link', urlArg);
+        mainWindow.webContents.send('deep-link', url);
       } else {
-        pendingDeepLink = urlArg;
+        pendingDeepLink = url;
       }
     }
   });
