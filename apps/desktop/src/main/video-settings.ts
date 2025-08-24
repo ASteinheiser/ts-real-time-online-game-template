@@ -4,12 +4,7 @@
 import { app, screen, type BrowserWindow } from 'electron';
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { join } from 'path';
-
-export interface VideoSettings {
-  fullscreen: boolean;
-  width: number;
-  height: number;
-}
+import type { VideoSettings } from '../shared/types';
 
 /** Common desktop game resolutions – will be filtered by display size */
 const COMMON_RESOLUTIONS = [

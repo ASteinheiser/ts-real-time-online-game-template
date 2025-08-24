@@ -1,9 +1,5 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@repo/ui';
-
-export interface ResolutionOption {
-  width: number;
-  height: number;
-}
+import type { ResolutionOption } from '../../../../shared/types';
 
 interface ResolutionSelectProps {
   availableResolutions: Array<ResolutionOption>;

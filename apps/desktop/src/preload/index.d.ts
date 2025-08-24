@@ -1,15 +1,7 @@
 import type { ElectronAPI } from '@electron-toolkit/preload';
+import type { ResolutionOption, VideoSettings } from '../shared/types';
 
 export type DeepLinkCallback = (url: string) => void;
-
-interface ResolutionOption {
-  width: number;
-  height: number;
-}
-
-interface VideoSettings extends ResolutionOption {
-  fullscreen: boolean;
-}
 
 export interface CustomAPI {
   /** called once by the renderer to setup a deep-link listener */

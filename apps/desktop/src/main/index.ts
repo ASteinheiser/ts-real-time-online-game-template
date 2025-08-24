@@ -3,12 +3,8 @@ import { join } from 'path';
 import { electronApp, optimizer, is } from '@electron-toolkit/utils';
 import icon from '../../resources/icon.png?asset';
 import { ELECTRON_EVENTS } from '../shared/constants';
-import {
-  getAvailableResolutions,
-  loadVideoSettings,
-  applyVideoSettings,
-  type VideoSettings,
-} from './video-settings';
+import type { VideoSettings } from '../shared/types';
+import { getAvailableResolutions, loadVideoSettings, applyVideoSettings } from './video-settings';
 
 const WIN_APP_USER_MODEL_ID = 'iamandrew.demo-game';
 
