@@ -1,6 +1,6 @@
 import { contextBridge, ipcRenderer } from 'electron';
 import { electronAPI } from '@electron-toolkit/preload';
-import type { DeepLinkCallback } from './index.d';
+import type { DeepLinkCallback, CustomAPI } from './index.d';
 
 /** stores the deep-link listener callback (preload -> renderer) */
 let deepLinkListener: DeepLinkCallback | null = null;
@@ -19,8 +19,8 @@ ipcRenderer.on('deep-link', (_event, url: string) => {
 });
 
 // Custom API for renderer
-const api = {
-  onDeepLink: (callback: DeepLinkCallback) => {
+const api: CustomAPI = {
+  onDeepLink: (callback) => {
     // setup the deep-link listener (preload -> renderer)
     deepLinkListener = callback;
     // Replay cold start deep-links (if any) once
@@ -29,6 +29,11 @@ const api = {
       pendingDeepLink = null;
       deliverDeepLink(url);
     }
+  },
+  video: {
+    getAvailableResolutions: () => ipcRenderer.invoke('get-available-resolutions'),
+    getVideoSettings: () => ipcRenderer.invoke('get-video-settings'),
+    setVideoSettings: (settings) => ipcRenderer.invoke('set-video-settings', settings),
   },
 };
 
