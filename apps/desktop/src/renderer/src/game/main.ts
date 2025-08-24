@@ -1,5 +1,4 @@
-import { AUTO, Game } from 'phaser';
-import { MAP_SIZE } from '@repo/core-game';
+import { AUTO, Game, Scale } from 'phaser';
 import { Boot } from './scenes/Boot';
 import { Preloader } from './scenes/Preloader';
 import { MainMenu } from './scenes/MainMenu';
@@ -9,11 +8,12 @@ import { GAME_CONTAINER_ID } from './constants';
 
 const config: Phaser.Types.Core.GameConfig = {
   type: AUTO,
-  width: MAP_SIZE.width,
-  height: MAP_SIZE.height,
   parent: GAME_CONTAINER_ID,
-  backgroundColor: '#09090b',
   scene: [Boot, Preloader, MainMenu, MainGame, GameOver],
+  pixelArt: true,
+  scale: {
+    mode: Scale.RESIZE,
+  },
   physics: {
     default: 'arcade',
     arcade: {
@@ -21,7 +21,6 @@ const config: Phaser.Types.Core.GameConfig = {
       debug: false,
     },
   },
-  pixelArt: true,
 };
 
 export const StartGame = (parent: string) => {
