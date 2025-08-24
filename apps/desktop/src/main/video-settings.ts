@@ -42,7 +42,7 @@ const saveVideoSettings = (settings: VideoSettings) => {
 };
 
 /** Loads the video settings from the JSON file */
-export const getVideoSettings = (): VideoSettings => {
+export const loadVideoSettings = (): VideoSettings => {
   try {
     const settingsFile = getConfigFile();
 
@@ -64,7 +64,7 @@ export const getVideoSettings = (): VideoSettings => {
 
 /** Applies the video settings to the window and persists them */
 export const applyVideoSettings = (window: BrowserWindow, newSettings: Partial<VideoSettings>) => {
-  const existingSettings = getVideoSettings();
+  const existingSettings = loadVideoSettings();
   const mergedSettings = {
     fullscreen: newSettings.fullscreen ?? existingSettings.fullscreen,
     width: newSettings.width ?? existingSettings.width,
