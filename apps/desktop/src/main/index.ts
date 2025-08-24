@@ -1,13 +1,14 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron';
 import { join } from 'path';
 import { electronApp, optimizer, is } from '@electron-toolkit/utils';
+import icon from '../../resources/icon.png?asset';
+import { ELECTRON_EVENTS } from '../shared/constants';
 import {
   getAvailableResolutions,
   loadVideoSettings,
   applyVideoSettings,
   type VideoSettings,
 } from './video-settings';
-import icon from '../../resources/icon.png?asset';
 
 const WIN_APP_USER_MODEL_ID = 'iamandrew.demo-game';
 
@@ -40,7 +41,7 @@ function createWindow(): void {
   mainWindow.on('ready-to-show', () => {
     mainWindow?.show();
     if (pendingDeepLink) {
-      mainWindow?.webContents.send('deep-link', pendingDeepLink);
+      mainWindow?.webContents.send(ELECTRON_EVENTS.DEEP_LINK, pendingDeepLink);
       pendingDeepLink = null;
     }
   });
@@ -83,9 +84,9 @@ app.whenReady().then(() => {
   });
 
   // IPC handlers for video settings
-  ipcMain.handle('get-available-resolutions', () => getAvailableResolutions(mainWindow));
-  ipcMain.handle('get-video-settings', () => loadVideoSettings());
-  ipcMain.handle('set-video-settings', (_, newSettings: Partial<VideoSettings>) =>
+  ipcMain.handle(ELECTRON_EVENTS.GET_AVAILABLE_RESOLUTIONS, () => getAvailableResolutions(mainWindow));
+  ipcMain.handle(ELECTRON_EVENTS.GET_VIDEO_SETTINGS, () => loadVideoSettings());
+  ipcMain.handle(ELECTRON_EVENTS.SET_VIDEO_SETTINGS, (_, newSettings: Partial<VideoSettings>) =>
     applyVideoSettings(mainWindow, newSettings)
   );
 
@@ -111,7 +112,7 @@ if (!gotLock) {
       if (mainWindow) {
         if (mainWindow.isMinimized()) mainWindow.restore();
         mainWindow.focus();
-        mainWindow.webContents.send('deep-link', url);
+        mainWindow.webContents.send(ELECTRON_EVENTS.DEEP_LINK, url);
       } else {
         pendingDeepLink = url;
       }
@@ -121,7 +122,7 @@ if (!gotLock) {
   app.on('open-url', (event, url) => {
     event.preventDefault();
     if (mainWindow) {
-      mainWindow.webContents.send('deep-link', url);
+      mainWindow.webContents.send(ELECTRON_EVENTS.DEEP_LINK, url);
     } else {
       pendingDeepLink = url;
     }

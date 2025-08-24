@@ -1,5 +1,6 @@
 import { contextBridge, ipcRenderer } from 'electron';
 import { electronAPI } from '@electron-toolkit/preload';
+import { ELECTRON_EVENTS } from '../shared/constants';
 import type { DeepLinkCallback, CustomAPI } from './index.d';
 
 /** stores the deep-link listener callback (preload -> renderer) */
@@ -14,7 +15,7 @@ const deliverDeepLink = (url: string) => {
 };
 
 // Always-on listener from main process → preload
-ipcRenderer.on('deep-link', (_event, url: string) => {
+ipcRenderer.on(ELECTRON_EVENTS.DEEP_LINK, (_event, url: string) => {
   deliverDeepLink(url);
 });
 
@@ -31,9 +32,9 @@ const api: CustomAPI = {
     }
   },
   video: {
-    getAvailableResolutions: () => ipcRenderer.invoke('get-available-resolutions'),
-    getVideoSettings: () => ipcRenderer.invoke('get-video-settings'),
-    setVideoSettings: (settings) => ipcRenderer.invoke('set-video-settings', settings),
+    getAvailableResolutions: () => ipcRenderer.invoke(ELECTRON_EVENTS.GET_AVAILABLE_RESOLUTIONS),
+    getVideoSettings: () => ipcRenderer.invoke(ELECTRON_EVENTS.GET_VIDEO_SETTINGS),
+    setVideoSettings: (settings) => ipcRenderer.invoke(ELECTRON_EVENTS.SET_VIDEO_SETTINGS, settings),
   },
 };
 
