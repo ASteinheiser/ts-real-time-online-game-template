@@ -14,7 +14,7 @@ export const ResolutionSelect = ({
 }: ResolutionSelectProps) => {
   return (
     <Select value={currentResolution} onValueChange={onResolutionChange}>
-      <SelectTrigger className="w-[130px]">
+      <SelectTrigger className="w-[130px] text-lg font-pixel">
         <SelectValue placeholder="--" />
       </SelectTrigger>
 
@@ -22,7 +22,7 @@ export const ResolutionSelect = ({
         {availableResolutions.map(({ width, height }) => {
           const resolution = `${width}x${height}`;
           return (
-            <SelectItem key={resolution} value={resolution}>
+            <SelectItem key={resolution} value={resolution} className="text-lg font-pixel">
               {resolution}
             </SelectItem>
           );
