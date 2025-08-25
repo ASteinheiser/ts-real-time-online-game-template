@@ -7,8 +7,8 @@ export const Versions = () => {
 
   return (
     <div className="w-full flex flex-col items-center gap-4">
-      <p className="text-md font-pixel flex flex-row items-center gap-1">
-        Client:<span className="text-sm font-label">v{version}</span>
+      <p className="text-xl font-pixel flex flex-row items-center gap-1">
+        Version<span className="text-lg font-label">{version}</span>
       </p>
 
       <ul className="flex flex-row gap-4">
