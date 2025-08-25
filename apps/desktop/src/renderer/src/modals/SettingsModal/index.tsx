@@ -37,6 +37,11 @@ export const SettingsModal = ({ isOpen, onOpenChange }: SettingsModalProps) => {
     window.api.video.setVideoSettings({ width, height });
   };
 
+  const handleRefetchResolutions = async () => {
+    const resolutions = await window.api.video.getAvailableResolutions();
+    setAvailableRes(resolutions);
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent
@@ -64,6 +69,11 @@ export const SettingsModal = ({ isOpen, onOpenChange }: SettingsModalProps) => {
               availableResolutions={availableRes}
               currentResolution={resolution}
               onResolutionChange={handleChangeResolution}
+              // ensures we show the latest resolution options in case the user:
+              // changed display settings or dragged the window to another monitor
+              onOpenChange={(open) => {
+                if (open) handleRefetchResolutions();
+              }}
             />
           </div>
         </div>

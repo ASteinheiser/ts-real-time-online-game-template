@@ -5,15 +5,17 @@ interface ResolutionSelectProps {
   availableResolutions: Array<ResolutionOption>;
   currentResolution: string;
   onResolutionChange: (resolution: string) => void;
+  onOpenChange: (open: boolean) => void;
 }
 
 export const ResolutionSelect = ({
   availableResolutions,
   currentResolution,
   onResolutionChange,
+  onOpenChange,
 }: ResolutionSelectProps) => {
   return (
-    <Select value={currentResolution} onValueChange={onResolutionChange}>
+    <Select value={currentResolution} onValueChange={onResolutionChange} onOpenChange={onOpenChange}>
       <SelectTrigger className="w-[140px] text-xl font-pixel">
         <SelectValue placeholder="--" />
       </SelectTrigger>
