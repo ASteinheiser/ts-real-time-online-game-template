@@ -15,16 +15,12 @@ let mainWindow: BrowserWindow | null = null;
 let pendingDeepLink: string | null = null;
 
 function createWindow(): void {
-  const videoSettings = loadVideoSettings();
-
   mainWindow = new BrowserWindow({
-    // configurable video settings
-    fullscreen: videoSettings.fullscreen,
-    width: videoSettings.width,
-    height: videoSettings.height,
     // settings to create an OS-agnostic experience
-    resizable: false,
+    frame: false,
+    transparent: true,
     autoHideMenuBar: true,
+    resizable: false,
     // icon for linux
     ...(process.platform === 'linux' ? { icon } : {}),
     // preload script for renderer process
@@ -33,6 +29,8 @@ function createWindow(): void {
       sandbox: false,
     },
   });
+  // handles setting resolution and fullscreen on startup
+  applyVideoSettings(mainWindow, {});
 
   mainWindow.on('ready-to-show', () => {
     mainWindow?.show();
