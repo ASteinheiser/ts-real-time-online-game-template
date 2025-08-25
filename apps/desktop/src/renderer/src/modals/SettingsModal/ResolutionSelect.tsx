@@ -13,16 +13,16 @@ export const ResolutionSelect = ({
   onResolutionChange,
 }: ResolutionSelectProps) => {
   return (
-    <Select>
+    <Select value={currentResolution} onValueChange={onResolutionChange}>
       <SelectTrigger className="w-[130px]">
         <SelectValue placeholder="--" />
       </SelectTrigger>
 
-      <SelectContent defaultValue={currentResolution}>
+      <SelectContent>
         {availableResolutions.map(({ width, height }) => {
           const resolution = `${width}x${height}`;
           return (
-            <SelectItem key={resolution} value={resolution} onClick={() => onResolutionChange(resolution)}>
+            <SelectItem key={resolution} value={resolution}>
               {resolution}
             </SelectItem>
           );
