@@ -37,6 +37,7 @@ export const VideoSettingsProvider = ({ children }: { children: React.ReactNode 
   }, []);
 
   const handleLoadVideoSettings = async () => {
+    // listen for fullscreen changes
     window.api.video.onFullscreenChanged(setIsFullscreen);
 
     const [resolutions, { fullscreen, width, height }] = await Promise.all([
