@@ -14,6 +14,8 @@ export interface CustomAPI {
     getVideoSettings: () => Promise<VideoSettings>;
     /** Applies and persists new video settings */
     setVideoSettings: (settings: Partial<VideoSettings>) => Promise<void>;
+    /** called once by the renderer to setup a fullscreen listener */
+    onFullscreenChanged: (callback: (isFullscreen: boolean) => void) => void;
   };
 }
 

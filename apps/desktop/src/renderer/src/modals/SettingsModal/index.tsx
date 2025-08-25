@@ -16,6 +16,8 @@ export const SettingsModal = ({ isOpen, onOpenChange }: SettingsModalProps) => {
 
   useEffect(() => {
     (async () => {
+      window.api.video.onFullscreenChanged(setFullscreen);
+
       const [resolutions, videoSettings] = await Promise.all([
         window.api.video.getAvailableResolutions(),
         window.api.video.getVideoSettings(),

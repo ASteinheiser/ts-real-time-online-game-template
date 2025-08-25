@@ -35,6 +35,8 @@ const api: CustomAPI = {
     getAvailableResolutions: () => ipcRenderer.invoke(ELECTRON_EVENTS.GET_AVAILABLE_RESOLUTIONS),
     getVideoSettings: () => ipcRenderer.invoke(ELECTRON_EVENTS.GET_VIDEO_SETTINGS),
     setVideoSettings: (settings) => ipcRenderer.invoke(ELECTRON_EVENTS.SET_VIDEO_SETTINGS, settings),
+    onFullscreenChanged: (callback) =>
+      ipcRenderer.on(ELECTRON_EVENTS.ON_FULLSCREEN_CHANGED, (_, isFullscreen) => callback(isFullscreen)),
   },
 };
 

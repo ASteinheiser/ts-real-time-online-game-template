@@ -40,6 +40,13 @@ function createWindow(): void {
     }
   });
 
+  mainWindow.on('enter-full-screen', () => {
+    mainWindow?.webContents.send(ELECTRON_EVENTS.ON_FULLSCREEN_CHANGED, true);
+  });
+  mainWindow.on('leave-full-screen', () => {
+    mainWindow?.webContents.send(ELECTRON_EVENTS.ON_FULLSCREEN_CHANGED, false);
+  });
+
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url);
     return { action: 'deny' };
