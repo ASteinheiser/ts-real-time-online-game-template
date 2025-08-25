@@ -5,7 +5,7 @@ export const Versions = () => {
   const [versions] = useState(window.electron.process.versions);
 
   return (
-    <ul className="flex flex-row gap-4">
+    <ul className="flex flex-row gap-4 justify-center w-full">
       <li className="text-sm font-label flex flex-row items-center">
         <Electron size={20} className="mr-2" />v{versions.electron}
       </li>
