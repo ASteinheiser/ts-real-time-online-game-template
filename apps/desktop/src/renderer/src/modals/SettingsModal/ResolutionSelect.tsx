@@ -2,6 +2,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import type { ResolutionOption } from '../../../../shared/types';
 
 interface ResolutionSelectProps {
+  disabled: boolean;
   availableResolutions: Array<ResolutionOption>;
   currentResolution: ResolutionOption;
   onResolutionChange: (resolution: ResolutionOption) => void;
@@ -9,6 +10,7 @@ interface ResolutionSelectProps {
 }
 
 export const ResolutionSelect = ({
+  disabled,
   availableResolutions,
   currentResolution,
   onResolutionChange,
@@ -20,7 +22,7 @@ export const ResolutionSelect = ({
       onValueChange={(value) => onResolutionChange(parseResolution(value))}
       onOpenChange={onOpenChange}
     >
-      <SelectTrigger className="w-[140px] text-xl font-pixel">
+      <SelectTrigger className="w-[140px] text-xl font-pixel" disabled={disabled}>
         <SelectValue placeholder="--" />
       </SelectTrigger>
 

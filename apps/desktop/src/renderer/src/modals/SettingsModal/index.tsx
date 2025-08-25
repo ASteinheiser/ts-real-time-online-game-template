@@ -42,6 +42,7 @@ export const SettingsModal = ({ isOpen, onOpenChange }: SettingsModalProps) => {
           <div className="flex items-center justify-between">
             <Label className="font-title text-xl">Resolution</Label>
             <ResolutionSelect
+              disabled={isFullscreen}
               availableResolutions={availableResolutions}
               currentResolution={currentResolution}
               onResolutionChange={changeResolution}
