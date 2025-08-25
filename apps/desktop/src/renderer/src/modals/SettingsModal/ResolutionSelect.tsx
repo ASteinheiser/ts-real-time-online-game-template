@@ -3,8 +3,8 @@ import type { ResolutionOption } from '../../../../shared/types';
 
 interface ResolutionSelectProps {
   availableResolutions: Array<ResolutionOption>;
-  currentResolution: string;
-  onResolutionChange: (resolution: string) => void;
+  currentResolution: ResolutionOption;
+  onResolutionChange: (resolution: ResolutionOption) => void;
   onOpenChange: (open: boolean) => void;
 }
 
@@ -15,7 +15,11 @@ export const ResolutionSelect = ({
   onOpenChange,
 }: ResolutionSelectProps) => {
   return (
-    <Select value={currentResolution} onValueChange={onResolutionChange} onOpenChange={onOpenChange}>
+    <Select
+      value={stringifyResolution(currentResolution)}
+      onValueChange={(value) => onResolutionChange(parseResolution(value))}
+      onOpenChange={onOpenChange}
+    >
       <SelectTrigger className="w-[140px] text-xl font-pixel">
         <SelectValue placeholder="--" />
       </SelectTrigger>
@@ -34,11 +38,11 @@ export const ResolutionSelect = ({
   );
 };
 
-export const stringifyResolution = (res: ResolutionOption) => {
+const stringifyResolution = (res: ResolutionOption) => {
   return `${res.width}x${res.height}`;
 };
 
-export const parseResolution = (res: string): ResolutionOption => {
+const parseResolution = (res: string): ResolutionOption => {
   const [width, height] = res.split('x').map(Number);
   return { width, height };
 };

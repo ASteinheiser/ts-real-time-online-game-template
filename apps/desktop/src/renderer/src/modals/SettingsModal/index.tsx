@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react';
 import { Checkbox, Label, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@repo/ui';
-import type { ResolutionOption } from '../../../../shared/types';
-import { ResolutionSelect, stringifyResolution, parseResolution } from './ResolutionSelect';
+import { useVideoSettings } from '../../VideoSettingsProvider';
+import { ResolutionSelect } from './ResolutionSelect';
 import { Versions } from './Versions';
 
 interface SettingsModalProps {
@@ -10,39 +9,14 @@ interface SettingsModalProps {
 }
 
 export const SettingsModal = ({ isOpen, onOpenChange }: SettingsModalProps) => {
-  const [fullscreen, setFullscreen] = useState(false);
-  const [resolution, setResolution] = useState('');
-  const [availableRes, setAvailableRes] = useState<Array<ResolutionOption>>([]);
-
-  useEffect(() => {
-    (async () => {
-      window.api.video.onFullscreenChanged(setFullscreen);
-
-      const [resolutions, videoSettings] = await Promise.all([
-        window.api.video.getAvailableResolutions(),
-        window.api.video.getVideoSettings(),
-      ]);
-      setAvailableRes(resolutions);
-      setFullscreen(videoSettings.fullscreen);
-      setResolution(stringifyResolution(videoSettings));
-    })();
-  }, []);
-
-  const handleChangeFullscreen = (checked: boolean) => {
-    setFullscreen(checked);
-    window.api.video.setVideoSettings({ fullscreen: checked });
-  };
-
-  const handleChangeResolution = (res: string) => {
-    setResolution(res);
-    const { width, height } = parseResolution(res);
-    window.api.video.setVideoSettings({ width, height });
-  };
-
-  const handleRefetchResolutions = async () => {
-    const resolutions = await window.api.video.getAvailableResolutions();
-    setAvailableRes(resolutions);
-  };
+  const {
+    isFullscreen,
+    currentResolution,
+    availableResolutions,
+    refetchResolutions,
+    changeFullscreen,
+    changeResolution,
+  } = useVideoSettings();
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -60,21 +34,21 @@ export const SettingsModal = ({ isOpen, onOpenChange }: SettingsModalProps) => {
             <Label className="font-title text-xl">Fullscreen</Label>
             <Checkbox
               className="size-6"
-              checked={fullscreen}
-              onCheckedChange={(checked) => handleChangeFullscreen(Boolean(checked.valueOf()))}
+              checked={isFullscreen}
+              onCheckedChange={(checked) => changeFullscreen(Boolean(checked.valueOf()))}
             />
           </div>
 
           <div className="flex items-center justify-between">
             <Label className="font-title text-xl">Resolution</Label>
             <ResolutionSelect
-              availableResolutions={availableRes}
-              currentResolution={resolution}
-              onResolutionChange={handleChangeResolution}
+              availableResolutions={availableResolutions}
+              currentResolution={currentResolution}
+              onResolutionChange={changeResolution}
               // ensures we show the latest resolution options in case the user:
               // changed display settings or dragged the window to another monitor
               onOpenChange={(open) => {
-                if (open) handleRefetchResolutions();
+                if (open) refetchResolutions();
               }}
             />
           </div>
