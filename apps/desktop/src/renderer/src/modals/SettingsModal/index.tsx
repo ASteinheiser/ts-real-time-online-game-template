@@ -70,7 +70,7 @@ export const SettingsModal = ({ isOpen, onOpenChange }: SettingsModalProps) => {
 
         <div className="w-20 h-[2px] bg-secondary mx-auto" />
 
-        <DialogFooter className="py-2">
+        <DialogFooter>
           <Versions />
         </DialogFooter>
       </DialogContent>
