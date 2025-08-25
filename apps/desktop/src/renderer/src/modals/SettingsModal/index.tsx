@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Checkbox, Label, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@repo/ui';
 import type { ResolutionOption } from '../../../../shared/types';
-import { ResolutionSelect } from './ResolutionSelect';
+import { ResolutionSelect, stringifyResolution, parseResolution } from './ResolutionSelect';
 import { Versions } from './Versions';
 
 interface SettingsModalProps {
@@ -22,7 +22,7 @@ export const SettingsModal = ({ isOpen, onOpenChange }: SettingsModalProps) => {
       ]);
       setAvailableRes(resolutions);
       setFullscreen(videoSettings.fullscreen);
-      setResolution(`${videoSettings.width}x${videoSettings.height}`);
+      setResolution(stringifyResolution(videoSettings));
     })();
   }, []);
 
@@ -33,7 +33,7 @@ export const SettingsModal = ({ isOpen, onOpenChange }: SettingsModalProps) => {
 
   const handleChangeResolution = (res: string) => {
     setResolution(res);
-    const [width, height] = res.split('x').map(Number);
+    const { width, height } = parseResolution(res);
     window.api.video.setVideoSettings({ width, height });
   };
 

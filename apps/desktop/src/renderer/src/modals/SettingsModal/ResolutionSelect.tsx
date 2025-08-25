@@ -19,15 +19,24 @@ export const ResolutionSelect = ({
       </SelectTrigger>
 
       <SelectContent>
-        {availableResolutions.map(({ width, height }) => {
-          const resolution = `${width}x${height}`;
+        {availableResolutions.map((resolution) => {
+          const resString = stringifyResolution(resolution);
           return (
-            <SelectItem key={resolution} value={resolution} className="text-xl font-pixel">
-              {resolution}
+            <SelectItem key={resString} value={resString} className="text-xl font-pixel">
+              {resString}
             </SelectItem>
           );
         })}
       </SelectContent>
     </Select>
   );
+};
+
+export const stringifyResolution = (res: ResolutionOption) => {
+  return `${res.width}x${res.height}`;
+};
+
+export const parseResolution = (res: string): ResolutionOption => {
+  const [width, height] = res.split('x').map(Number);
+  return { width, height };
 };
