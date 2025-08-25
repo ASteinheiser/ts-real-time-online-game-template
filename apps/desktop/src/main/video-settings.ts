@@ -77,8 +77,15 @@ export const applyVideoSettings = (window: BrowserWindow | null, newSettings: Pa
   if (mergedSettings.fullscreen) {
     window.setFullScreen(true);
   } else {
+    const { x, y } = window.getBounds();
+    const currentDisplay = screen.getDisplayNearestPoint({ x, y });
+    const { width: displayWidth, height: displayHeight } = currentDisplay.workArea;
+    // ensure the window is not larger than the display
+    const newWidth = displayWidth < mergedSettings.width ? displayWidth : mergedSettings.width;
+    const newHeight = displayHeight < mergedSettings.height ? displayHeight : mergedSettings.height;
+
     window.setFullScreen(false);
-    window.setContentSize(mergedSettings.width, mergedSettings.height);
+    window.setSize(newWidth, newHeight);
     window.center();
   }
 
